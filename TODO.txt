@@ -20,3 +20,5 @@ TODO
   configurable with a list of keys to operate on, and perhaps some sort of
   patter matching will be needed. Supporting this would be the work of a
   module in collective.transmogrifier.
+  
+- Provide a UI for selecting and running pipelines
