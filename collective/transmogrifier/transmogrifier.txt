@@ -399,7 +399,60 @@ By operating on one item at a time, a transmogrifier pipeline can handle huge
 numbers of content without breaking memory limits; individual sections should
 also avoid using memory unnecessarily.
 
+Previous sections go first
+~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+As mentioned in the Sources_ section, when inserting new items into the
+stream, generally previous pipe sections come first. This way someone
+constructing a pipeline knows what source section will be processed earlier
+(those slotted earlier in the pipeline) and can adjust expectations
+accordingly. This makes content construction more predictable when dealing
+with multiple sources.
+
+An exception would be a Folder Source, which inserts additional Folder items
+into the pipeline to ensure that the required container for any given content
+item exists at construction time. Such a source would inject extra items as
+needed, not before or after the previous source section.
+
+Iterators have 3 stages
+~~~~~~~~~~~~~~~~~~~~~~~
+
+Some tasks have to happen before the pipeline runs, or after all content has
+been created. In such cases it is handy to realise that iteration within a
+section consists of three stages: before iteration, iteration itself, and
+after iteration.
+
+For example, a section creating references may have to wait for all content to
+be created before it can insert the references. In this case it could build a
+queue during iteration, and only when the previous pipe section has been
+exhausted and the last item has been yielded would the section reach into the
+portal and create all the references.
+
+Sources following the `Previous sections go first`_ convention basically inject the new items in the after iteration stage.
+
+Here's a piece of psuedo code to illustrate these 3 stages::
+
+    def __iter__(self):
+        # Before iteration
+        # You can do initialisation here
+        
+        for item in self.previous
+            # Iteration itself
+            # You could process the items, take notes, inject additional
+            # items based on the current item in the pipe or manipulate portal
+            # content created by previous items
+            yield item
+            
+        # After iteration
+        # The section still has control here and could inject additional
+        # items, manipulate all portal content created by the pipeline,
+        # or clean up after itself.
+
+You can get quite creative with this. For example, the reference creator could
+get quite creative and defer creation of references until it knew the
+referenced object has been created too and periodically create these
+references. This would keep memory requirements smaller as not *all*
+references to create have to be remembered.
 
 .. _buildout: http://pypi.python.org/pypi/zc.buildout
 .. _iterator protocol: http://www.python.org/dev/peps/pep-0234/
