@@ -22,3 +22,12 @@ TODO
   module in collective.transmogrifier.
   
 - Provide a UI for selecting and running pipelines
+
+- Define a 'default import pipeline' variable in the transmogrifier section,
+  so you can include a default set of sections that'll work for 95% of the
+  transmogrifier import cases. The goal is to have a pipeline definition like
+  this::
+
+    pipeline =
+        my.specific.import.section
+        ${transmogrifier:importpipeline}
