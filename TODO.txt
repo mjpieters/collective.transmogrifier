@@ -1,0 +1,22 @@
+TODO
+====
+
+- Possible create 'nicer' exceptions based on a base transmogrifier exception
+
+- Create default utility sections:
+
+  - construction (should take care of delayed cataloging, memory management,
+    etc.)
+
+  - workflow management
+
+  - 'path' creation (insert Folders into the pipeline wherever required)
+
+  - references
+
+  - splitter (2 or more sub-pipelines based on conditions)
+
+- Think about general option parsing support; many sections will be
+  configurable with a list of keys to operate on, and perhaps some sort of
+  patter matching will be needed. Supporting this would be the work of a
+  module in collective.transmogrifier.

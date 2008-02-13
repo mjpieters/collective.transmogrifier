@@ -1,0 +1,10 @@
+Change History
+**************
+
+(name of developer listed in brackets)
+
+0.1 (unreleased)
+================
+
+- Initial transmogrifier architecture.
+  [mj]
