@@ -54,16 +54,15 @@ class SplitterSection(object):
                                      'return an ISection' % (
                                           blueprint_id, section_id))
                 pipeline = iter(pipeline)
-                        
-            self.subpipes.append(pipeline)
+                
+            self.subpipes.appendleft(pipeline)
     
     def __iter__(self):
         subpipes = self.subpipes
         while subpipes:
-            pipe = subpipes.popleft()
             try:
-                yield pipe.next()
+                yield subpipes[-1].next()
             except StopIteration:
-                pass
+                subpipes.pop()
             else:
-                subpipes.append(pipe)
+                subpipes.rotate()
