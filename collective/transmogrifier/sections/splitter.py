@@ -1,4 +1,5 @@
 import itertools
+import collections
 
 from zope.interface import classProvides, implements
 
@@ -26,7 +27,7 @@ class SplitterSection(object):
     implements(ISectionBlueprint)
     
     def __init__(self, transmogrifier, name, options, previous):
-        self.subpipes = []
+        self.subpipes = collections.deque()
         
         pipe_ids = [k for k in options if k.startswith('pipeline')]
         pipe_ids.sort()
@@ -57,9 +58,12 @@ class SplitterSection(object):
             self.subpipes.append(pipeline)
     
     def __iter__(self):
-        while self.subpipes:
-            for i, pipe in enumerate(self.subpipes[:]):
-                try:
-                    yield pipe.next()
-                except StopIteration:
-                    del self.subpipes[i]
+        subpipes = self.subpipes
+        while subpipes:
+            pipe = subpipes.popleft()
+            try:
+                yield pipe.next()
+            except StopIteration:
+                pass
+            else:
+                subpipes.append(pipe)
