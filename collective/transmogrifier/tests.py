@@ -120,6 +120,7 @@ def tearDown(test):
     from collective.transmogrifier import transmogrifier
     transmogrifier.configuration_registry.clear()
     shutil.rmtree(BASEDIR)
+    cleanup.cleanUp()
 
 def test_suite():
     return unittest.TestSuite((
