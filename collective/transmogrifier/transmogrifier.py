@@ -71,6 +71,7 @@ class Transmogrifier(UserDict.DictMixin):
             if not ISection.providedBy(pipeline):
                 raise ValueError('Blueprint %s for section %s did not return '
                                  'an ISection' % (blueprint_id, section_id))
+            pipeline = iter(pipeline) # ensure you can call .next()
         
         # Pipeline execution
         for item in pipeline:
