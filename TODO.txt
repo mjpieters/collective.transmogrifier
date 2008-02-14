@@ -14,7 +14,8 @@ TODO
 
   - references
 
-  - splitter (2 or more sub-pipelines based on conditions)
+- Create a not-so-naive version of the splitter with look-ahead condition
+  testing and extra-items-inserted detection.
 
 - Think about general option parsing support; many sections will be
   configurable with a list of keys to operate on, and perhaps some sort of
