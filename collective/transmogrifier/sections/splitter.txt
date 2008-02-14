@@ -1,0 +1,15 @@
+Splitter section
+================
+
+A splitter pipeline section lets you branch a pipeline into 2 or more
+sub-pipelines.
+
+.. WARNING::
+    A splitter section has to, by it's very nature, keep a buffer of items not
+    interesting to the currently active sub-pipe. This can cause it to eat
+    memory quite rapidly for item streams that are not uniformly mixed.
+
+    Use a custom pipe section with the conditional sections contained wholly
+    within it to avoid this trap.
+
+
