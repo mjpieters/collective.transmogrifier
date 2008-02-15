@@ -3,6 +3,8 @@ TODO
 
 - Possible create 'nicer' exceptions based on a base transmogrifier exception
 
+- Sprinkle helpful logging statements throughout
+
 - Create default utility sections:
 
   - construction (should take care of delayed cataloging, memory management,
@@ -13,6 +15,14 @@ TODO
   - 'path' creation (insert Folders into the pipeline wherever required)
 
   - references
+  
+  - subtransaction committer
+  
+  - key mover (move the value of one key over to another)
+  
+  - re-coder (en- or decode keys between various encodings and unicode)
+  
+  - key inserter (insert fixed values into a certain key)
 
 - Create a not-so-naive version of the splitter with look-ahead condition
   testing and extra-items-inserted detection.
