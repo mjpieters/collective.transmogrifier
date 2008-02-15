@@ -12,4 +12,34 @@ sub-pipelines.
     Use a custom pipe section with the conditional sections contained wholly
     within it to avoid this trap.
 
+A splitter section takes 2 or more sub-pipelines, and sends the items from the previous section through each of the sub-pipelines, where each sub-pipeline gets it's own copy:
+
+>>> emptysplitter = """
+... [transmogrifier]
+... pipeline =
+...     source
+...     splitter
+...     printer
+...     
+... [source]
+... blueprint = collective.transmogrifier.sections.tests.rangesource
+... size = 3
+... 
+... [splitter]
+... blueprint = collective.transmogrifier.sections.splitter
+... pipeline-1 =
+... pipeline-2 =
+... 
+... [printer]
+... blueprint = collective.transmogrifier.sections.tests.pprinter
+... """
+>>> registerConfig(u'collective.transmogrifier.sections.tests.emptysplitter',
+...                emptysplitter)
+>>> transmogrifier(u'collective.transmogrifier.sections.tests.emptysplitter')
+{'id': 'item-00'}
+{'id': 'item-00'}
+{'id': 'item-01'}
+{'id': 'item-01'}
+{'id': 'item-02'}
+{'id': 'item-02'}
 

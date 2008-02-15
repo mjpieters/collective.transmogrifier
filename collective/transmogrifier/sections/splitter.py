@@ -24,7 +24,7 @@ from collective.transmogrifier.interfaces import ISection
 
 class SplitterSection(object):
     classProvides(ISectionBlueprint)
-    implements(ISectionBlueprint)
+    implements(ISection)
     
     def __init__(self, transmogrifier, name, options, previous):
         self.subpipes = collections.deque()
@@ -32,11 +32,15 @@ class SplitterSection(object):
         pipe_ids = [k for k in options if k.startswith('pipeline')]
         pipe_ids.sort()
         
+        if len(pipe_ids) < 2:
+            raise ValueError(
+                '%s: Need at least two sub-pipes for a splitter' % name)
+        
         splitter_head = list(itertools.tee(previous, len(pipe_ids)))
         
         for pipe_id, pipeline in zip(pipe_ids, splitter_head):
             condition = options.get('%s-condition' % pipe_id)
-            if contition is not None:
+            if condition is not None:
                 # TODO: insert condition section.
                 pass
             
