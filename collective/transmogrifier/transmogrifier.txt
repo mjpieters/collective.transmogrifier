@@ -15,14 +15,14 @@ names the sections in order:
 ...     section3
 ...     
 ... [section1]
-... blueprint = collective.transmogrify.tests.examplesource
+... blueprint = collective.transmogrifier.tests.examplesource
 ... size = 5
 ... 
 ... [section2]
-... blueprint = collective.transmogrify.tests.exampletransform
+... blueprint = collective.transmogrifier.tests.exampletransform
 ... 
 ... [section3]
-... blueprint = collective.transmogrify.tests.exampleconstructor
+... blueprint = collective.transmogrifier.tests.exampleconstructor
 ... """
 
 The format of the configuration files is defined by the Python ConfigParser
@@ -86,7 +86,7 @@ Here is a simple blueprint, in the form of a class definition:
 ...             yield item
 ...
 >>> provideUtility(ExampleTransform, 
-...                name=u'collective.transmogrify.tests.exampletransform')
+...                name=u'collective.transmogrifier.tests.exampletransform')
 
 Note that we register this class as a named utility, and that instances of
 this class can be used as an iterator. When slotted together, items 'flow'
@@ -124,7 +124,7 @@ with another example:
 ...             yield dict(id='item%02d' % i)
 ...
 >>> provideUtility(ExampleSource,
-...                name=u'collective.transmogrify.tests.examplesource')
+...                name=u'collective.transmogrifier.tests.examplesource')
 
 In this example we use the ``options`` dictionary to read options from the
 section configuration, which in the example configuration we gave earlier has
@@ -174,7 +174,7 @@ For example purposes, we simply pretty print the items instead:
 ...             yield item
 ...
 >>> provideUtility(ExampleConstructor, 
-...                name=u'collective.transmogrify.tests.exampleconstructor')
+...                name=u'collective.transmogrifier.tests.exampleconstructor')
   
 With this last section blueprint example completed, we can load the example configuration we created earlier, and run our transmogrification:
 
@@ -232,7 +232,7 @@ A short example shows each of these arguments in action:
 ...             item['title'] = '%s - %s' % (self.site_title, item['id'])
 ...             yield item
 >>> provideUtility(TitleExampleSection, 
-...                name=u'collective.transmogrify.tests.titleexample')
+...                name=u'collective.transmogrifier.tests.titleexample')
 >>> titlepipeline = """\
 ... [transmogrifier]
 ... pipeline =
@@ -241,14 +241,14 @@ A short example shows each of these arguments in action:
 ...     section3
 ...     
 ... [section1]
-... blueprint = collective.transmogrify.tests.examplesource
+... blueprint = collective.transmogrifier.tests.examplesource
 ... size = 5
 ... 
 ... [titlesection]
-... blueprint = collective.transmogrify.tests.titleexample
+... blueprint = collective.transmogrifier.tests.titleexample
 ... 
 ... [section3]
-... blueprint = collective.transmogrify.tests.exampleconstructor
+... blueprint = collective.transmogrifier.tests.exampleconstructor
 ... """
 >>> registerConfig(u'collective.transmogrifier.tests.titlepipeline', 
 ...                titlepipeline)
@@ -301,14 +301,14 @@ substitution, using both the section and the option name joined by a colon:
 ... item_count = 3
 ...     
 ... [section1]
-... blueprint = collective.transmogrify.tests.examplesource
+... blueprint = collective.transmogrifier.tests.examplesource
 ... size = ${definitions:item_count}
 ... 
 ... [section2]
-... blueprint = collective.transmogrify.tests.exampletransform
+... blueprint = collective.transmogrifier.tests.exampletransform
 ... 
 ... [section3]
-... blueprint = collective.transmogrify.tests.exampleconstructor
+... blueprint = collective.transmogrifier.tests.exampleconstructor
 ... """
 >>> registerConfig(u'collective.transmogrifier.tests.substitutionexample', 
 ...                substitutionexample)
