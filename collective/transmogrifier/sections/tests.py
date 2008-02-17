@@ -70,6 +70,18 @@ class SplitterConditionSectionTests(unittest.TestCase):
         section.next()
         self.assertTrue(section.isDone)
         self.assertRaises(StopIteration, section.next)
+        
+class SplitterSectionTests(unittest.TestCase):
+    def _makeOne(self, transmogrifier, options, previous):
+        from splitter import SplitterSection
+        return SplitterSection(transmogrifier, 'unittest', options, previous)
+    
+    def testAtLeastTwo(self):
+        self.assertRaises(ValueError, self._makeOne, {}, {}, iter(()))
+        self.assertRaises(ValueError, self._makeOne, {}, {'pipeline-1': ''},
+                          iter(()))
+        # Shouldn't raise
+        self._makeOne({}, {'pipeline-1': '', 'pipeline-2': ''}, iter(()))
 
 # Doctest support
 
