@@ -76,7 +76,7 @@ optional and use the pipeline option name plus
 
 Conditions are expressed as TALES statements, and have access to the current
 item (``item``), the transmogrifier (``transmogrifier``), the splitter options
-(``options``) and sys.modules ``modules``).
+(``options``) and sys.modules (``modules``).
 
 .. WARNING::
     Although the splitter section employs some techniques to avoid memory
