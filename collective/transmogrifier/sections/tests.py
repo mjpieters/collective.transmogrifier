@@ -70,7 +70,7 @@ class SplitterConditionSectionTests(unittest.TestCase):
         section.next()
         self.assertTrue(section.isDone)
         self.assertRaises(StopIteration, section.next)
-        
+
 class SplitterSectionTests(unittest.TestCase):
     def _makeOne(self, transmogrifier, options, previous):
         from splitter import SplitterSection
@@ -99,7 +99,7 @@ class RangeSource(object):
             
         for i in range(self.size):
             yield dict(id='item-%02d' % i)
-            
+
 class PrettyPrinter(object):
     classProvides(ISectionBlueprint)
     implements(ISection)
@@ -133,6 +133,7 @@ def sectionsSetUp(test):
 def test_suite():
     return unittest.TestSuite((
         unittest.makeSuite(SplitterConditionSectionTests),
+        unittest.makeSuite(SplitterSectionTests),
         doctest.DocFileSuite(
             'splitter.txt',
             setUp=sectionsSetUp, tearDown=tearDown),
