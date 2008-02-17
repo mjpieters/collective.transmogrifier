@@ -4,7 +4,7 @@
 
 <utility
   component=".splitter.SplitterSection"
-  name="collective.transmogrifier.sources.splitter"
+  name="collective.transmogrifier.sections.splitter"
   />
 
 </configure>

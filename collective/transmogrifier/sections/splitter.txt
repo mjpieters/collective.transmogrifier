@@ -4,15 +4,9 @@ Splitter section
 A splitter pipeline section lets you branch a pipeline into 2 or more
 sub-pipelines.
 
-.. WARNING::
-    A splitter section has to, by it's very nature, keep a buffer of items not
-    interesting to the currently active sub-pipe. This can cause it to eat
-    memory quite rapidly for item streams that are not uniformly mixed.
-
-    Use a custom pipe section with the conditional sections contained wholly
-    within it to avoid this trap.
-
-A splitter section takes 2 or more sub-pipelines, and sends the items from the previous section through each of the sub-pipelines, where each sub-pipeline gets it's own copy:
+A splitter section takes 2 or more sub-pipelines, and sends the items from the
+previous section through each of the sub-pipelines, where each sub-pipeline
+gets it's own copy:
 
 >>> emptysplitter = """
 ... [transmogrifier]
@@ -43,3 +37,53 @@ A splitter section takes 2 or more sub-pipelines, and sends the items from the p
 {'id': 'item-02'}
 {'id': 'item-02'}
 
+Although the sub-pipelines in the splitter are empty, we end up with 2 copies
+of every item in the pipeline as both sub-pipelines get to process a copy.
+Sub-pipelines are defined by options starting with ``pipeline-``.
+
+Normally you'll use conditions to identify items for each sub-pipe, making the
+splitter the pipeline equivalent of an if/elif statement. Conditions are
+optional and use the pipeline option name plus
+``-condition``:
+
+>>> evenoddsplitter = """
+... [transmogrifier]
+... pipeline =
+...     source
+...     splitter
+...     printer
+...     
+... [source]
+... blueprint = collective.transmogrifier.sections.tests.rangesource
+... size = 3
+... 
+... [splitter]
+... blueprint = collective.transmogrifier.sections.splitter
+... pipeline-odd-condition = python:int(item['id'][-2]) % 2
+... pipeline-odd =
+... pipeline-even-condition = python:int(item['id'][-2]) % 2 == 0
+... pipeline-even =
+... 
+... [printer]
+... blueprint = collective.transmogrifier.sections.tests.pprinter
+... """
+>>> registerConfig(u'collective.transmogrifier.sections.tests.evenodd',
+...                evenoddsplitter)
+>>> transmogrifier(u'collective.transmogrifier.sections.tests.evenodd')
+{'id': 'item-00'}
+{'id': 'item-01'}
+{'id': 'item-02'}
+
+Conditions are expressed as TALES statements, and have access to the current
+item (``item``), the transmogrifier (``transmogrifier``), the splitter options
+(``options``) and sys.modules ``modules``).
+
+.. WARNING::
+    Although the splitter section employs some techniques to avoid memory
+    bloat, if any sub-pipe swallows items (so taking them from the previous
+    section without passing them on), runs the risk of pulling all remaining
+    items into the splitter buffer as a next match for the sub-pipe is being
+    sought.
+
+    You can avoid this by not using sections that discard items within a
+    splitter; place these before or after a splitter section.
