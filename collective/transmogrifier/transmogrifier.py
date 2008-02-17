@@ -2,13 +2,12 @@ import re
 import ConfigParser
 import UserDict
 
-from zope.component import adapts, getUtility
+from zope.component import adapts
 
 from Products.CMFCore.interfaces import ISiteRoot
 
-from interfaces import ISection
-from interfaces import ISectionBlueprint
 from interfaces import ITransmogrifier
+from utils import constructPipeline
 
 class ConfigurationRegistry(object):
     def __init__(self):
@@ -60,18 +59,7 @@ class Transmogrifier(UserDict.DictMixin):
         options = self._raw['transmogrifier']
         sections = [s.strip() for s in options['pipeline'].split() 
                     if s.strip()]
-                
-        # Pipeline construction
-        pipeline = iter(()) # empty starter section
-        for section_id in sections:
-            section_options = self[section_id]
-            blueprint_id = section_options['blueprint'].decode('ascii')
-            blueprint = getUtility(ISectionBlueprint, blueprint_id)
-            pipeline = blueprint(self, section_id, section_options, pipeline)
-            if not ISection.providedBy(pipeline):
-                raise ValueError('Blueprint %s for section %s did not return '
-                                 'an ISection' % (blueprint_id, section_id))
-            pipeline = iter(pipeline) # ensure you can call .next()
+        pipeline = constructPipeline(self, sections)       
         
         # Pipeline execution
         for item in pipeline:
@@ -199,4 +187,4 @@ class Options(UserDict.DictMixin):
         result.update(self._data)
         return result
 
-    
+
