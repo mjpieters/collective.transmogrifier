@@ -186,5 +186,3 @@ class Options(UserDict.DictMixin):
         result.update(self._cooked)
         result.update(self._data)
         return result
-
-
