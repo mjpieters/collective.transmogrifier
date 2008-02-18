@@ -39,7 +39,7 @@ class IRegisterConfigDirective(Interface):
 
 _configuration_regs = []
 def registerConfig(_context, configuration, name=u'default', title=None,
-                   description=u''):
+                   description=None):
     """Add a new configuration to the registry"""
     if title is None:
         title = u"Pipeline configuration '%s'" % name
