@@ -1,0 +1,37 @@
+Condition section
+=================
+
+A condition pipeline section lets you selectively discard items from the
+pipeline. The condition section blueprint name is
+``collective.transmogrifier.sections.condition``.
+
+A condition section takes a ``condition`` TALES expression. When this
+expression when matched against the current item is True, the item is yielded
+to the next pipe section, otherwise it is not:
+
+>>> condition = """
+... [transmogrifier]
+... pipeline =
+...     source
+...     condition
+...     printer
+...     
+... [source]
+... blueprint = collective.transmogrifier.sections.tests.rangesource
+... size = 5
+... 
+... [condition]
+... blueprint = collective.transmogrifier.sections.condition
+... condition = python:int(item['id'][-2:]) > 2
+... 
+... [printer]
+... blueprint = collective.transmogrifier.sections.tests.pprinter
+... """
+>>> registerConfig(u'collective.transmogrifier.sections.tests.condition',
+...                condition)
+>>> transmogrifier(u'collective.transmogrifier.sections.tests.condition')
+{'id': 'item-03'}
+{'id': 'item-04'}
+
+As condition sections skip items in the pipeline, they should not be used
+inside a splitter section!

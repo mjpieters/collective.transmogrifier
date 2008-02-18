@@ -3,8 +3,18 @@
     i18n_domain="collective.transmogrifier">
 
 <utility
-  component=".splitter.SplitterSection"
-  name="collective.transmogrifier.sections.splitter"
-  />
+    component=".condition.ConditionSection"
+    name="collective.transmogrifier.sections.condition"
+    />
+
+<utility
+    component=".splitter.SplitterSection"
+    name="collective.transmogrifier.sections.splitter"
+    />
+
+<utility
+    component=".savepoint.SavepointSection"
+    name="collective.transmogrifier.sections.savepoint"
+    />
 
 </configure>

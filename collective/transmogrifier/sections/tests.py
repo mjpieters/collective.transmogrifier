@@ -203,6 +203,6 @@ def test_suite():
         unittest.makeSuite(SplitterConditionSectionTests),
         unittest.makeSuite(SplitterSectionTests),
         doctest.DocFileSuite(
-            'splitter.txt',
+            'condition.txt', 'splitter.txt', 'savepoint.txt',
             setUp=sectionsSetUp, tearDown=tearDown),
     ))
