@@ -2,11 +2,12 @@ Splitter section
 ================
 
 A splitter pipeline section lets you branch a pipeline into 2 or more
-sub-pipelines.
+sub-pipelines. The splitter section blueprint name is
+``collective.transmogrifier.sections.splitter``.
 
-A splitter section takes 2 or more sub-pipelines, and sends the items from the
-previous section through each of the sub-pipelines, where each sub-pipeline
-gets it's own copy:
+A splitter section takes 2 or more pipeline definitions, and sends the items
+from the previous section through each of these sub-pipelines, each with it's
+own copy [*]_ of the items:
 
 >>> emptysplitter = """
 ... [transmogrifier]
@@ -37,14 +38,13 @@ gets it's own copy:
 {'id': 'item-02'}
 {'id': 'item-02'}
 
-Although the sub-pipelines in the splitter are empty, we end up with 2 copies
-of every item in the pipeline as both sub-pipelines get to process a copy.
-Sub-pipelines are defined by options starting with ``pipeline-``.
+Although the pipeline definitions in the splitter are empty, we end up with 2
+copies of every item in the pipeline as both splitter pipelines get to process
+a copy. Splitter pipelines are defined by options starting with ``pipeline-``.
 
 Normally you'll use conditions to identify items for each sub-pipe, making the
 splitter the pipeline equivalent of an if/elif statement. Conditions are
-optional and use the pipeline option name plus
-``-condition``:
+optional and use the pipeline option name plus ``-condition``:
 
 >>> evenoddsplitter = """
 ... [transmogrifier]
@@ -61,7 +61,7 @@ optional and use the pipeline option name plus
 ... blueprint = collective.transmogrifier.sections.splitter
 ... pipeline-odd-condition = python:int(item['id'][-2]) % 2
 ... pipeline-odd =
-... pipeline-even-condition = python:int(item['id'][-2]) % 2 == 0
+... pipeline-even-condition = not:${splitter:pipeline-odd-condition}
 ... pipeline-even =
 ... 
 ... [printer]
@@ -74,9 +74,18 @@ optional and use the pipeline option name plus
 {'id': 'item-01'}
 {'id': 'item-02'}
 
-Conditions are expressed as TALES statements, and have access to the current
-item (``item``), the transmogrifier (``transmogrifier``), the splitter options
-(``options``) and sys.modules (``modules``).
+Conditions are expressed as TALES statements, and have access to:
+
+=================== ==========================================================
+ ``item``            the current pipeline item
+ ``transmogrifier``  the transmogrifier
+ ``name``            the name of the splitter section
+ ``pipeline``        the name of the splitter pipeline this condition belongs
+                     to (including the ``pipeline-`` prefix)
+ ``options``         the splitter options
+ ``modules``         sys.modules
+=================== ==========================================================
+
 
 .. WARNING::
     Although the splitter section employs some techniques to avoid memory
@@ -86,4 +95,10 @@ item (``item``), the transmogrifier (``transmogrifier``), the splitter options
     sought.
 
     You can avoid this by not using sections that discard items within a
-    splitter; place these before or after a splitter section.
+    splitter; place these before or after a splitter section. Better still,
+    use a correct condition in the splitter configuration that won't include
+    items to discard in the first place.
+
+.. [*] Note that copy.deepcopy is used on all items. This will fail on items
+    containing file handles, modules or other non-copyable values. See the
+    copy module documentation.

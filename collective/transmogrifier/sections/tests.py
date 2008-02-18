@@ -1,3 +1,4 @@
+import itertools
 import pprint
 import unittest
 from zope.component import provideUtility
@@ -70,6 +71,13 @@ class SplitterConditionSectionTests(unittest.TestCase):
         section.next()
         self.assertTrue(section.isDone)
         self.assertRaises(StopIteration, section.next)
+    
+    def testCopy(self):
+        orig, source = itertools.tee((dict(foo=i) for i in range(2)), 2)
+        section = self._makeOne(source)
+        for original, yielded in itertools.izip(orig, section):
+            self.assertEqual(original, yielded)
+            self.assertFalse(original is yielded)
 
 class SplitterSectionTests(unittest.TestCase):
     def _makeOne(self, transmogrifier, options, previous):
@@ -82,6 +90,66 @@ class SplitterSectionTests(unittest.TestCase):
                           iter(()))
         # Shouldn't raise
         self._makeOne({}, {'pipeline-1': '', 'pipeline-2': ''}, iter(()))
+    
+    def testInsertExtra(self):
+        class Inserter(object):
+            implements(ISection)
+            def __init__(self, transmogrifier, name, options, previous):
+                self.previous = previous
+            def __iter__(self):
+                count = 0
+                for item in self.previous:
+                    item['pipeline'] = 1
+                    yield item
+                    yield dict(id='extra-%02d' % count)
+                    count += 1
+        
+        provideUtility(Inserter, ISectionBlueprint,
+            name=u'collective.transmogrifier.tests.inserter')
+        splitter = self._makeOne(dict(
+            inserter=dict(
+                blueprint='collective.transmogrifier.tests.inserter')),
+            {'pipeline-1': 'inserter', 'pipeline-2': ''},
+            (dict(id='item-%02d' % i) for i in range(3)))
+        self.assertEqual(list(splitter), [
+            dict(id='item-00', pipeline=1), # p1 advanced, look at p2
+            dict(id='item-00'),             # p2 advanced, look at p1
+            dict(id='extra-00'),            # p1 did not advance
+            dict(id='item-01', pipeline=1), # p1 advanced, look at p2
+            dict(id='item-01'),             # p2 advanced, look at p1
+            dict(id='extra-01'),            # p1 did not advance
+            dict(id='item-02', pipeline=1), # p1 advanced, condition isDone
+            dict(id='extra-02'),            # last in p1 after isDone, l.a. p2
+            dict(id='item-02'),             # p2 advanced
+        ])                                  # p2 is done
+    
+    def testSkipItems(self):
+        class Skip(object):
+            implements(ISection)
+            def __init__(self, transmogrifier, name, options, previous):
+                self.previous = previous
+            def __iter__(self):
+                count = 0
+                for item in self.previous:
+                    if count % 2:
+                        item['pipeline'] = 1
+                        yield item
+                    count += 1
+        provideUtility(Skip, ISectionBlueprint,
+            name=u'collective.transmogrifier.tests.skip')
+        splitter = self._makeOne(dict(
+            skip=dict(
+                blueprint='collective.transmogrifier.tests.skip')),
+            {'pipeline-1': 'skip', 'pipeline-2': ''},
+            (dict(id='item-%02d' % i) for i in range(4)))
+        self.assertEqual(list(splitter), [
+            dict(id='item-01', pipeline=1), # p1 is ahead
+            dict(id='item-00'),             # p2 advanced, p1 is skipped
+            dict(id='item-01'),             # p2 advanced, p1 no longer ahead
+            dict(id='item-03', pipeline=1), # p1 is ahead again
+            dict(id='item-02'),             # p2 advanced, p1 is skipped
+            dict(id='item-03')              # p2 advanced, p1 no longer ahead
+        ])                                  # p1 is done, p2 is done
 
 # Doctest support
 
@@ -138,5 +206,3 @@ def test_suite():
             'splitter.txt',
             setUp=sectionsSetUp, tearDown=tearDown),
     ))
-
-    return suite

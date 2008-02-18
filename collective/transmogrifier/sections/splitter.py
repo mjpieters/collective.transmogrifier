@@ -1,13 +1,13 @@
 import itertools
 import collections
-import sys
+import copy
 
 from zope.interface import classProvides, implements
-from zope.app.pagetemplate import engine
 
 from collective.transmogrifier.interfaces import ISectionBlueprint
 from collective.transmogrifier.interfaces import ISection
 from collective.transmogrifier.utils import constructPipeline
+from collective.transmogrifier.utils import Condition
 
 # This splitter uses look-ahead condition sections to only advance sub-pipes
 # that can actually yield something, thus avoiding filling the itertools.tee
@@ -57,7 +57,7 @@ class SplitterConditionSection(object):
                 next = self.previous.next()
             
             if self.condition(next):
-                return next
+                return copy.deepcopy(next)
         
     @property
     def isAhead(self):
@@ -103,21 +103,6 @@ class SplitterConditionSection(object):
         return self._getBuffer() is _stop
 
 
-class Condition(object):
-    def __init__(self, expression, transmogrifier, options):
-        self.expression = engine.Engine.compile(expression)
-        self.transmogrifier = transmogrifier
-        self.options = options
-    
-    def __call__(self, item):
-        return self.expression(engine.Engine.getContext(
-            item = item,
-            transmogrifier = self.transmogrifier,
-            options = self.options,
-            nothing = None,
-            modules = sys.modules,
-        ))
-
 class SplitterSection(object):
     classProvides(ISectionBlueprint)
     implements(ISection)
@@ -139,7 +124,8 @@ class SplitterSection(object):
         for pipe_id, pipeline in zip(pipe_ids, splitter_head):
             condition = options.get('%s-condition' % pipe_id)
             if condition is not None:
-                condition = Condition(condition, transmogrifier, options)
+                condition = Condition(condition, transmogrifier, name, 
+                                      options, pipeline=pipe_id)
             condition = SplitterConditionSection(condition, pipeline)
             
             sections = [s.strip() for s in options[pipe_id].split() 
