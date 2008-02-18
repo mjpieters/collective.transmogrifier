@@ -128,8 +128,7 @@ class SplitterSection(object):
                                       options, pipeline=pipe_id)
             condition = SplitterConditionSection(condition, pipeline)
             
-            sections = [s.strip() for s in options[pipe_id].split() 
-                        if s.strip()]
+            sections = options[pipe_id].splitlines() 
             pipeline = constructPipeline(transmogrifier, sections, condition)
             self.subpipes.appendleft((condition, pipeline))
     

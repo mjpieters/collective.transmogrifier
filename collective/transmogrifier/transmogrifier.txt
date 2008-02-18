@@ -5,23 +5,23 @@ To transmogrify, or import and convert non-plone content, you simply define a
 pipeline. Pipe sections, the equivalent of parts in a buildout_, are slotted
 together into a processing pipe. To slot sections together, you define a
 configuration file, define named sections, and a main pipeline definition that
-names the sections in order:
+names the sections in order (one section per line):
 
 >>> exampleconfig = """\
 ... [transmogrifier]
 ... pipeline =
-...     section1
-...     section2
-...     section3
+...     section 1
+...     section 2
+...     section 3
 ...     
-... [section1]
+... [section 1]
 ... blueprint = collective.transmogrifier.tests.examplesource
 ... size = 5
 ... 
-... [section2]
+... [section 2]
 ... blueprint = collective.transmogrifier.tests.exampletransform
 ... 
-... [section3]
+... [section 3]
 ... blueprint = collective.transmogrifier.tests.exampleconstructor
 ... """
 
@@ -181,11 +181,11 @@ With this last section blueprint example completed, we can load the example conf
 >>> from collective.transmogrifier.transmogrifier import Transmogrifier
 >>> transmogrifier = Transmogrifier(plone)
 >>> transmogrifier(u'collective.transmogrifier.tests.exampleconfig')
-{'exampletransformname': 'section2', 'id': 'item00'}
-{'exampletransformname': 'section2', 'id': 'item01'}
-{'exampletransformname': 'section2', 'id': 'item02'}
-{'exampletransformname': 'section2', 'id': 'item03'}
-{'exampletransformname': 'section2', 'id': 'item04'}
+{'exampletransformname': 'section 2', 'id': 'item00'}
+{'exampletransformname': 'section 2', 'id': 'item01'}
+{'exampletransformname': 'section 2', 'id': 'item02'}
+{'exampletransformname': 'section 2', 'id': 'item03'}
+{'exampletransformname': 'section 2', 'id': 'item04'}
   
 Developing blueprints
 ~~~~~~~~~~~~~~~~~~~~~

@@ -57,8 +57,7 @@ class Transmogrifier(UserDict.DictMixin):
             self._raw[section] = dict(parser.items(section))
             
         options = self._raw['transmogrifier']
-        sections = [s.strip() for s in options['pipeline'].split() 
-                    if s.strip()]
+        sections = options['pipeline'].splitlines()
         pipeline = constructPipeline(self, sections)       
         
         # Pipeline execution

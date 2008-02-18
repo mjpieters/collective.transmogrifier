@@ -17,6 +17,9 @@ def constructPipeline(transmogrifier, sections, pipeline=None):
         pipeline = iter(()) # empty starter section
     
     for section_id in sections:
+        section_id = section_id.strip()
+        if not section_id:
+            continue
         section_options = transmogrifier[section_id]
         blueprint_id = section_options['blueprint'].decode('ascii')
         blueprint = getUtility(ISectionBlueprint, blueprint_id)
