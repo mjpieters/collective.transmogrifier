@@ -15,17 +15,12 @@ TODO
   - 'path' creation (insert Folders into the pipeline wherever required)
 
   - references
-  
-  - subtransaction committer
-  
+
   - key mover (move the value of one key over to another)
   
   - re-coder (en- or decode keys between various encodings and unicode)
   
   - key inserter (insert fixed values into a certain key)
-
-- Create a not-so-naive version of the splitter with look-ahead condition
-  testing and extra-items-inserted detection.
 
 - Think about general option parsing support; many sections will be
   configurable with a list of keys to operate on, and perhaps some sort of
@@ -34,11 +29,14 @@ TODO
   
 - Provide a UI for selecting and running pipelines
 
+- Add configuration inclusion a lá buildout, using 'extends'.
+
 - Define a 'default import pipeline' variable in the transmogrifier section,
   so you can include a default set of sections that'll work for 95% of the
   transmogrifier import cases. The goal is to have a pipeline definition like
   this::
 
+    extend = collective.transmogrifier.ploneimport
     pipeline =
         my.specific.import.section
         ${transmogrifier:importpipeline}
