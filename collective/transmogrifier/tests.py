@@ -182,5 +182,3 @@ def test_suite():
             'transmogrifier.txt',
             setUp=setUp, tearDown=tearDown),
     ))
-
-    return suite
