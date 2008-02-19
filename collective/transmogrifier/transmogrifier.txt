@@ -274,6 +274,9 @@ extensions are based on the zc.buildout extensions and are:
 - option values can use a substitution syntax, described below, to
   refer to option values in specific sections.
 
+- you can include other configuration files, see `Including other
+  configurations`_.
+
 The ConfigParser syntax is very flexible. Section names can contain any
 characters other than newlines and right square braces ("]"). Option names can
 contain any characters (within the ASCII character set) other than newlines,
@@ -319,6 +322,56 @@ pipeline section, so we only get 3 items when we execute this pipeline:
 
 >>> transmogrifier = Transmogrifier(plone)
 >>> transmogrifier(u'collective.transmogrifier.tests.substitutionexample')
+{'exampletransformname': 'section2', 'id': 'item00'}
+{'exampletransformname': 'section2', 'id': 'item01'}
+{'exampletransformname': 'section2', 'id': 'item02'}
+
+Including other configurations
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+You can include other transmogrifier configurations with the ``include``
+option in the transmogrifier section. This option takes a list of
+configuration ids, separated by whitespace. All sections and options from
+those configuration files will be included provided the options weren't
+already present. This works recursively; inclusions in the included
+configuration files are honoured too:
+
+>>> inclusionexample = """\
+... [transmogrifier]
+... include = 
+...     collective.transmogrifier.tests.sources
+...     collective.transmogrifier.tests.base
+... """
+>>> registerConfig(u'collective.transmogrifier.tests.inclusionexample', 
+...                inclusionexample)
+>>> sources = """\
+... [section1]
+... blueprint = collective.transmogrifier.tests.examplesource
+... size = 3
+... """
+>>> registerConfig(u'collective.transmogrifier.tests.sources', 
+...                sources)
+>>> base = """\
+... [transmogrifier]
+... pipeline =
+...     section1
+...     section2
+...     section3
+... include = collective.transmogrifier.tests.constructor
+...
+... [section2]
+... blueprint = collective.transmogrifier.tests.exampletransform
+... """
+>>> registerConfig(u'collective.transmogrifier.tests.base', 
+...                base)
+>>> constructor = """\
+... [section3]
+... blueprint = collective.transmogrifier.tests.exampleconstructor
+... """
+>>> registerConfig(u'collective.transmogrifier.tests.constructor', 
+...                constructor)
+>>> transmogrifier = Transmogrifier(plone)
+>>> transmogrifier(u'collective.transmogrifier.tests.inclusionexample')
 {'exampletransformname': 'section2', 'id': 'item00'}
 {'exampletransformname': 'section2', 'id': 'item01'}
 {'exampletransformname': 'section2', 'id': 'item02'}

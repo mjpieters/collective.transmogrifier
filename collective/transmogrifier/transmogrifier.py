@@ -44,17 +44,8 @@ class Transmogrifier(UserDict.DictMixin):
         self.portal = portal
         
     def __call__(self, configuration_id):
-        config_info = configuration_registry.getConfiguration(
-            configuration_id)
-        parser = ConfigParser.RawConfigParser()
-        parser.optionxform = str # case sensitive
-        parser.readfp(open(config_info['configuration']))
-        
-        self._raw = {}
+        self._raw = _load_config(configuration_id)
         self._data = {}
-        
-        for section in parser.sections():
-            self._raw[section] = dict(parser.items(section))
             
         options = self._raw['transmogrifier']
         sections = options['pipeline'].splitlines()
@@ -132,11 +123,16 @@ class Options(UserDict.DictMixin):
 
     _template_split = re.compile('([$]{[^}]*})').split
     _valid = re.compile('\${[-a-zA-Z0-9 ._]+:[-a-zA-Z0-9 ._]+}$').match
+    _tales = re.compile('^\s*string:', re.MULTILINE).match
     def _sub(self, template, seen):
         parts = self._template_split(template)
         subs = []
         for ref in parts[1::2]:
             if not self._valid(ref):
+                 # A value with a string: TALES expression?
+                if self._tales(template):
+                    subs.append(ref)
+                    continue
                 raise ValueError('Not a valid substitution %s.' % ref)
             
             names = tuple(ref[2:-1].split(':'))
@@ -185,3 +181,35 @@ class Options(UserDict.DictMixin):
         result.update(self._cooked)
         result.update(self._data)
         return result
+
+def _load_config(configuration_id, seen=None):
+    if seen is None:
+        seen = []
+    if configuration_id in seen:
+        raise ValueError(
+            'Recursive configuration extends: %s (%r)' % (
+                configuration_id, seen))
+    seen.append(configuration_id)
+    
+    config_info = configuration_registry.getConfiguration(
+        configuration_id)
+    parser = ConfigParser.RawConfigParser()
+    parser.optionxform = str # case sensitive
+    parser.readfp(open(config_info['configuration']))
+    
+    includes = None
+    result = {}
+    for section in parser.sections():
+        result[section] = dict(parser.items(section))
+        if section == 'transmogrifier':
+            includes = result[section].pop('include', includes)
+    
+    if includes:
+        for configuration_id in includes.split()[::-1]:
+            include = _load_config(configuration_id, seen)
+            for section, options in include.iteritems():
+                result.setdefault(section, {}).update(options)
+    
+    seen.pop()
+    
+    return result
