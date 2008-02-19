@@ -18,15 +18,8 @@ TODO
 
   - key mover (move the value of one key over to another)
   
-  - re-coder (en- or decode keys between various encodings and unicode)
-  
   - key inserter (insert fixed values into a certain key)
 
-- Think about general option parsing support; many sections will be
-  configurable with a list of keys to operate on, and perhaps some sort of
-  patter matching will be needed. Supporting this would be the work of a
-  module in collective.transmogrifier.
-  
 - Provide a UI for selecting and running pipelines
 
 - Add configuration inclusion a lá buildout, using 'extends'.
@@ -36,7 +29,7 @@ TODO
   transmogrifier import cases. The goal is to have a pipeline definition like
   this::
 
-    extend = collective.transmogrifier.ploneimport
+    extends = collective.transmogrifier.ploneimport
     pipeline =
         my.specific.import.section
         ${transmogrifier:importpipeline}
