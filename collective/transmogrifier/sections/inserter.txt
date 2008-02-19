@@ -1,0 +1,55 @@
+Inserter section
+================
+
+An inserter pipeline section lets you define a key and value to insert into pipeline items. The inserter section blueprint name is
+``collective.transmogrifier.sections.inserter``.
+
+A inserter section takes a ``key`` and a ``value`` TALES expression. These expressions are evaluated to generate the actual key-value pair that gets inserted:
+
+>>> inserter = """
+... [transmogrifier]
+... pipeline =
+...     source
+...     simple-insertion
+...     expression-insertion
+...     printer
+...     
+... [source]
+... blueprint = collective.transmogrifier.sections.tests.rangesource
+... size = 3
+... 
+... [simple-insertion]
+... blueprint = collective.transmogrifier.sections.inserter
+... key = string:foo
+... value = string:bar (inserted into "${item/id}" by the "$name" section)
+...
+... [expression-insertion]
+... blueprint = collective.transmogrifier.sections.inserter
+... key = python:'foo-%s' % item['id'][-2:]
+... value = python:int(item['id'][-2:]) * 15
+... 
+... [printer]
+... blueprint = collective.transmogrifier.sections.tests.pprinter
+... """
+>>> registerConfig(u'collective.transmogrifier.sections.tests.inserter',
+...                inserter)
+>>> transmogrifier(u'collective.transmogrifier.sections.tests.inserter')
+{'foo': 'bar (inserted into "item-00" by the "simple-insertion" section)',
+ 'foo-00': 0,
+ 'id': 'item-00'}
+{'foo': 'bar (inserted into "item-01" by the "simple-insertion" section)',
+ 'foo-01': 15,
+ 'id': 'item-01'}
+{'foo': 'bar (inserted into "item-02" by the "simple-insertion" section)',
+ 'foo-02': 30,
+ 'id': 'item-02'}
+
+Both the ``key`` and ``value`` expressions have access to the following:
+
+=================== ==========================================================
+ ``item``            the current pipeline item
+ ``transmogrifier``  the transmogrifier
+ ``name``            the name of the splitter section
+ ``options``         the splitter options
+ ``modules``         sys.modules
+=================== ==========================================================

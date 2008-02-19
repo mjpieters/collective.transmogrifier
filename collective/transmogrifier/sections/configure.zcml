@@ -8,6 +8,11 @@
     />
 
 <utility
+    component=".inserter.InserterSection"
+    name="collective.transmogrifier.sections.inserter"
+    />
+
+<utility
     component=".condition.ConditionSection"
     name="collective.transmogrifier.sections.condition"
     />

@@ -100,6 +100,15 @@ class OptionSubstitutionTests(unittest.TestCase):
             ))
         self.assertEqual(opts['spam']['monty'], 'python')
         self.assertEqual(opts['eggs']['foo'], 'python')
+    
+    def testSkipTALESStringExpressions(self):
+        opts = self._loadOptions(
+            dict(
+                spam=dict(monty='string:${spam/eggs}'),
+                eggs=dict(foo='${spam/monty}')
+            ))
+        self.assertEqual(opts['spam']['monty'], 'string:${spam/eggs}')
+        self.assertRaises(ValueError, operator.itemgetter('eggs'), opts)
         
     def testErrors(self):
         opts = self._loadOptions(

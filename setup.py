@@ -15,6 +15,7 @@ long_description = ('\n'.join((
     'Default section blueprints',
     '**************************',
     read('collective', 'transmogrifier', 'sections', 'codec.txt'), '',
+    read('collective', 'transmogrifier', 'sections', 'inserter.txt'), '',
     read('collective', 'transmogrifier', 'sections', 'condition.txt'), '',
     read('collective', 'transmogrifier', 'sections', 'splitter.txt'), '',
     read('collective', 'transmogrifier', 'sections', 'savepoint.txt'), '',
