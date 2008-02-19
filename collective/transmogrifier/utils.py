@@ -40,7 +40,7 @@ class Matcher(object):
     starts with re: or regexp:, in which case it is treated as a regular
     expression.
     
-    Regular expressions will be compiled and applied in search mode
+    Regular expressions will be compiled and applied in match mode
     (matching anywhere in the string).
     
     """
