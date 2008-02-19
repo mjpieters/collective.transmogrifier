@@ -16,20 +16,18 @@ TODO
 
   - references
 
-  - key mover (move the value of one key over to another)
-  
-  - key inserter (insert fixed values into a certain key)
+  - key mover (move the value of one key over to another and/or delete keys)
 
 - Provide a UI for selecting and running pipelines
-
-- Add configuration inclusion a lá buildout, using 'extends'.
 
 - Define a 'default import pipeline' variable in the transmogrifier section,
   so you can include a default set of sections that'll work for 95% of the
   transmogrifier import cases. The goal is to have a pipeline definition like
   this::
 
-    extends = collective.transmogrifier.ploneimport
+    include = collective.transmogrifier.ploneimport
     pipeline =
         my.specific.import.section
         ${transmogrifier:importpipeline}
+
+- Perhaps utils.Expressions should grow an TAL iterator-like interface? YAGNI?
