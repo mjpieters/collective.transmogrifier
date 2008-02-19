@@ -33,5 +33,15 @@ to the next pipe section, otherwise it is not:
 {'id': 'item-03'}
 {'id': 'item-04'}
 
+The ``condition`` expression has access to the following:
+
+=================== ==========================================================
+ ``item``            the current pipeline item
+ ``transmogrifier``  the transmogrifier
+ ``name``            the name of the splitter section
+ ``options``         the splitter options
+ ``modules``         sys.modules
+=================== ==========================================================
+
 As condition sections skip items in the pipeline, they should not be used
 inside a splitter section!
