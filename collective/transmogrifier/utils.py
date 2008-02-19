@@ -1,3 +1,4 @@
+import re
 import sys
 
 from zope.component import getUtility
@@ -31,6 +32,34 @@ def constructPipeline(transmogrifier, sections, pipeline=None):
         pipeline = iter(pipeline) # ensure you can call .next()
     
     return pipeline
+
+class Matcher(object):
+    """Given a set of string expressions, return the first match.
+    
+    Normally items are matched using equality, unless the expression
+    starts with re: or regexp:, in which case it is treated as a regular
+    expression.
+    
+    Regular expressions will be compiled and applied in search mode
+    (matching anywhere in the string).
+    
+    """
+    def __init__(self, *expressions):
+        self.expressions = []
+        for expr in expressions:
+            if expr.startswith('re:') or expr.startswith('regexp:'):
+                expr = expr.split(':', 2)[1]
+                expr = re.compile(expr).match
+            else:
+                expr = lambda x, y=expr: x == y
+            self.expressions.append(expr)
+    
+    def __call__(self, value):
+        for expr in self.expressions:
+            match = expr(value)
+            if match:
+                return match
+        return False
 
 class Expression(object):
     """A transmogrifier expression

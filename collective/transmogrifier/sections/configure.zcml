@@ -3,6 +3,11 @@
     i18n_domain="collective.transmogrifier">
 
 <utility
+    component=".codec.CodecSection"
+    name="collective.transmogrifier.sections.codec"
+    />
+
+<utility
     component=".condition.ConditionSection"
     name="collective.transmogrifier.sections.condition"
     />

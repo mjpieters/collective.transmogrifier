@@ -153,6 +153,38 @@ class SplitterSectionTests(unittest.TestCase):
 
 # Doctest support
 
+class SampleSource(object):
+    classProvides(ISectionBlueprint)
+    implements(ISection)
+    
+    sample = (
+        dict(
+            id='foo',
+            title=u'The Foo Fighters \u2117',
+            status=u'\u2117'),
+        dict(
+            id='bar',
+            title=u'Brand Chocolate Bar \u2122',
+            status=u'\u2122'),
+        dict(id='monty-python', 
+             title=u"Monty Python's Flying Circus \u00A9",
+             status=u'\u00A9'),
+    )
+    
+    def __init__(self, transmogrifier, name, options, previous):
+        self.encoding = options.get('encoding', None)
+        self.previous = previous
+    
+    def __iter__(self):
+        for item in self.previous:
+            yield item
+        
+        for item in self.sample:
+            if self.encoding is not None:
+                item['title'] = item['title'].encode(self.encoding)
+                item['status'] = item['status'].encode(self.encoding)
+            yield item
+
 class RangeSource(object):
     classProvides(ISectionBlueprint)
     implements(ISection)
@@ -193,6 +225,8 @@ def sectionsSetUp(test):
     zcml.load_config('meta.zcml', zope.component)
     zcml.load_config('configure.zcml', collective.transmogrifier.sections)
     
+    provideUtility(SampleSource,
+        name=u'collective.transmogrifier.sections.tests.samplesource')
     provideUtility(RangeSource,
         name=u'collective.transmogrifier.sections.tests.rangesource')
     provideUtility(PrettyPrinter,
@@ -203,6 +237,6 @@ def test_suite():
         unittest.makeSuite(SplitterConditionSectionTests),
         unittest.makeSuite(SplitterSectionTests),
         doctest.DocFileSuite(
-            'condition.txt', 'splitter.txt', 'savepoint.txt',
+            'codec.txt', 'condition.txt', 'splitter.txt', 'savepoint.txt',
             setUp=sectionsSetUp, tearDown=tearDown),
     ))

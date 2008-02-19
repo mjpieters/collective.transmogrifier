@@ -1,0 +1,64 @@
+Codec section
+=============
+
+A codec pipeline section lets you alter the character encoding of item
+values, allowing you to recode text from and to unicode and any of the
+codecs supported by python. The codec section blueprint name is
+``collective.transmogrifier.sections.codec``.
+
+What values to recode is determined by the ``keys`` option, which takes a set
+of newline-separated key names. If a key name starts with ``re:`` or
+``regexp:`` it is treated as a regular expression instead and keys are matched
+in search mode (anywhere in the string).
+
+The optional ``from`` and ``to`` options determine what codecs values are
+recoded from and to. Both these values default to ``unicode``, meaning no
+translation. If either option is set to ``default``, the current default
+encoding of the Plone site is used.
+
+To deal with possible encoding errors, you can set the error handler of both
+the ``from`` and ``to`` codecs separately with the ``from-error-handler`` and
+``to-error-handler`` options, respectively. These default to ``strict``, but
+can be set to any error handler supported by python, including ``replace`` and
+``ignore``.
+
+>>> codecs = """
+... [transmogrifier]
+... pipeline =
+...     source
+...     decode-all
+...     encode-id
+...     encode-title
+...     printer
+...     
+... [source]
+... blueprint = collective.transmogrifier.sections.tests.samplesource
+... encoding = utf8
+... 
+... [decode-all]
+... blueprint = collective.transmogrifier.sections.codec
+... keys = re:.*
+... from = utf8
+...
+... [encode-id]
+... blueprint = collective.transmogrifier.sections.codec
+... keys = id
+... to = ascii
+...
+... [encode-title]
+... blueprint = collective.transmogrifier.sections.codec
+... keys = title
+... to = ascii
+... to-error-handler = backslashreplace
+... 
+... [printer]
+... blueprint = collective.transmogrifier.sections.tests.pprinter
+... """
+>>> registerConfig(u'collective.transmogrifier.sections.tests.codecs',
+...                codecs)
+>>> transmogrifier(u'collective.transmogrifier.sections.tests.codecs')
+{'status': u'\u2117', 'id': 'foo', 'title': 'The Foo Fighters \\u2117'}
+{'status': u'\u2122', 'id': 'bar', 'title': 'Brand Chocolate Bar \\u2122'}
+{'id': 'monty-python',
+ 'status': u'\xa9',
+ 'title': "Monty Python's Flying Circus \\xa9"}
