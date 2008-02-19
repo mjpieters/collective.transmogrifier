@@ -27,6 +27,7 @@ A savepoint section doesn't alter the items in any way:
 ...                savepoint)
 
 We'll show savepoints being committed by overriding transaction.savepoint:
+
 >>> import transaction
 >>> original_savepoint = transaction.savepoint
 >>> counter = [0]
