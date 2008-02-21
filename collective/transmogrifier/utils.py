@@ -47,6 +47,9 @@ class Matcher(object):
     def __init__(self, *expressions):
         self.expressions = []
         for expr in expressions:
+            expr = expr.strip()
+            if not expr:
+                continue
             if expr.startswith('re:') or expr.startswith('regexp:'):
                 expr = expr.split(':', 2)[1]
                 expr = re.compile(expr).match
@@ -74,7 +77,8 @@ class Expression(object):
         self.options = options
         self.extras = extras
 
-    def __call__(self, item):
+    def __call__(self, item, **extras):
+        extras.update(self.extras)
         return self.expression(engine.Engine.getContext(
             item = item,
             transmogrifier = self.transmogrifier,
@@ -82,7 +86,7 @@ class Expression(object):
             options = self.options,
             nothing = None,
             modules = sys.modules,
-            **self.extras
+            **extras
         ))
 
 class Condition(Expression):

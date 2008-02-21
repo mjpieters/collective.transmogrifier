@@ -17,6 +17,7 @@ long_description = ('\n'.join((
     read('collective', 'transmogrifier', 'sections', 'codec.txt'), '',
     read('collective', 'transmogrifier', 'sections', 'inserter.txt'), '',
     read('collective', 'transmogrifier', 'sections', 'condition.txt'), '',
+    read('collective', 'transmogrifier', 'sections', 'manipulator.txt'), '',
     read('collective', 'transmogrifier', 'sections', 'splitter.txt'), '',
     read('collective', 'transmogrifier', 'sections', 'savepoint.txt'), '',
 

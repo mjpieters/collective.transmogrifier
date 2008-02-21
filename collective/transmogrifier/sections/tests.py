@@ -237,7 +237,7 @@ def test_suite():
         unittest.makeSuite(SplitterConditionSectionTests),
         unittest.makeSuite(SplitterSectionTests),
         doctest.DocFileSuite(
-            'codec.txt', 'inserter.txt', 'condition.txt', 'splitter.txt',
-            'savepoint.txt',
+            'codec.txt', 'inserter.txt', 'manipulator.txt', 'condition.txt',
+            'splitter.txt', 'savepoint.txt',
             setUp=sectionsSetUp, tearDown=tearDown),
     ))

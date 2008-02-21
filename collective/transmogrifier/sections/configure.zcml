@@ -18,6 +18,11 @@
     />
 
 <utility
+    component=".manipulator.ManipulatorSection"
+    name="collective.transmogrifier.sections.manipulator"
+    />
+
+<utility
     component=".splitter.SplitterSection"
     name="collective.transmogrifier.sections.splitter"
     />
