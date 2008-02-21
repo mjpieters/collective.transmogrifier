@@ -1,10 +1,14 @@
 Inserter section
 ================
 
-An inserter pipeline section lets you define a key and value to insert into pipeline items. The inserter section blueprint name is
+An inserter pipeline section lets you define a key and value to insert into
+pipeline items. The inserter section blueprint name is
 ``collective.transmogrifier.sections.inserter``.
 
-A inserter section takes a ``key`` and a ``value`` TALES expression. These expressions are evaluated to generate the actual key-value pair that gets inserted:
+A inserter section takes a ``key`` and a ``value`` TALES expression. These
+expressions are evaluated to generate the actual key-value pair that gets
+inserted. You can also specify an optional ``condition`` option; if given, the
+key only gets inserted when the condition, which is also a TALES is true.
 
 >>> inserter = """
 ... [transmogrifier]
@@ -27,6 +31,7 @@ A inserter section takes a ``key`` and a ``value`` TALES expression. These expre
 ... blueprint = collective.transmogrifier.sections.inserter
 ... key = python:'foo-%s' % item['id'][-2:]
 ... value = python:int(item['id'][-2:]) * 15
+... condition = python:int(item['id'][-2:])
 ... 
 ... [printer]
 ... blueprint = collective.transmogrifier.sections.tests.pprinter
@@ -35,7 +40,6 @@ A inserter section takes a ``key`` and a ``value`` TALES expression. These expre
 ...                inserter)
 >>> transmogrifier(u'collective.transmogrifier.sections.tests.inserter')
 {'foo': 'bar (inserted into "item-00" by the "simple-insertion" section)',
- 'foo-00': 0,
  'id': 'item-00'}
 {'foo': 'bar (inserted into "item-01" by the "simple-insertion" section)',
  'foo-01': 15,
@@ -44,7 +48,8 @@ A inserter section takes a ``key`` and a ``value`` TALES expression. These expre
  'foo-02': 30,
  'id': 'item-02'}
 
-Both the ``key`` and ``value`` expressions have access to the following:
+The ``key``, ``value`` and ``condition`` expressions have access to the
+following:
 
 =================== ==========================================================
  ``item``            the current pipeline item
