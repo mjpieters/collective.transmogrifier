@@ -7,16 +7,15 @@ TODO
 
 - Create default utility sections:
 
-  - construction (should take care of delayed cataloging, memory management,
-    etc.)
+  - construction (should take care of delayed cataloging, etc.)
 
   - workflow management
 
   - 'path' creation (insert Folders into the pipeline wherever required)
 
   - references
-
-  - key mover (move the value of one key over to another and/or delete keys)
+  
+  - HTML cleanup
 
 - Provide a UI for selecting and running pipelines
 
