@@ -10,12 +10,18 @@ expressions are evaluated to generate the actual key-value pair that gets
 inserted. You can also specify an optional ``condition`` option; if given, the
 key only gets inserted when the condition, which is also a TALES is true.
 
+Because the inserter ``value`` expression has access to the original item, it
+could even be used to change existing item values. Just target an existing
+key, pull out the original value in the value expression and return a modified
+version.
+
 >>> inserter = """
 ... [transmogrifier]
 ... pipeline =
 ...     source
 ...     simple-insertion
 ...     expression-insertion
+...     transform-id
 ...     printer
 ...     
 ... [source]
@@ -32,6 +38,11 @@ key only gets inserted when the condition, which is also a TALES is true.
 ... key = python:'foo-%s' % item['id'][-2:]
 ... value = python:int(item['id'][-2:]) * 15
 ... condition = python:int(item['id'][-2:])
+...
+... [transform-id]
+... blueprint = collective.transmogrifier.sections.inserter
+... key = string:id
+... value = string:foo-${item/id}
 ... 
 ... [printer]
 ... blueprint = collective.transmogrifier.sections.tests.pprinter
@@ -40,13 +51,13 @@ key only gets inserted when the condition, which is also a TALES is true.
 ...                inserter)
 >>> transmogrifier(u'collective.transmogrifier.sections.tests.inserter')
 {'foo': 'bar (inserted into "item-00" by the "simple-insertion" section)',
- 'id': 'item-00'}
+ 'id': 'foo-item-00'}
 {'foo': 'bar (inserted into "item-01" by the "simple-insertion" section)',
  'foo-01': 15,
- 'id': 'item-01'}
+ 'id': 'foo-item-01'}
 {'foo': 'bar (inserted into "item-02" by the "simple-insertion" section)',
  'foo-02': 30,
- 'id': 'item-02'}
+ 'id': 'foo-item-02'}
 
 The ``key``, ``value`` and ``condition`` expressions have access to the
 following:
