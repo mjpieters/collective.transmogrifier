@@ -8,8 +8,7 @@ codecs supported by python. The codec section blueprint name is
 
 What values to recode is determined by the ``keys`` option, which takes a set
 of newline-separated key names. If a key name starts with ``re:`` or
-``regexp:`` it is treated as a regular expression instead and keys are matched
-in search mode (anywhere in the string).
+``regexp:`` it is treated as a regular expression instead.
 
 The optional ``from`` and ``to`` options determine what codecs values are
 recoded from and to. Both these values default to ``unicode``, meaning no
