@@ -148,6 +148,22 @@ class ConstructPipelineTests(cleanup.CleanUp, unittest.TestCase):
         # No longer raises
         self._doConstruct(config, ['noisection'])
 
+class DefaultKeysTest(unittest.TestCase):
+    def _defaultKeys(self, *args):
+        from collective.transmogrifier.utils import defaultKeys
+        return defaultKeys(*args)
+    
+    def testWithKey(self):
+        self.assertEqual(
+            self._defaultKeys('foo.bar.baz', 'spam', 'eggs'),
+            ('_foo.bar.baz_spam_eggs', '_foo.bar.baz_eggs',
+             '_spam_eggs', '_eggs'))
+    
+    def testWithoutKey(self):
+        self.assertEqual(
+            self._defaultKeys('foo.bar.baz', 'spam'),
+            ('_foo.bar.baz_spam', '_foo.bar.baz', '_spam'))
+
 # Doctest support
 
 BASEDIR = None
@@ -187,6 +203,7 @@ def test_suite():
         unittest.makeSuite(MetaDirectivesTests),
         unittest.makeSuite(OptionSubstitutionTests),
         unittest.makeSuite(ConstructPipelineTests),
+        unittest.makeSuite(DefaultKeysTest),
         doctest.DocFileSuite(
             'transmogrifier.txt',
             setUp=setUp, tearDown=tearDown),

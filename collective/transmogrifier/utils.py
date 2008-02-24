@@ -33,6 +33,28 @@ def constructPipeline(transmogrifier, sections, pipeline=None):
     
     return pipeline
 
+def defaultKeys(blueprint, section, key=None):
+    """Create a set of item keys based on blueprint id, section name and key
+
+    These keys will match more specificly targeted item keys first; first
+    _blueprint_section_key, then _blueprint_key, then _section_key, then _key.
+    
+    key is optional, and when omitted results in _blueprint_section, then
+    _blueprint, then _section
+
+    """
+    parts = ['', blueprint, section]
+    if key is not None:
+        parts.append(key)
+    keys = (
+        '_'.join(parts),                 # _blueprint_section_key or _blueprint_section
+        '_'.join(parts[:2] + parts[3:]), # _blueprint_key or _blueprint
+        '_'.join(parts[:1] + parts[2:]), # _section_key or _section
+    )
+    if key is not None:
+        keys += ('_'.join(parts[:1] + parts[3:]),) # _key
+    return keys
+
 class Matcher(object):
     """Given a set of string expressions, return the first match.
     
@@ -57,11 +79,12 @@ class Matcher(object):
                 expr = lambda x, y=expr: x == y
             self.expressions.append(expr)
     
-    def __call__(self, value):
-        for expr in self.expressions:
-            match = expr(value)
-            if match:
-                return match
+    def __call__(self, *values):
+        for value in values:
+            for expr in self.expressions:
+                match = expr(value)
+                if match:
+                    return match
         return False
 
 class Expression(object):
