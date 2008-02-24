@@ -240,4 +240,7 @@ def test_suite():
             'codec.txt', 'inserter.txt', 'manipulator.txt', 'condition.txt',
             'splitter.txt', 'savepoint.txt',
             setUp=sectionsSetUp, tearDown=tearDown),
+        doctest.DocFileSuite(
+            'portaltransforms.txt',
+            setUp=sectionsSetUp, tearDown=tearDown),
     ))

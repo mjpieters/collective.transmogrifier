@@ -32,4 +32,9 @@
     name="collective.transmogrifier.sections.savepoint"
     />
 
+  <utility
+      component=".portaltransforms.PortalTransformsSection"
+      name="collective.transmogrifier.sections.portaltransforms"
+      />
+
 </configure>

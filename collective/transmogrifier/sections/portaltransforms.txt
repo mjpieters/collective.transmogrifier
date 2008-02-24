@@ -1,0 +1,19 @@
+Portal Transforms section
+=========================
+
+A portal transforms pipeline section lets you use Portal Transforms to
+transform item values. The portal transforms section blueprint name is
+``collective.transmogrifier.sections.portaltransforms``.
+
+What values to transform is determined by the ``keys`` option, which takes a
+set of newline-separated key names. If a key name starts with ``re:`` or
+``regexp:`` it is treated as a regular expression instead.
+
+You can specify what transformation to apply in two ways. Firstly, you can
+directly specify a transformation by naming it with the ``transform`` option;
+the named transformation is run directly. Alternatively you can let the portal
+transforms tool figure out what transform to use by specifying ``target`` and
+an optional ``from`` mimetype. The portal transforms tool will select one or
+more transforms based on these mimetypes, and if no ``from`` option is given
+the original item value is used to determine one.
+

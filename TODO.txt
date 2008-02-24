@@ -14,8 +14,6 @@ TODO
   - 'path' creation (insert Folders into the pipeline wherever required)
 
   - references
-  
-  - HTML cleanup
 
 - Provide a UI for selecting and running pipelines
 

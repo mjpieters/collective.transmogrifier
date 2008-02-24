@@ -20,6 +20,8 @@ long_description = ('\n'.join((
     read('collective', 'transmogrifier', 'sections', 'manipulator.txt'), '',
     read('collective', 'transmogrifier', 'sections', 'splitter.txt'), '',
     read('collective', 'transmogrifier', 'sections', 'savepoint.txt'), '',
+    read('collective', 'transmogrifier', 'sections', 'portaltransforms.txt'),
+    '',
 
     read('docs', 'HISTORY.txt'), '',
 
