@@ -79,6 +79,6 @@ class CodecSection(object):
         
         for item in self.previous:
             for key in item:
-                if self.matcher(key):
+                if self.matcher(key)[1]:
                     item[key] = encode(decode(item[key]))
             yield item

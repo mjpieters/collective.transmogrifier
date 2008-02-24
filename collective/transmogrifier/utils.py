@@ -47,7 +47,7 @@ def defaultKeys(blueprint, section, key=None):
     if key is not None:
         parts.append(key)
     keys = (
-        '_'.join(parts),                 # _blueprint_section_key or _blueprint_section
+        '_'.join(parts), # _blueprint_section_key or _blueprint_section
         '_'.join(parts[:2] + parts[3:]), # _blueprint_key or _blueprint
         '_'.join(parts[:1] + parts[2:]), # _section_key or _section
     )
@@ -64,6 +64,11 @@ class Matcher(object):
     
     Regular expressions will be compiled and applied in match mode
     (matching anywhere in the string).
+    
+    On calling, returns a tuple of (matched, matchresult), where matched is
+    the matched value, and matchresult is either a boolean or the regular
+    expression match object. When no match was made, (None, False) is
+    returned.
     
     """
     def __init__(self, *expressions):
@@ -84,8 +89,8 @@ class Matcher(object):
             for expr in self.expressions:
                 match = expr(value)
                 if match:
-                    return match
-        return False
+                    return value, match
+        return None, False
 
 class Expression(object):
     """A transmogrifier expression

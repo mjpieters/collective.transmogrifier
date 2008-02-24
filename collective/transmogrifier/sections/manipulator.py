@@ -20,10 +20,10 @@ class ManipulatorSection(object):
     def __iter__(self):
         for item in self.previous:
             for key in item.keys():
-                match = self.keys(key)
+                match = self.keys(key)[1]
                 if match:
                     dest = self.dest(item, key=key, match=match)
                     item[dest] = copy.deepcopy(item[key])
-                if self.delete(key):
+                if self.delete(key)[1]:
                     del item[key]
             yield item
