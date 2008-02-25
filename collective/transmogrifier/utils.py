@@ -123,5 +123,5 @@ class Condition(Expression):
     Test if a pipeline item matches the given TALES expression.
     
     """
-    def __call__(self, item):
-        return bool(super(Condition, self).__call__(item))
+    def __call__(self, item, **extras):
+        return bool(super(Condition, self).__call__(item, **extras))
