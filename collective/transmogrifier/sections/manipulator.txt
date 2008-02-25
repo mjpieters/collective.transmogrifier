@@ -57,16 +57,16 @@ instead of copied.
 >>> transmogrifier(u'collective.transmogrifier.sections.tests.manipulator')
 {'id': 'foo',
  'id-duplicate': 'foo',
- 'title': 'The Foo Fighters \\u2117',
- 'title-duplicate': 'The Foo Fighters \\u2117'}
+ 'title': u'The Foo Fighters \u2117',
+ 'title-duplicate': u'The Foo Fighters \u2117'}
 {'id': 'bar',
  'id-duplicate': 'bar',
- 'title': 'Brand Chocolate Bar \\u2122',
- 'title-duplicate': 'Brand Chocolate Bar \\u2122'}
+ 'title': u'Brand Chocolate Bar \u2122',
+ 'title-duplicate': u'Brand Chocolate Bar \u2122'}
 {'id': 'monty-python',
  'id-duplicate': 'monty-python',
- 'title': "Monty Python's Flying Circus \\xa9",
- 'title-duplicate': "Monty Python's Flying Circus \\xa9"}
+ 'title': u"Monty Python's Flying Circus \xa9",
+ 'title-duplicate': u"Monty Python's Flying Circus \xa9"}
 
 The ``destination`` expression has access to the following:
 

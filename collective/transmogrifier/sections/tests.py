@@ -156,24 +156,24 @@ class SplitterSectionTests(unittest.TestCase):
 class SampleSource(object):
     classProvides(ISectionBlueprint)
     implements(ISection)
-    
-    sample = (
-        dict(
-            id='foo',
-            title=u'The Foo Fighters \u2117',
-            status=u'\u2117'),
-        dict(
-            id='bar',
-            title=u'Brand Chocolate Bar \u2122',
-            status=u'\u2122'),
-        dict(id='monty-python', 
-             title=u"Monty Python's Flying Circus \u00A9",
-             status=u'\u00A9'),
-    )
-    
+        
     def __init__(self, transmogrifier, name, options, previous):
         self.encoding = options.get('encoding', None)
         self.previous = previous
+        self.sample = (
+            dict(
+                id='foo',
+                title=u'The Foo Fighters \u2117',
+                status=u'\u2117'),
+            dict(
+                id='bar',
+                title=u'Brand Chocolate Bar \u2122',
+                status=u'\u2122'),
+            dict(id='monty-python', 
+                 title=u"Monty Python's Flying Circus \u00A9",
+                 status=u'\u00A9'),
+        )
+        
     
     def __iter__(self):
         for item in self.previous:
