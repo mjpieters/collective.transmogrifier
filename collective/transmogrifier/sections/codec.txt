@@ -21,6 +21,10 @@ the ``from`` and ``to`` codecs separately with the ``from-error-handler`` and
 can be set to any error handler supported by python, including ``replace`` and
 ``ignore``.
 
+Also optional is the ``condition`` option, which lets you specify a TALES
+expression that when evaluating to False will prevent any en- or decoding from
+happening. The condition is evaluated for every matched key.
+
 >>> codecs = """
 ... [transmogrifier]
 ... pipeline =
@@ -49,6 +53,7 @@ can be set to any error handler supported by python, including ``replace`` and
 ... keys = title
 ... to = ascii
 ... to-error-handler = backslashreplace
+... condition = python:'Brand' not in item['title']
 ... 
 ... [printer]
 ... blueprint = collective.transmogrifier.sections.tests.pprinter
@@ -57,7 +62,7 @@ can be set to any error handler supported by python, including ``replace`` and
 ...                codecs)
 >>> transmogrifier(u'collective.transmogrifier.sections.tests.codecs')
 {'status': u'\u2117', 'id': 'foo', 'title': 'The Foo Fighters \\u2117'}
-{'status': u'\u2122', 'id': 'bar', 'title': 'Brand Chocolate Bar \\u2122'}
+{'status': u'\u2122', 'id': 'bar', 'title': u'Brand Chocolate Bar \u2122'}
 {'id': 'monty-python',
  'status': u'\xa9',
  'title': "Monty Python's Flying Circus \\xa9"}

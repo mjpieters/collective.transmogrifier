@@ -2,7 +2,7 @@ import codecs
 from zope.interface import classProvides, implements
 from collective.transmogrifier.interfaces import ISectionBlueprint
 from collective.transmogrifier.interfaces import ISection
-from collective.transmogrifier.utils import Matcher
+from collective.transmogrifier.utils import Matcher, Condition
 
 def _get_default_encoding(site):
     from Products.CMFPlone.utils import getSiteEncoding
@@ -53,6 +53,8 @@ class CodecSection(object):
         codecs.lookup_error(self.to_error_handler)
         
         self.matcher = Matcher(*options['keys'].splitlines())
+        self.condition = Condition(options.get('condition', 'python:True'),
+                                   transmogrifier, name, options)
     
     def __iter__(self):
         from_ = self.from_
@@ -79,6 +81,7 @@ class CodecSection(object):
         
         for item in self.previous:
             for key in item:
-                if self.matcher(key)[1]:
+                match = self.matcher(key)[1]
+                if match and self.condition(item, key=key, match=match):
                     item[key] = encode(decode(item[key]))
             yield item

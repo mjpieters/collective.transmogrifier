@@ -1,7 +1,7 @@
 from zope.interface import classProvides, implements
 from collective.transmogrifier.interfaces import ISectionBlueprint
 from collective.transmogrifier.interfaces import ISection
-from collective.transmogrifier.utils import Matcher
+from collective.transmogrifier.utils import Matcher, Condition
 
 from Products.CMFCore.utils import getToolByName
 
@@ -17,12 +17,15 @@ class PortalTransformsSection(object):
         if self.transform is None:
             self.target = options['target']
             self.from_ = options.get('from')
+        self.condition = Condition(options.get('condition', 'python:True'),
+                                   transmogrifier, name, options)
         self.previous = previous
     
     def __iter__(self):
         for item in self.previous:
             for key in item:
-                if not self.keys(key):
+                match = self.keys(key)[1]
+                if not (match and self.condition(item, key=key, match=match)):
                     continue
                 if self.transform is not None:
                     item[key] = self.ptransforms(self.transform, item[key])

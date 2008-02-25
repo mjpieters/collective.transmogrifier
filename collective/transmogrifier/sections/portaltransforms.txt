@@ -17,3 +17,6 @@ an optional ``from`` mimetype. The portal transforms tool will select one or
 more transforms based on these mimetypes, and if no ``from`` option is given
 the original item value is used to determine one.
 
+Also optional is the ``condition`` option, which lets you specify a TALES
+expression that when evaluating to False will prevent any transformations from
+happening. The condition is evaluated for every matched key.
