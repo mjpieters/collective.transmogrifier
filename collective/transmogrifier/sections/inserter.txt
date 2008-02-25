@@ -68,4 +68,6 @@ following:
  ``name``            the name of the splitter section
  ``options``         the splitter options
  ``modules``         sys.modules
+ ``key``             (only for the value and condition expressions) the key
+                     being inserted
 =================== ==========================================================

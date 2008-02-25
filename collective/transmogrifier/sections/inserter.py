@@ -11,14 +11,13 @@ class InserterSection(object):
         self.key = Expression(options['key'], transmogrifier, name, options)
         self.value = Expression(options['value'], transmogrifier, name,
                                 options)
-        self.condition = options.get('condition')
-        if self.condition is not None:
-            self.condition = Condition(self.condition, transmogrifier, name,
-                                       options)
+        self.condition = Condition(options.get('condition', 'python:True'),
+                                   transmogrifier, name, options)
         self.previous = previous
     
     def __iter__(self):
         for item in self.previous:
-            if self.condition is None or self.condition(item):
-                item[self.key(item)] = self.value(item)
+            key = self.key(item)
+            if self.condition(item, key=key):
+                item[key] = self.value(item, key=key)
             yield item
