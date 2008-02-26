@@ -232,6 +232,20 @@ def sectionsSetUp(test):
     provideUtility(PrettyPrinter,
         name=u'collective.transmogrifier.sections.tests.pprinter')
 
+def portalTransformsSetUp(test):
+    sectionsSetUp(test)
+    
+    class MockPortalTransforms(object):
+        def __call__(self, transform, data):
+            return 'Transformed %r using the %s transform' % (data, transform)
+        def convertToData(self, target, data, mimetype=None):
+            if mimetype is not None:
+                return 'Transformed %r from %s to %s' % (
+                    data, mimetype, target)
+            else:
+                return 'Transformed %r to %s' % (data, target)
+    test.globs['plone'].portal_transforms = MockPortalTransforms()
+
 def test_suite():
     return unittest.TestSuite((
         unittest.makeSuite(SplitterConditionSectionTests),
@@ -242,5 +256,5 @@ def test_suite():
             setUp=sectionsSetUp, tearDown=tearDown),
         doctest.DocFileSuite(
             'portaltransforms.txt',
-            setUp=sectionsSetUp, tearDown=tearDown),
+            setUp=portalTransformsSetUp, tearDown=tearDown),
     ))

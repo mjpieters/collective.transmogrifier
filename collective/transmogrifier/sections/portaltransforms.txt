@@ -20,3 +20,61 @@ the original item value is used to determine one.
 Also optional is the ``condition`` option, which lets you specify a TALES
 expression that when evaluating to False will prevent any transformations from
 happening. The condition is evaluated for every matched key.
+
+>>> ptransforms = """
+... [transmogrifier]
+... pipeline =
+...     source
+...     transform-id
+...     transform-title
+...     transform-status
+...     printer
+... 
+... [source]
+... blueprint = collective.transmogrifier.sections.tests.samplesource
+... encoding = utf8
+... 
+... [transform-id]
+... blueprint = collective.transmogrifier.sections.portaltransforms
+... transform = identity
+... keys = id
+...
+... [transform-title]
+... blueprint = collective.transmogrifier.sections.portaltransforms
+... target = text/plain
+... keys = title
+... 
+... [transform-status]
+... blueprint = collective.transmogrifier.sections.portaltransforms
+... from = text/plain
+... target = text/plain
+... keys = status
+... 
+... [printer]
+... blueprint = collective.transmogrifier.sections.tests.pprinter
+... """
+>>> registerConfig(u'collective.transmogrifier.sections.tests.ptransforms',
+...                ptransforms)
+>>> transmogrifier(u'collective.transmogrifier.sections.tests.ptransforms')
+{'id': "Transformed 'foo' using the identity transform",
+ 'status': "Transformed '\\xe2\\x84\\x97' from text/plain to text/plain",
+ 'title': "Transformed 'The Foo Fighters \\xe2\\x84\\x97' to text/plain"}
+{'id': "Transformed 'bar' using the identity transform",
+ 'status': "Transformed '\\xe2\\x84\\xa2' from text/plain to text/plain",
+ 'title': "Transformed 'Brand Chocolate Bar \\xe2\\x84\\xa2' to text/plain"}
+{'id': "Transformed 'monty-python' using the identity transform",
+ 'status': "Transformed '\\xc2\\xa9' from text/plain to text/plain",
+ 'title': 'Transformed "Monty Python\'s Flying Circus \\xc2\\xa9" to text/plain'}
+
+The ``condition`` expression has access to the following:
+
+=================== ==========================================================
+ ``item``            the current pipeline item
+ ``key``             the name of the matched key
+ ``match``           if the key was matched by a regular expression, the match
+                     object, otherwise boolean True
+ ``transmogrifier``  the transmogrifier
+ ``name``            the name of the splitter section
+ ``options``         the splitter options
+ ``modules``         sys.modules
+=================== ==========================================================

@@ -12,7 +12,7 @@ class PortalTransformsSection(object):
     def __init__(self, transmogrifier, name, options, previous):
         self.ptransforms = getToolByName(transmogrifier.portal,
                                          'portal_transforms')
-        self.keys = Matcher(options['keys'].splitlines())
+        self.keys = Matcher(*options['keys'].splitlines())
         self.transform = options.get('transform')
         if self.transform is None:
             self.target = options['target']
