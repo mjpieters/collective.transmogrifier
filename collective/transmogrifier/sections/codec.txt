@@ -66,3 +66,16 @@ happening. The condition is evaluated for every matched key.
 {'id': 'monty-python',
  'status': u'\xa9',
  'title': "Monty Python's Flying Circus \\xa9"}
+
+The ``condition`` expression has access to the following:
+
+=================== ==========================================================
+ ``item``            the current pipeline item
+ ``key``             the name of the matched key
+ ``match``           if the key was matched by a regular expression, the match
+                     object, otherwise boolean True
+ ``transmogrifier``  the transmogrifier
+ ``name``            the name of the splitter section
+ ``options``         the splitter options
+ ``modules``         sys.modules
+=================== ==========================================================
