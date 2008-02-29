@@ -10,11 +10,13 @@ TODO
   - construction
 
   - catalog delaying (replace catalog index methods with queues until
-    iteration is done)
+    iteration is done). May not be needed pending another project.
 
   - workflow management
 
   - 'path' creation (insert Folders into the pipeline wherever required)
+
+  - alternative path strategy: delay items until parents have been seen.
 
   - references
 
