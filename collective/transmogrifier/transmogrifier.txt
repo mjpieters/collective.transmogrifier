@@ -380,8 +380,13 @@ configuration files are honoured too:
 {'exampletransformname': 'section2', 'id': 'item01'}
 {'exampletransformname': 'section2', 'id': 'item02'}
 
-When calling transmogrifier, you can provide your own overrides; configuration
-settings that override
+When calling transmogrifier, you can provide your own sections too: any extra
+keyword is interpreted as a section dictionary. Do make sure you use string
+values though:
+
+>>> transmogrifier(u'collective.transmogrifier.tests.inclusionexample',
+...               section1=dict(size='1'))
+{'exampletransformname': 'section2', 'id': 'item00'}
 
 Conventions
 -----------

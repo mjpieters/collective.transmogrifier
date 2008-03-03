@@ -43,8 +43,8 @@ class Transmogrifier(UserDict.DictMixin):
     def __init__(self, portal):
         self.portal = portal
         
-    def __call__(self, configuration_id):
-        self._raw = _load_config(configuration_id)
+    def __call__(self, configuration_id, **overrides):
+        self._raw = _load_config(configuration_id, **overrides)
         self._data = {}
             
         options = self._raw['transmogrifier']
@@ -182,7 +182,7 @@ class Options(UserDict.DictMixin):
         result.update(self._data)
         return result
 
-def _load_config(configuration_id, seen=None):
+def _load_config(configuration_id, seen=None, **overrides):
     if seen is None:
         seen = []
     if configuration_id in seen:
@@ -208,8 +208,12 @@ def _load_config(configuration_id, seen=None):
         for configuration_id in includes.split()[::-1]:
             include = _load_config(configuration_id, seen)
             for section, options in include.iteritems():
-                result.setdefault(section, {}).update(options)
+                options.update(result.get(section, {}))
+                result[section] = options
     
     seen.pop()
+    
+    for section, options in overrides.iteritems():
+        result.setdefault(section, {}).update(options)
     
     return result
