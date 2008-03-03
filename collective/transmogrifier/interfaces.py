@@ -5,8 +5,14 @@ class ITransmogrifier(zope.interface.Interface):
     
     portal = zope.interface.Attribute("The targeted Plone portal")
     
-    def __call__(self, configuration_id):
-        """Load and execute the named pipeline configuration"""
+    def __call__(self, configuration_id, **overrides):
+        """Load and execute the named pipeline configuration
+        
+        Any dictionaries passed in as extra keywords, are interpreted as
+        section configuration overrides. Only string keys and values are
+        accepted.
+        
+        """
         
     def __getitem__(section):
         """Retrieve a section from the pipeline configuration"""

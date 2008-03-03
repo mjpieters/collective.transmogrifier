@@ -3,6 +3,7 @@ import ConfigParser
 import UserDict
 
 from zope.component import adapts
+from zope.interface import implements
 
 from Products.CMFCore.interfaces import ISiteRoot
 
@@ -38,6 +39,7 @@ configuration_registry = ConfigurationRegistry()
 
 
 class Transmogrifier(UserDict.DictMixin):
+    implements(ITransmogrifier)
     adapts(ISiteRoot)
     
     def __init__(self, portal):
