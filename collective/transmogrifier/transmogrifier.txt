@@ -175,8 +175,9 @@ For example purposes, we simply pretty print the items instead:
 ...
 >>> provideUtility(ExampleConstructor, 
 ...                name=u'collective.transmogrifier.tests.exampleconstructor')
-  
-With this last section blueprint example completed, we can load the example configuration we created earlier, and run our transmogrification:
+
+With this last section blueprint example completed, we can load the example
+configuration we created earlier, and run our transmogrification:
 
 >>> from collective.transmogrifier.transmogrifier import Transmogrifier
 >>> transmogrifier = Transmogrifier(plone)
@@ -341,13 +342,16 @@ configuration files are honoured too:
 ... include = 
 ...     collective.transmogrifier.tests.sources
 ...     collective.transmogrifier.tests.base
+...
+... [section1]
+... size = 3
 ... """
 >>> registerConfig(u'collective.transmogrifier.tests.inclusionexample', 
 ...                inclusionexample)
 >>> sources = """\
 ... [section1]
 ... blueprint = collective.transmogrifier.tests.examplesource
-... size = 3
+... size = 10
 ... """
 >>> registerConfig(u'collective.transmogrifier.tests.sources', 
 ...                sources)
@@ -375,6 +379,9 @@ configuration files are honoured too:
 {'exampletransformname': 'section2', 'id': 'item00'}
 {'exampletransformname': 'section2', 'id': 'item01'}
 {'exampletransformname': 'section2', 'id': 'item02'}
+
+When calling transmogrifier, you can provide your own overrides; configuration
+settings that override
 
 Conventions
 -----------
@@ -438,7 +445,8 @@ the keys ``_acme.transmogrifier.fileloader_imageloader1_filename`` and
 support such targeting should prefer such section specific keys over those
 only using the blueprint name.
 
-The collective.transmogrifier.utils module has a handy utility method called ``defaultKeys`` that'll generate these keys for you for easy matching:
+The collective.transmogrifier.utils module has a handy utility method called
+``defaultKeys`` that'll generate these keys for you for easy matching:
 
 >>> from collective.transmogrifier.utils import defaultKeys
 >>> keys = defaultKeys('acme.transmogrifier.fileloader',
@@ -493,7 +501,8 @@ queue during iteration, and only when the previous pipe section has been
 exhausted and the last item has been yielded would the section reach into the
 portal and create all the references.
 
-Sources following the `Previous sections go first`_ convention basically inject the new items in the after iteration stage.
+Sources following the `Previous sections go first`_ convention basically
+inject the new items in the after iteration stage.
 
 Here's a piece of psuedo code to illustrate these 3 stages::
 
