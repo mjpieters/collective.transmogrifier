@@ -20,7 +20,7 @@ class CodecSection(object):
     def __init__(self, transmogrifier, name, options, previous):
         self.previous = previous
         
-        if 'from' in options:
+        if options.get('from'):
             from_ = options['from'].strip().lower()
             if from_ != 'unicode':
                 if from_ == 'default':
@@ -36,7 +36,7 @@ class CodecSection(object):
         # Test if the error handler is available
         codecs.lookup_error(self.from_error_handler)
         
-        if 'to' in options:
+        if options.get('to'):
             to = options['to'].strip().lower()
             if to != 'unicode':
                 if to == 'default':

@@ -14,7 +14,7 @@ class PortalTransformsSection(object):
                                          'portal_transforms')
         self.keys = Matcher(*options['keys'].splitlines())
         self.transform = options.get('transform')
-        if self.transform is None:
+        if not self.transform:
             self.target = options['target']
             self.from_ = options.get('from')
         self.condition = Condition(options.get('condition', 'python:True'),
@@ -27,7 +27,7 @@ class PortalTransformsSection(object):
                 match = self.keys(key)[1]
                 if not (match and self.condition(item, key=key, match=match)):
                     continue
-                if self.transform is not None:
+                if self.transform:
                     item[key] = self.ptransforms(self.transform, item[key])
                 else:
                     item[key] = self.ptransforms.convertToData(

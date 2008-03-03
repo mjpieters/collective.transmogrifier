@@ -158,7 +158,7 @@ class SampleSource(object):
     implements(ISection)
         
     def __init__(self, transmogrifier, name, options, previous):
-        self.encoding = options.get('encoding', None)
+        self.encoding = options.get('encoding')
         self.previous = previous
         self.sample = (
             dict(
@@ -180,7 +180,7 @@ class SampleSource(object):
             yield item
         
         for item in self.sample:
-            if self.encoding is not None:
+            if self.encoding:
                 item['title'] = item['title'].encode(self.encoding)
                 item['status'] = item['status'].encode(self.encoding)
             yield item

@@ -123,7 +123,7 @@ class SplitterSection(object):
         
         for pipe_id, pipeline in zip(pipe_ids, splitter_head):
             condition = options.get('%s-condition' % pipe_id)
-            if condition is not None:
+            if condition:
                 condition = Condition(condition, transmogrifier, name, 
                                       options, pipeline=pipe_id)
             condition = SplitterConditionSection(condition, pipeline)
