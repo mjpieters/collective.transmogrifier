@@ -1,4 +1,3 @@
-from zope.configuration.fields import GlobalObject
 from zope.configuration.fields import MessageID
 from zope.configuration.fields import Path
 from zope.configuration.fields import PythonIdentifier
