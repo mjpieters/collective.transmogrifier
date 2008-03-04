@@ -32,14 +32,14 @@
     name="collective.transmogrifier.sections.savepoint"
     />
 
-  <utility
-      component=".portaltransforms.PortalTransformsSection"
-      name="collective.transmogrifier.sections.portaltransforms"
-      />
+<utility
+    component=".portaltransforms.PortalTransformsSection"
+    name="collective.transmogrifier.sections.portaltransforms"
+    />
 
-  <utility
-      component=".csvsource.CSVSourceSection"
-      name="collective.transmogrifier.sections.csvsource"
-      />
+<utility
+    component=".csvsource.CSVSourceSection"
+    name="collective.transmogrifier.sections.csvsource"
+    />
 
 </configure>
