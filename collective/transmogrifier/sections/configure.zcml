@@ -37,4 +37,9 @@
       name="collective.transmogrifier.sections.portaltransforms"
       />
 
+  <utility
+      component=".csvsource.CSVSourceSection"
+      name="collective.transmogrifier.sections.csvsource"
+      />
+
 </configure>

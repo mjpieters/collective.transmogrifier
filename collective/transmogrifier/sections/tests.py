@@ -252,7 +252,7 @@ def test_suite():
         unittest.makeSuite(SplitterSectionTests),
         doctest.DocFileSuite(
             'codec.txt', 'inserter.txt', 'manipulator.txt', 'condition.txt',
-            'splitter.txt', 'savepoint.txt',
+            'splitter.txt', 'savepoint.txt', 'csvsource.txt',
             setUp=sectionsSetUp, tearDown=tearDown),
         doctest.DocFileSuite(
             'portaltransforms.txt',

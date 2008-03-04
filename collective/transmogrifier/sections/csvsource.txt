@@ -1,0 +1,47 @@
+CSV source section
+==================
+
+A CSV source pipeline section lets you create pipeline items from CSV files.
+The CSV source section blueprint name is
+``collective.transmogrifier.sections.csvsource``.
+
+A CSV source section will load the CSV file named in the ``filename`` option,
+and will yield an item for each line in the CSV file. It'll use the first line
+of the CSV file to determine what keys to use, or you can specify a
+``fieldnames`` option to specify the key names.
+
+By default the CSV file is assumed to use the Excel CSV dialect, but you can
+specify any dialect supported by the python csv module if you specify it with
+the ``dialect`` option.
+
+>>> import tempfile
+>>> tmp = tempfile.NamedTemporaryFile('w+', suffix='.csv')
+>>> tmp.write('\r\n'.join("""\
+... foo,bar,baz
+... first-foo,first-bar,first-baz
+... second-foo,second-bar,second-baz
+... """.splitlines()))
+>>> tmp.flush()
+>>> csvsource = """
+... [transmogrifier]
+... pipeline =
+...     csvsource
+...     printer
+...     
+... [csvsource]
+... blueprint = collective.transmogrifier.sections.csvsource
+... filename = %s
+... 
+... [printer]
+... blueprint = collective.transmogrifier.sections.tests.pprinter
+... """ % tmp.name
+>>> registerConfig(u'collective.transmogrifier.sections.tests.csvsource',
+...                csvsource)
+>>> transmogrifier(u'collective.transmogrifier.sections.tests.csvsource')
+{'baz': 'first-baz', 'foo': 'first-foo', 'bar': 'first-bar'}
+{'baz': 'second-baz', 'foo': 'second-foo', 'bar': 'second-bar'}
+>>> transmogrifier(u'collective.transmogrifier.sections.tests.csvsource',
+...                csvsource=dict(fieldnames='monty spam eggs'))
+{'eggs': 'baz', 'monty': 'foo', 'spam': 'bar'}
+{'eggs': 'first-baz', 'monty': 'first-foo', 'spam': 'first-bar'}
+{'eggs': 'second-baz', 'monty': 'second-foo', 'spam': 'second-bar'}
