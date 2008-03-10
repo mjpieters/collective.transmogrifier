@@ -20,6 +20,12 @@ TODO
 
   - references
 
+  - A logging section (log selected or all keys to a logging target (Z2, file,
+    syslog, etc.) with configurable log level)
+
+  - Black box? Section that encapsulates a single pipeline for the purposes of
+    encapsulation and reuse.
+
 - Provide a UI for selecting and running pipelines
 
 - Define a 'default import pipeline' variable in the transmogrifier section,
@@ -31,5 +37,8 @@ TODO
     pipeline =
         my.specific.import.section
         ${transmogrifier:importpipeline}
+
+  With a black box section that could even be done without variable
+  substitution.
 
 - Perhaps utils.Expressions should grow an TAL iterator-like interface? YAGNI?
