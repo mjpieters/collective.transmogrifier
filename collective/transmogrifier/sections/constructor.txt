@@ -1,15 +1,20 @@
 Constructor section
 ===================
 
-A constructor pipeline section is the heart of a transmogrifier content
-imprort pipeline. It constructs Plone content based on the items it processes.
-The constructor section blueprint name is
-``collective.transmogrifier.sections.constructor``.
+A constructor pipeline section is the heart of a transmogrifier content import
+pipeline. It constructs Plone content based on the items it processes. The
+constructor section blueprint name is
+``collective.transmogrifier.sections.constructor``. Constructor sections do
+only one thing, they construct *new* content. No schema changes are made.
 
-Construction needs at least 3 pieces of information: the path to the folder
-where to create the object, it's id, and it's portal type. To determine each
-of these, the constructor section inspects each item and looks for several
-keys.
+Construction needs 3 pieces of information: the path to the folder where to
+create the object, it's id, and it's portal type. To determine each of these,
+the constructor section inspects each item and looks for several keys, as
+described below. Any item missing any of these three pieces will be skipped.
+Similarly, items with a path or type that doesn't exist will be skipped as
+well; make sure that these paths are constructed beforehand. Because a
+constructor section will only construct new objects, if an object with the
+same id in the same context already exists, the item will also be skipped.
 
 For the object id, it'll look (in order) for
 ``_collective.transmogrifier.sections.constructor_[sectionname]_id``,
@@ -27,4 +32,12 @@ like ``id-key``. If omitted, the constructor will look for
 ``_[sectionname]_type``, ``_type``, ``portal_type`` and ``Type`` (in that
 order, with ``[sectionname]`` replaced).
 
-For the path, use the ``path-key`` option (same interpretation as ``type-key`` and ``id-key``), defaulting to ``_collective.transmogrifier.sections.constructor_[sectionname]_path``, ``_collective.transmogrifier.sections.constructor_path``, ``_[sectionname]_path``, ``_path``.
+For the path, use the ``path-key`` option (same interpretation as ``type-key``
+and ``id-key``), defaulting to
+``_collective.transmogrifier.sections.constructor_[sectionname]_path``,
+``_collective.transmogrifier.sections.constructor_path``,
+``_[sectionname]_path``, ``_path``.
+
+Using the path, id and type, a new object will be constructed using
+invokeFactory; nothing else is done. Paths are always interpreted as relative
+to the portal object.

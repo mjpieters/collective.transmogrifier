@@ -7,8 +7,6 @@ TODO
 
 - Create default utility sections:
 
-  - construction
-
   - updating existing content (if type matches)
 
   - catalog delaying (replace catalog index methods with queues until

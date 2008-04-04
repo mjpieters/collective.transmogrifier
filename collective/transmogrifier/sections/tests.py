@@ -247,7 +247,7 @@ def portalTransformsSetUp(test):
     test.globs['plone'].portal_transforms = MockPortalTransforms()
 
 def constructorSetUp(test):
-    sectionsSetup(test)
+    sectionsSetUp(test)
 
 def test_suite():
     return unittest.TestSuite((
