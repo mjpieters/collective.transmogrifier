@@ -7,4 +7,24 @@ The constructor section blueprint name is
 ``collective.transmogrifier.sections.constructor``.
 
 Construction needs at least 3 pieces of information: the path to the folder
-where to create the object, it's id, and it's portal type.
+where to create the object, it's id, and it's portal type. To determine each
+of these, the constructor section inspects each item and looks for several
+keys.
+
+For the object id, it'll look (in order) for
+``_collective.transmogrifier.sections.constructor_[sectionname]_id``,
+``_collective.transmogrifier.sections.constructor_id``, ``_[sectionname]_id``,
+``_id``, ``getId`` and ``id``, where ``[sectionname]`` is replaced with the
+name given to the current section. This allows you to target the right section
+precisely if needed. Alternatively, you can specify what key to use for the id
+by specifying the ``id-key`` option, which should be a list of keys to try
+(one key per line, use a ``re:`` or ``regexp:`` prefix to specify regular expressions).
+
+For the portal type, use the ``type-key`` option to specify a set of keys just
+like ``id-key``. If omitted, the constructor will look for
+``_collective.transmogrifier.sections.constructor_[sectionname]_type``,
+``_collective.transmogrifier.sections.constructor_type``,
+``_[sectionname]_type``, ``_type``, ``portal_type`` and ``Type`` (in that
+order, with ``[sectionname]`` replaced).
+
+For the path, use the ``path-key`` option (same interpretation as ``type-key`` and ``id-key``), defaulting to ``_collective.transmogrifier.sections.constructor_[sectionname]_path``, ``_collective.transmogrifier.sections.constructor_path``, ``_[sectionname]_path``, ``_path``.
