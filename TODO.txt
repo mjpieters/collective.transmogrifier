@@ -29,6 +29,8 @@ TODO
   - Fail-safe default section: alter path to a leftover path if the path
     doesn't exist.
 
+  - marker interfaces
+
 - Provide a UI for selecting and running pipelines
 
 - Define a 'default import pipeline' variable in the transmogrifier section,
