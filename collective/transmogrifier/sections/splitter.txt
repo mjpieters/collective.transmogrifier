@@ -59,10 +59,20 @@ optional and use the pipeline option name plus ``-condition``:
 ... 
 ... [splitter]
 ... blueprint = collective.transmogrifier.sections.splitter
-... pipeline-odd-condition = python:int(item['id'][-2]) % 2
-... pipeline-odd =
-... pipeline-even-condition = not:${splitter:pipeline-odd-condition}
-... pipeline-even =
+... pipeline-even-condition = python:int(item['id'][-2:]) % 2
+... pipeline-even = even-section
+... pipeline-odd-condition = not:${splitter:pipeline-even-condition}
+... pipeline-odd = odd-section
+... 
+... [odd-section]
+... blueprint = collective.transmogrifier.sections.inserter
+... key = string:even
+... value = string:The even pipe
+... 
+... [even-section]
+... blueprint = collective.transmogrifier.sections.inserter
+... key = string:odd
+... value = string:The odd pipe
 ... 
 ... [printer]
 ... blueprint = collective.transmogrifier.sections.tests.pprinter
@@ -70,9 +80,9 @@ optional and use the pipeline option name plus ``-condition``:
 >>> registerConfig(u'collective.transmogrifier.sections.tests.evenodd',
 ...                evenoddsplitter)
 >>> transmogrifier(u'collective.transmogrifier.sections.tests.evenodd')
-{'id': 'item-00'}
-{'id': 'item-01'}
-{'id': 'item-02'}
+{'even': 'The even pipe', 'id': 'item-00'}
+{'odd': 'The odd pipe', 'id': 'item-01'}
+{'even': 'The even pipe', 'id': 'item-02'}
 
 Conditions are expressed as TALES statements, and have access to:
 
