@@ -246,6 +246,9 @@ def portalTransformsSetUp(test):
                 return 'Transformed %r to %s' % (data, target)
     test.globs['plone'].portal_transforms = MockPortalTransforms()
 
+def constructorSetUp(test):
+    sectionsSetup(test)
+
 def test_suite():
     return unittest.TestSuite((
         unittest.makeSuite(SplitterConditionSectionTests),
@@ -257,4 +260,7 @@ def test_suite():
         doctest.DocFileSuite(
             'portaltransforms.txt',
             setUp=portalTransformsSetUp, tearDown=tearDown),
+        doctest.DocFileSuite(
+            'constructor.txt',
+            setUp=constructorSetUp, tearDown=tearDown),
     ))

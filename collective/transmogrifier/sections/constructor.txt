@@ -1,0 +1,10 @@
+Constructor section
+===================
+
+A constructor pipeline section is the heart of a transmogrifier content
+imprort pipeline. It constructs Plone content based on the items it processes.
+The constructor section blueprint name is
+``collective.transmogrifier.sections.constructor``.
+
+Construction needs at least 3 pieces of information: the path to the folder
+where to create the object, it's id, and it's portal type.

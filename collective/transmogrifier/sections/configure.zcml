@@ -3,6 +3,11 @@
     i18n_domain="collective.transmogrifier">
 
 <utility
+    component=".constructor.ConstructorSection"
+    name="collective.transmogrifier.sections.constructor"
+    />
+
+<utility
     component=".codec.CodecSection"
     name="collective.transmogrifier.sections.codec"
     />
