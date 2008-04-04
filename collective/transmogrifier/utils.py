@@ -78,7 +78,7 @@ class Matcher(object):
             if not expr:
                 continue
             if expr.startswith('re:') or expr.startswith('regexp:'):
-                expr = expr.split(':', 2)[1]
+                expr = expr.split(':', 1)[1]
                 expr = re.compile(expr).match
             else:
                 expr = lambda x, y=expr: x == y
