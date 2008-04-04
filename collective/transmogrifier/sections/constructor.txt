@@ -41,3 +41,46 @@ and ``id-key``), defaulting to
 Using the path, id and type, a new object will be constructed using
 invokeFactory; nothing else is done. Paths are always interpreted as relative
 to the portal object.
+
+>>> import pprint
+>>> constructor = """
+... [transmogrifier]
+... pipeline =
+...     contentsource
+...     constructor
+...     printer
+...     
+... [contentsource]
+... blueprint = collective.transmogrifier.sections.tests.contentsource
+... 
+... [constructor]
+... blueprint = collective.transmogrifier.sections.constructor
+... 
+... [printer]
+... blueprint = collective.transmogrifier.sections.tests.pprinter
+... """
+>>> registerConfig(u'collective.transmogrifier.sections.tests.constructor',
+...                constructor)
+>>> transmogrifier(u'collective.transmogrifier.sections.tests.constructor')
+{'_type': 'FooType', '_id': 'foo', '_path': '/spam/eggs'}
+{'Title': 'Should not be constructed, not an existing path',
+ '_id': 'bar',
+ '_path': 'not/existing',
+ '_type': 'BarType'}
+{'Title': 'Should not be constructed, an existing object',
+ '_id': 'existing',
+ '_path': '/spam/eggs',
+ '_type': 'FooType'}
+{'Title': 'Should not be constructed, no type',
+ '_id': 'incomplete',
+ '_path': '/spam/eggs'}
+{'Title': 'Should not be constructed, not an existing type',
+ '_id': 'nosuchtype',
+ '_path': '/spam/eggs',
+ '_type': 'NonExisting'}
+{'Title': 'Factories are allowed to change the id',
+ '_id': 'changedByFactory',
+ '_path': '/spam/eggs',
+ '_type': 'FooType'}
+>>> pprint.pprint(plone.constructed)
+(('spam/eggs', 'foo', 'FooType'), ('spam/eggs', 'changedByFactory', 'FooType'))

@@ -217,8 +217,7 @@ def sectionsSetUp(test):
     setUp(test)
         
     from collective.transmogrifier.transmogrifier import Transmogrifier
-    test.globs.update(dict(
-        transmogrifier=Transmogrifier(test.globs['plone'])))
+    test.globs['transmogrifier'] = Transmogrifier(test.globs['plone'])
     
     import zope.component
     import collective.transmogrifier.sections
@@ -248,6 +247,53 @@ def portalTransformsSetUp(test):
 
 def constructorSetUp(test):
     sectionsSetUp(test)
+    
+    class MockPortal(object):
+        existing = True # Existing object
+        
+        @property
+        def portal_types(self): return self
+        def getTypeInfo(self, type_name):
+            if type_name in ('FooType', 'BarType'): return True
+        
+        _last_path = None
+        def unrestrictedTraverse(self, path, default):
+            if path == 'not/existing':
+                return default
+            self._last_path = path
+            return self
+        
+        constructed = ()
+        def invokeFactory(self, id, type_name):
+            if id == 'changeme':
+                id = 'changedByFactory'
+            self.constructed += ((self._last_path, id, type_name),)
+            return id
+    
+    test.globs['plone'] = MockPortal()
+    test.globs['transmogrifier'].portal = test.globs['plone']
+    
+    class ContentSource(SampleSource):
+        classProvides(ISectionBlueprint)
+        implements(ISection)
+        
+        def __init__(self, *args, **kw):
+            super(ContentSource, self).__init__(*args, **kw)
+            self.sample = (
+                dict(_id='foo', _type='FooType', _path='/spam/eggs'),
+                dict(_id='bar', _type='BarType', _path='not/existing',
+                     Title='Should not be constructed, not an existing path'),
+                dict(_id='existing', _type='FooType', _path='/spam/eggs',
+                     Title='Should not be constructed, an existing object'),
+                dict(_id='incomplete', _path='/spam/eggs',
+                     Title='Should not be constructed, no type'),
+                dict(_id='nosuchtype', _type='NonExisting', _path='/spam/eggs',
+                     Title='Should not be constructed, not an existing type'),
+                dict(_id='changeme', _type='FooType', _path='/spam/eggs',
+                     Title='Factories are allowed to change the id'),
+            )
+    provideUtility(ContentSource,
+        name=u'collective.transmogrifier.sections.tests.contentsource')
 
 def test_suite():
     return unittest.TestSuite((
