@@ -9,6 +9,8 @@ TODO
 
   - construction
 
+  - updating existing content (if type matches)
+
   - catalog delaying (replace catalog index methods with queues until
     iteration is done). May not be needed pending another project.
 
@@ -25,6 +27,9 @@ TODO
 
   - Black box? Section that encapsulates a single pipeline for the purposes of
     encapsulation and reuse.
+
+  - Fail-safe default section: alter path to a leftover path if the path
+    doesn't exist.
 
 - Provide a UI for selecting and running pipelines
 
