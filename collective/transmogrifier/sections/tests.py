@@ -295,6 +295,73 @@ def constructorSetUp(test):
     provideUtility(ContentSource,
         name=u'collective.transmogrifier.sections.tests.contentsource')
 
+def aTSchemaUpdaterSetUp(test):
+    sectionsSetUp(test)
+    
+    class MockField(object):
+        def __init__(self, name):
+            self.name = name
+        def getName(self):
+            return self.name
+        _instance = None
+        def getMutator(self, obj):
+            self._instance = obj
+            return self
+        def __call__(self, val):
+            self._instance._fieldSet(self.name, val)
+    
+    from Products.Archetypes.interfaces import IBaseObject
+    class MockPortal(object):
+        implements(IBaseObject)
+        
+        _last_path = None
+        def unrestrictedTraverse(self, path, default):
+            if path == 'not/existing':
+                return default
+            self._last_path = path
+            return self
+        def __getattr__(self, name):
+            if name == 'notexisting':
+                raise AttributeError(name)
+            if name == 'notatcontent':
+                return object()
+            self._last_path += '/' + name
+            return self
+        
+        def Schema(self):
+            return self
+        def editableFields(self):
+            return (MockField('fieldone'), MockField('fieldtwo'),
+                    MockField('Title'))
+        
+        updated = ()
+        def _fieldSet(self, name, val):
+            self.updated += ((self._last_path, name, val),)
+    
+    test.globs['plone'] = MockPortal()
+    test.globs['transmogrifier'].portal = test.globs['plone']
+    
+    class SchemaSource(SampleSource):
+        classProvides(ISectionBlueprint)
+        implements(ISection)
+        
+        def __init__(self, *args, **kw):
+            super(SchemaSource, self).__init__(*args, **kw)
+            self.sample = (
+                dict(_id='foo', _path='/spam/eggs', fieldone='one value', 
+                     fieldtwo=2, nosuchfield='ignored'),
+                dict(_id='bar', _path='not/existing', fieldone='one value',
+                     Title='Should not be updated, not an existing path'),
+                dict(_id='notexisting', _path='/spam/eggs', fieldtwo=2,
+                     Title='Should not be updated, not an existing object'),
+                dict(_id='incomplete', fieldone='one value',
+                     Title='Should not be updated, no path'),
+                dict(_id='notatcontent', fieldtwo=2,
+                     Title='Should not be updated, not an AT base object'),
+            )
+    provideUtility(SchemaSource,
+        name=u'collective.transmogrifier.sections.tests.schemasource')
+
 def test_suite():
     return unittest.TestSuite((
         unittest.makeSuite(SplitterConditionSectionTests),
@@ -309,4 +376,7 @@ def test_suite():
         doctest.DocFileSuite(
             'constructor.txt',
             setUp=constructorSetUp, tearDown=tearDown),
+        doctest.DocFileSuite(
+            'atschemaupdater.txt',
+            setUp=aTSchemaUpdaterSetUp, tearDown=tearDown),
     ))

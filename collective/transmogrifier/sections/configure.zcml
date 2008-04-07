@@ -8,6 +8,11 @@
     />
 
 <utility
+    component=".atschemaupdater.ATSchemaUpdaterSection"
+    name="collective.transmogrifier.sections.atschemaupdater"
+    />
+
+<utility
     component=".codec.CodecSection"
     name="collective.transmogrifier.sections.codec"
     />

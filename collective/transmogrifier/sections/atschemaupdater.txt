@@ -1,0 +1,78 @@
+ATSchema updater section
+========================
+
+A schema updater pipeline section is another important transmogrifier content
+import pipeline element. It alters the schema of Plone content based on the
+items it processes. The schema updater section blueprint name is
+``collective.transmogrifier.sections.atschemaupdater``. Schema updater sections
+operate on objects already present in the ZODB, be they created by a
+constructor or pre-existing objects.
+
+Schema updating needs at least 2 pieces of information: the path to the folder
+where to find the object, and it's id. To determine each of these, the schema
+updater section inspects each item and looks for two keys, as described below.
+Any item missing any of these two pieces will be skipped. Similarly, items
+with a path and id that doesn't exist will be skipped as well.
+
+For the object id, it'll look (in order) for
+``_collective.transmogrifier.sections.atschemaupdater_[sectionname]_id``,
+``_collective.transmogrifier.sections.atschemaupdater_id``,
+``_[sectionname]_id``, ``_id``, ``getId`` and ``id``, where ``[sectionname]``
+is replaced with the name given to the current section. This allows you to
+target the right section precisely if needed. Alternatively, you can specify
+what key to use for the id by specifying the ``id-key`` option, which should
+be a list of keys to try (one key per line, use a ``re:`` or ``regexp:``
+prefix to specify regular expressions).
+
+For the path, use the ``path-key`` option (same interpretation as ``id-key``),
+defaulting to
+``_collective.transmogrifier.sections.atschemaupdater_[sectionname]_path``,
+``_collective.transmogrifier.sections.atschemaupdater_path``,
+``_[sectionname]_path``, ``_path``.
+
+The object located through the path and id; paths are always interpreted as
+relative to the portal object. For Archetype objects, any writable field who's
+id matches a key in the current item will be updated with the corresponding
+value.
+
+>>> import pprint
+>>> atschema = """
+... [transmogrifier]
+... pipeline =
+...     schemasource
+...     schemaupdater
+...     printer
+...     
+... [schemasource]
+... blueprint = collective.transmogrifier.sections.tests.schemasource
+... 
+... [schemaupdater]
+... blueprint = collective.transmogrifier.sections.atschemaupdater
+... 
+... [printer]
+... blueprint = collective.transmogrifier.sections.tests.pprinter
+... """
+>>> registerConfig(u'collective.transmogrifier.sections.tests.atschema',
+...                atschema)
+>>> transmogrifier(u'collective.transmogrifier.sections.tests.atschema')
+{'_id': 'foo',
+ '_path': '/spam/eggs',
+ 'fieldone': 'one value',
+ 'fieldtwo': 2,
+ 'nosuchfield': 'ignored'}
+{'Title': 'Should not be updated, not an existing path',
+ '_id': 'bar',
+ '_path': 'not/existing',
+ 'fieldone': 'one value'}
+{'Title': 'Should not be updated, not an existing object',
+ '_id': 'notexisting',
+ '_path': '/spam/eggs',
+ 'fieldtwo': 2}
+{'Title': 'Should not be updated, no path',
+ '_id': 'incomplete',
+ 'fieldone': 'one value'}
+{'Title': 'Should not be updated, not an AT base object',
+ '_id': 'notatcontent',
+ 'fieldtwo': 2}
+>>> pprint.pprint(plone.updated)
+(('spam/eggs/foo', 'fieldone', 'one value'), ('spam/eggs/foo', 'fieldtwo', 2))
