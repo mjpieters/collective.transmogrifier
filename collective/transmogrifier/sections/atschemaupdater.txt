@@ -1,39 +1,32 @@
 ATSchema updater section
 ========================
 
-A schema updater pipeline section is another important transmogrifier content
-import pipeline element. It alters the schema of Plone content based on the
-items it processes. The schema updater section blueprint name is
-``collective.transmogrifier.sections.atschemaupdater``. Schema updater sections
-operate on objects already present in the ZODB, be they created by a
+An AT schema updater pipeline section is another important transmogrifier
+content import pipeline element. It alters the schema of Archetypes content
+based on the items it processes. The AT schema updater section blueprint name
+is ``collective.transmogrifier.sections.atschemaupdater``. AT Schema updater
+sections operate on objects already present in the ZODB, be they created by a
 constructor or pre-existing objects.
 
-Schema updating needs at least 2 pieces of information: the path to the folder
-where to find the object, and it's id. To determine each of these, the schema
-updater section inspects each item and looks for two keys, as described below.
-Any item missing any of these two pieces will be skipped. Similarly, items
-with a path and id that doesn't exist will be skipped as well.
+Schema updating needs at least 1 piece of information: the path to the object
+to update. To determine the path, the schema updater section inspects each
+item and looks for one key, as described below. Any item missing this piece of
+information will be skipped. Similarly, items with a path that doesn't exist
+or are not Archetypes objects will be skipped as well.
 
-For the object id, it'll look (in order) for
-``_collective.transmogrifier.sections.atschemaupdater_[sectionname]_id``,
-``_collective.transmogrifier.sections.atschemaupdater_id``,
-``_[sectionname]_id``, ``_id``, ``getId`` and ``id``, where ``[sectionname]``
-is replaced with the name given to the current section. This allows you to
-target the right section precisely if needed. Alternatively, you can specify
-what key to use for the id by specifying the ``id-key`` option, which should
-be a list of keys to try (one key per line, use a ``re:`` or ``regexp:``
-prefix to specify regular expressions).
-
-For the path, use the ``path-key`` option (same interpretation as ``id-key``),
-defaulting to
+For the object path, it'll look (in order) for
 ``_collective.transmogrifier.sections.atschemaupdater_[sectionname]_path``,
 ``_collective.transmogrifier.sections.atschemaupdater_path``,
-``_[sectionname]_path``, ``_path``.
+``_[sectionname]_path`` and ``_path``, where ``[sectionname]`` is replaced
+with the name given to the current section. This allows you to target the
+right section precisely if needed. Alternatively, you can specify what key to
+use for the path by specifying the ``path-key`` option, which should be a list
+of keys to try (one key per line, use a ``re:`` or ``regexp:`` prefix to
+specify regular expressions).
 
-The object located through the path and id; paths are always interpreted as
-relative to the portal object. For Archetype objects, any writable field who's
-id matches a key in the current item will be updated with the corresponding
-value.
+Paths to objects are always interpreted as relative to the portal object. Any
+writable field who's id matches a key in the current item will be updated with
+the corresponding value, using the field's mutator.
 
 >>> import pprint
 >>> atschema = """
@@ -55,24 +48,16 @@ value.
 >>> registerConfig(u'collective.transmogrifier.sections.tests.atschema',
 ...                atschema)
 >>> transmogrifier(u'collective.transmogrifier.sections.tests.atschema')
-{'_id': 'foo',
- '_path': '/spam/eggs',
+{'_path': '/spam/eggs/foo',
  'fieldone': 'one value',
  'fieldtwo': 2,
  'nosuchfield': 'ignored'}
 {'Title': 'Should not be updated, not an existing path',
- '_id': 'bar',
- '_path': 'not/existing',
+ '_path': 'not/existing/bar',
  'fieldone': 'one value'}
-{'Title': 'Should not be updated, not an existing object',
- '_id': 'notexisting',
- '_path': '/spam/eggs',
- 'fieldtwo': 2}
-{'Title': 'Should not be updated, no path',
- '_id': 'incomplete',
- 'fieldone': 'one value'}
+{'fieldone': 'one value', 'Title': 'Should not be updated, no path'}
 {'Title': 'Should not be updated, not an AT base object',
- '_id': 'notatcontent',
+ '_path': '/spam/eggs/notatcontent',
  'fieldtwo': 2}
 >>> pprint.pprint(plone.updated)
 (('spam/eggs/foo', 'fieldone', 'one value'), ('spam/eggs/foo', 'fieldtwo', 2))

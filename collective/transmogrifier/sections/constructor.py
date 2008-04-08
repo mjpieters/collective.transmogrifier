@@ -38,21 +38,22 @@ class ConstructorSection(object):
     def __iter__(self):
         for item in self.previous:
             keys = item.keys()
-            idkey = self.idkey(*keys)[0]
             typekey = self.typekey(*keys)[0]
             pathkey = self.pathkey(*keys)[0]
             
-            if not (idkey and typekey and pathkey):    # not enough info
+            if not (typekey and pathkey):              # not enough info
                 yield item; continue
             
-            id, type_, path = item[idkey], item[typekey], item[pathkey]
+            type_, path = item[typekey], item[pathkey]
             
             if self.ttool.getTypeInfo(type_) is None:  # not an existing type
                 yield item; continue
             
             while path[0] == '/': path = path[1:]
-            context = self.portal.unrestrictedTraverse(path, None)
-            if context is None:                        # path doesn't exist
+            while path[-1] == '/': path = path[:-1]
+            container, id = path.rsplit('/', 1)
+            context = self.portal.unrestrictedTraverse(container, None)
+            if context is None:                        # container doesn't exist
                 yield item; continue
             
             if getattr(context, id, None) is not None: # item exists
@@ -60,6 +61,6 @@ class ConstructorSection(object):
             
             new_id = context.invokeFactory(id=id, type_name=type_)
             if new_id and new_id != id:
-                item[idkey] = new_id
+                item[pathkey] = '%s/%s' % (container, new_id)
             
             yield item

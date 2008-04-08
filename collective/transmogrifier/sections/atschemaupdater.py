@@ -30,21 +30,16 @@ class ATSchemaUpdaterSection(object):
     def __iter__(self):
         for item in self.previous:
             keys = item.keys()
-            idkey = self.idkey(*keys)[0]
             pathkey = self.pathkey(*keys)[0]
             
-            if not (idkey and pathkey): # not enough info
+            if not pathkey:         # not enough info
                 yield item; continue
             
-            id, path = item[idkey], item[pathkey]
+            path = item[pathkey]
             
             while path[0] == '/': path = path[1:]
-            context = self.portal.unrestrictedTraverse(path, None)
-            if context is None:         # path doesn't exist
-                yield item; continue
-            
-            obj = getattr(context, id, None)
-            if obj is None:             # item does not exist
+            obj = self.portal.unrestrictedTraverse(path, None)
+            if obj is None:         # path doesn't exist
                 yield item; continue
             
             if IBaseObject.providedBy(obj):

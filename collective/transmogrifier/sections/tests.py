@@ -280,16 +280,16 @@ def constructorSetUp(test):
         def __init__(self, *args, **kw):
             super(ContentSource, self).__init__(*args, **kw)
             self.sample = (
-                dict(_id='foo', _type='FooType', _path='/spam/eggs'),
-                dict(_id='bar', _type='BarType', _path='not/existing',
+                dict(_type='FooType', _path='/spam/eggs/foo'),
+                dict(_type='BarType', _path='not/existing/bar',
                      Title='Should not be constructed, not an existing path'),
-                dict(_id='existing', _type='FooType', _path='/spam/eggs',
+                dict(_type='FooType', _path='/spam/eggs/existing',
                      Title='Should not be constructed, an existing object'),
-                dict(_id='incomplete', _path='/spam/eggs',
+                dict(_path='/spam/eggs/incomplete',
                      Title='Should not be constructed, no type'),
-                dict(_id='nosuchtype', _type='NonExisting', _path='/spam/eggs',
+                dict(_type='NonExisting', _path='/spam/eggs/nosuchtype',
                      Title='Should not be constructed, not an existing type'),
-                dict(_id='changeme', _type='FooType', _path='/spam/eggs',
+                dict(_type='FooType', _path='/spam/eggs/changeme',
                      Title='Factories are allowed to change the id'),
             )
     provideUtility(ContentSource,
@@ -316,16 +316,11 @@ def aTSchemaUpdaterSetUp(test):
         
         _last_path = None
         def unrestrictedTraverse(self, path, default):
-            if path == 'not/existing':
+            if path == 'not/existing/bar':
                 return default
-            self._last_path = path
-            return self
-        def __getattr__(self, name):
-            if name == 'notexisting':
-                raise AttributeError(name)
-            if name == 'notatcontent':
+            if path.endswith('/notatcontent'):
                 return object()
-            self._last_path += '/' + name
+            self._last_path = path
             return self
         
         def Schema(self):
@@ -348,15 +343,13 @@ def aTSchemaUpdaterSetUp(test):
         def __init__(self, *args, **kw):
             super(SchemaSource, self).__init__(*args, **kw)
             self.sample = (
-                dict(_id='foo', _path='/spam/eggs', fieldone='one value', 
+                dict(_path='/spam/eggs/foo', fieldone='one value', 
                      fieldtwo=2, nosuchfield='ignored'),
-                dict(_id='bar', _path='not/existing', fieldone='one value',
+                dict(_path='not/existing/bar', fieldone='one value',
                      Title='Should not be updated, not an existing path'),
-                dict(_id='notexisting', _path='/spam/eggs', fieldtwo=2,
-                     Title='Should not be updated, not an existing object'),
-                dict(_id='incomplete', fieldone='one value',
+                dict(fieldone='one value',
                      Title='Should not be updated, no path'),
-                dict(_id='notatcontent', fieldtwo=2,
+                dict(_path='/spam/eggs/notatcontent', fieldtwo=2,
                      Title='Should not be updated, not an AT base object'),
             )
     provideUtility(SchemaSource,

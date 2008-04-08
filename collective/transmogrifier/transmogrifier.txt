@@ -419,6 +419,15 @@ will be used by constructor sections (see Constructors_) to construct Plone
 content. So keys that do not start with an underscore are expected to map to
 Archetypes fields or Zope3 schema fields or whatever the constructor expects.
 
+Paths are to the target object
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Many sections either create objects (constructors) or operate on
+already-constructed or pre-existing objecs. Such sections should interpret
+paths as the complete path for the object. For constructors this means they'll
+need to split the path into a container path and an id in order for them to
+find the correct context for constructing the object.
+
 Keys with a leading underscore are controllers
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
