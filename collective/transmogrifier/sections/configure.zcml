@@ -13,6 +13,11 @@
     />
 
 <utility
+    component=".workflowupdater.WorkflowUpdaterSection"
+    name="collective.transmogrifier.sections.workflowupdater"
+    />
+
+<utility
     component=".codec.CodecSection"
     name="collective.transmogrifier.sections.codec"
     />

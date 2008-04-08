@@ -359,6 +359,56 @@ def aTSchemaUpdaterSetUp(test):
     provideUtility(SchemaSource,
         name=u'collective.transmogrifier.sections.tests.schemasource')
 
+def workflowUpdaterSetUp(test):
+    sectionsSetUp(test)
+    
+    from Products.CMFCore.WorkflowCore import WorkflowException
+    
+    class MockPortal(object):
+        _last_path = None
+        def unrestrictedTraverse(self, path, default):
+            if path[0] == '/':
+                return default # path is absolute
+            if path == 'not/existing/bar':
+                return default
+            self._last_path = path
+            return self
+        
+        @property
+        def portal_workflow(self):
+            return self
+        
+        updated = ()
+        def doActionFor(self, ob, action):
+            assert ob == self
+            if action == 'nonsuch':
+                raise WorkflowException('Test exception')
+            self.updated += ((self._last_path, action),)
+
+    test.globs['plone'] = MockPortal()
+    test.globs['transmogrifier'].portal = test.globs['plone']
+
+    class WorkflowSource(SampleSource):
+        classProvides(ISectionBlueprint)
+        implements(ISection)
+
+        def __init__(self, *args, **kw):
+            super(WorkflowSource, self).__init__(*args, **kw)
+            self.sample = (
+                dict(_path='/spam/eggs/foo', _transitions='spam'),
+                dict(_path='/spam/eggs/baz', _transitions=('spam', 'eggs')),
+                dict(_path='not/existing/bar', _transitions=('spam', 'eggs'),
+                     title='Should not be updated, not an existing path'),
+                dict(_path='spam/eggs/incomplete',
+                     title='Should not be updated, no transitions'),
+                dict(_path='/spam/eggs/nosuchtransition', 
+                     _transitions=('nonsuch',),
+                     title='Should not be updated, no such transition'),
+            )
+    provideUtility(WorkflowSource,
+        name=u'collective.transmogrifier.sections.tests.workflowsource')
+
+
 def test_suite():
     return unittest.TestSuite((
         unittest.makeSuite(SplitterConditionSectionTests),
@@ -376,4 +426,7 @@ def test_suite():
         doctest.DocFileSuite(
             'atschemaupdater.txt',
             setUp=aTSchemaUpdaterSetUp, tearDown=tearDown),
+        doctest.DocFileSuite(
+            'workflowupdater.txt',
+            setUp=workflowUpdaterSetUp, tearDown=tearDown),
     ))
