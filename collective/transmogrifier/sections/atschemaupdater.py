@@ -49,7 +49,7 @@ class ATSchemaUpdaterSection(object):
             
             if IBaseObject.providedBy(obj):
                 for field in obj.Schema().editableFields():
-                    if not field.getName() in item:
+                    if not field.getName() in keys:
                         continue
                     setter = field.getMutator(obj)
                     if setter is not None:
