@@ -15,13 +15,6 @@ class ConstructorSection(object):
         self.portal = transmogrifier.portal
         self.ttool = getToolByName(self.portal, 'portal_types')
         
-        if 'id-key' in options:
-            idkeys = options['id-key'].splitlines()
-        else:
-            idkeys = defaultKeys(options['blueprint'], name, 'id')
-            idkeys += ('getId', 'id')
-        self.idkey = Matcher(*idkeys)
-        
         if 'type-key' in options:
             typekeys = options['type-key'].splitlines()
         else:

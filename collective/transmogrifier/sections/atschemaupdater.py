@@ -14,13 +14,6 @@ class ATSchemaUpdaterSection(object):
         self.previous = previous
         self.portal = transmogrifier.portal
         
-        if 'id-key' in options:
-            idkeys = options['id-key'].splitlines()
-        else:
-            idkeys = defaultKeys(options['blueprint'], name, 'id')
-            idkeys += ('getId', 'id')
-        self.idkey = Matcher(*idkeys)
-        
         if 'path-key' in options:
             pathkeys = options['type-key'].splitlines()
         else:
