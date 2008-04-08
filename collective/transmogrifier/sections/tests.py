@@ -258,6 +258,8 @@ def constructorSetUp(test):
         
         _last_path = None
         def unrestrictedTraverse(self, path, default):
+            if path[0] == '/':
+                return default # path is absolute
             if path == 'not/existing':
                 return default
             self._last_path = path
@@ -316,6 +318,8 @@ def aTSchemaUpdaterSetUp(test):
         
         _last_path = None
         def unrestrictedTraverse(self, path, default):
+            if path[0] == '/':
+                return default # path is absolute
             if path == 'not/existing/bar':
                 return default
             if path.endswith('/notatcontent'):
