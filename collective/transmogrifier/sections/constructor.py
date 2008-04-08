@@ -49,9 +49,7 @@ class ConstructorSection(object):
             if self.ttool.getTypeInfo(type_) is None:  # not an existing type
                 yield item; continue
             
-            while path[0] == '/': path = path[1:]
-            while path[-1] == '/': path = path[:-1]
-            container, id = path.rsplit('/', 1)
+            container, id = path.strip('/').rsplit('/', 1)
             context = self.portal.unrestrictedTraverse(container, None)
             if context is None:                        # container doesn't exist
                 yield item; continue

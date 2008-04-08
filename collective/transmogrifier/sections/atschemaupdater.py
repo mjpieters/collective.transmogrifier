@@ -37,8 +37,7 @@ class ATSchemaUpdaterSection(object):
             
             path = item[pathkey]
             
-            while path[0] == '/': path = path[1:]
-            obj = self.portal.unrestrictedTraverse(path, None)
+            obj = self.portal.unrestrictedTraverse(path.lstrip('/'), None)
             if obj is None:         # path doesn't exist
                 yield item; continue
             
