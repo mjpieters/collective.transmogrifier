@@ -4,6 +4,7 @@ from collective.transmogrifier.interfaces import ISection
 from collective.transmogrifier.utils import Matcher
 from collective.transmogrifier.utils import defaultKeys
 
+from Acquision import aq_base
 from Products.CMFCore.utils import getToolByName
 
 class ConstructorSection(object):
@@ -48,7 +49,7 @@ class ConstructorSection(object):
             if context is None:                        # container doesn't exist
                 yield item; continue
             
-            if getattr(context, id, None) is not None: # item exists
+            if getattr(aq_base(context), id, None) is not None: # item exists
                 yield item; continue
             
             new_id = context.invokeFactory(id=id, type_name=type_)
