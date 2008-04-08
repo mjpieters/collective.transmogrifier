@@ -4,7 +4,7 @@ from collective.transmogrifier.interfaces import ISection
 from collective.transmogrifier.utils import Matcher
 from collective.transmogrifier.utils import defaultKeys
 
-from Acquision import aq_base
+from Acquisition import aq_base
 from Products.CMFCore.utils import getToolByName
 
 class ConstructorSection(object):
