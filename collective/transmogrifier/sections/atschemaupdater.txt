@@ -24,9 +24,10 @@ use for the path by specifying the ``path-key`` option, which should be a list
 of keys to try (one key per line, use a ``re:`` or ``regexp:`` prefix to
 specify regular expressions).
 
-Paths to objects are always interpreted as relative to the portal object. Any
-writable field who's id matches a key in the current item will be updated with
-the corresponding value, using the field's mutator.
+Unicode paths are encoded to ASCII. Paths to objects are always interpreted as
+relative to the portal object. Any writable field who's id matches a key in
+the current item will be updated with the corresponding value, using the
+field's mutator.
 
 >>> import pprint
 >>> atschema = """
@@ -48,7 +49,7 @@ the corresponding value, using the field's mutator.
 >>> registerConfig(u'collective.transmogrifier.sections.tests.atschema',
 ...                atschema)
 >>> transmogrifier(u'collective.transmogrifier.sections.tests.atschema')
-{'_path': '/spam/eggs/foo',
+{'_path': u'/spam/eggs/foo',
  'fieldone': 'one value',
  'fieldtwo': 2,
  'nosuchfield': 'ignored'}

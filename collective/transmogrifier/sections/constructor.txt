@@ -33,9 +33,10 @@ like ``path-key``. If omitted, the constructor will look for
 ``_[sectionname]_type``, ``_type``, ``portal_type`` and ``Type`` (in that
 order, with ``[sectionname]`` replaced).
 
-Using the path and type, a new object will be constructed using invokeFactory;
-nothing else is done. Paths are always interpreted as relative to the portal
-object, with the last path segment being the id of the object to create.
+Unicode paths will be encoded to ASCII. Using the path and type, a new object
+will be constructed using invokeFactory; nothing else is done. Paths are
+always interpreted as relative to the portal object, with the last path
+segment being the id of the object to create.
 
 >>> import pprint
 >>> constructor = """
@@ -57,7 +58,7 @@ object, with the last path segment being the id of the object to create.
 >>> registerConfig(u'collective.transmogrifier.sections.tests.constructor',
 ...                constructor)
 >>> transmogrifier(u'collective.transmogrifier.sections.tests.constructor')
-{'_type': 'FooType', '_path': '/spam/eggs/foo'}
+{'_type': 'FooType', '_path': u'/spam/eggs/foo'}
 {'_type': 'FooType', '_path': '/foo'}
 {'_path': 'not/existing/bar',
  '_type': 'BarType',
