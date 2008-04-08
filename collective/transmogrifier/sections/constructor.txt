@@ -22,9 +22,9 @@ For the object path, it'll look (in order) for
 ``_[sectionname]_path``, and ``_path``, where ``[sectionname]`` is replaced
 with the name given to the current section. This allows you to target the
 right section precisely if needed. Alternatively, you can specify what key to
-use for the path by specifying the ``path-key`` option, which should be a list of
-keys to try (one key per line, use a ``re:`` or ``regexp:`` prefix to specify
-regular expressions).
+use for the path by specifying the ``path-key`` option, which should be a list
+of keys to try (one key per line, use a ``re:`` or ``regexp:`` prefix to
+specify regular expressions).
 
 For the portal type, use the ``type-key`` option to specify a set of keys just
 like ``path-key``. If omitted, the constructor will look for
@@ -58,19 +58,19 @@ object, with the last path segment being the id of the object to create.
 ...                constructor)
 >>> transmogrifier(u'collective.transmogrifier.sections.tests.constructor')
 {'_type': 'FooType', '_path': '/spam/eggs/foo'}
-{'Title': 'Should not be constructed, not an existing path',
- '_path': 'not/existing/bar',
- '_type': 'BarType'}
-{'Title': 'Should not be constructed, an existing object',
- '_path': '/spam/eggs/existing',
- '_type': 'FooType'}
-{'Title': 'Should not be constructed, no type',
- '_path': '/spam/eggs/incomplete'}
-{'Title': 'Should not be constructed, not an existing type',
- '_path': '/spam/eggs/nosuchtype',
- '_type': 'NonExisting'}
-{'Title': 'Factories are allowed to change the id',
- '_path': 'spam/eggs/changedByFactory',
- '_type': 'FooType'}
+{'_path': 'not/existing/bar',
+ '_type': 'BarType',
+ 'title': 'Should not be constructed, not an existing path'}
+{'_path': '/spam/eggs/existing',
+ '_type': 'FooType',
+ 'title': 'Should not be constructed, an existing object'}
+{'_path': '/spam/eggs/incomplete',
+ 'title': 'Should not be constructed, no type'}
+{'_path': '/spam/eggs/nosuchtype',
+ '_type': 'NonExisting',
+ 'title': 'Should not be constructed, not an existing type'}
+{'_path': 'spam/eggs/changedByFactory',
+ '_type': 'FooType',
+ 'title': 'Factories are allowed to change the id'}
 >>> pprint.pprint(plone.constructed)
 (('spam/eggs', 'foo', 'FooType'), ('spam/eggs', 'changedByFactory', 'FooType'))

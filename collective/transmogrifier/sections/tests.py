@@ -284,15 +284,15 @@ def constructorSetUp(test):
             self.sample = (
                 dict(_type='FooType', _path='/spam/eggs/foo'),
                 dict(_type='BarType', _path='not/existing/bar',
-                     Title='Should not be constructed, not an existing path'),
+                     title='Should not be constructed, not an existing path'),
                 dict(_type='FooType', _path='/spam/eggs/existing',
-                     Title='Should not be constructed, an existing object'),
+                     title='Should not be constructed, an existing object'),
                 dict(_path='/spam/eggs/incomplete',
-                     Title='Should not be constructed, no type'),
+                     title='Should not be constructed, no type'),
                 dict(_type='NonExisting', _path='/spam/eggs/nosuchtype',
-                     Title='Should not be constructed, not an existing type'),
+                     title='Should not be constructed, not an existing type'),
                 dict(_type='FooType', _path='/spam/eggs/changeme',
-                     Title='Factories are allowed to change the id'),
+                     title='Factories are allowed to change the id'),
             )
     provideUtility(ContentSource,
         name=u'collective.transmogrifier.sections.tests.contentsource')
@@ -331,7 +331,7 @@ def aTSchemaUpdaterSetUp(test):
             return self
         def editableFields(self):
             return (MockField('fieldone'), MockField('fieldtwo'),
-                    MockField('Title'))
+                    MockField('title'))
         
         updated = ()
         def _fieldSet(self, name, val):
@@ -350,11 +350,11 @@ def aTSchemaUpdaterSetUp(test):
                 dict(_path='/spam/eggs/foo', fieldone='one value', 
                      fieldtwo=2, nosuchfield='ignored'),
                 dict(_path='not/existing/bar', fieldone='one value',
-                     Title='Should not be updated, not an existing path'),
+                     title='Should not be updated, not an existing path'),
                 dict(fieldone='one value',
-                     Title='Should not be updated, no path'),
+                     title='Should not be updated, no path'),
                 dict(_path='/spam/eggs/notatcontent', fieldtwo=2,
-                     Title='Should not be updated, not an AT base object'),
+                     title='Should not be updated, not an AT base object'),
             )
     provideUtility(SchemaSource,
         name=u'collective.transmogrifier.sections.tests.schemasource')

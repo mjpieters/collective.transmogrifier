@@ -52,12 +52,12 @@ the corresponding value, using the field's mutator.
  'fieldone': 'one value',
  'fieldtwo': 2,
  'nosuchfield': 'ignored'}
-{'Title': 'Should not be updated, not an existing path',
- '_path': 'not/existing/bar',
- 'fieldone': 'one value'}
-{'fieldone': 'one value', 'Title': 'Should not be updated, no path'}
-{'Title': 'Should not be updated, not an AT base object',
- '_path': '/spam/eggs/notatcontent',
- 'fieldtwo': 2}
+{'_path': 'not/existing/bar',
+ 'fieldone': 'one value',
+ 'title': 'Should not be updated, not an existing path'}
+{'fieldone': 'one value', 'title': 'Should not be updated, no path'}
+{'_path': '/spam/eggs/notatcontent',
+ 'fieldtwo': 2,
+ 'title': 'Should not be updated, not an AT base object'}
 >>> pprint.pprint(plone.updated)
 (('spam/eggs/foo', 'fieldone', 'one value'), ('spam/eggs/foo', 'fieldtwo', 2))
