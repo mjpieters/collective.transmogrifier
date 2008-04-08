@@ -42,7 +42,8 @@ class ConstructorSection(object):
             if self.ttool.getTypeInfo(type_) is None:  # not an existing type
                 yield item; continue
             
-            container, id = path.strip('/').rsplit('/', 1)
+            elems = path.strip('/').rsplit('/', 1)
+            container, id = (len(elems) == 1 and ('', elems[0]) or elems)
             context = self.portal.unrestrictedTraverse(container, None)
             if context is None:                        # container doesn't exist
                 yield item; continue

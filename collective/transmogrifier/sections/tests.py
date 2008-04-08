@@ -258,7 +258,7 @@ def constructorSetUp(test):
         
         _last_path = None
         def unrestrictedTraverse(self, path, default):
-            if path[0] == '/':
+            if path[0:1] == '/':
                 return default # path is absolute
             if path == 'not/existing':
                 return default
@@ -283,6 +283,7 @@ def constructorSetUp(test):
             super(ContentSource, self).__init__(*args, **kw)
             self.sample = (
                 dict(_type='FooType', _path='/spam/eggs/foo'),
+                dict(_type='FooType', _path='/foo'),
                 dict(_type='BarType', _path='not/existing/bar',
                      title='Should not be constructed, not an existing path'),
                 dict(_type='FooType', _path='/spam/eggs/existing',

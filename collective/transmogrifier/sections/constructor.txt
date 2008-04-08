@@ -58,6 +58,7 @@ object, with the last path segment being the id of the object to create.
 ...                constructor)
 >>> transmogrifier(u'collective.transmogrifier.sections.tests.constructor')
 {'_type': 'FooType', '_path': '/spam/eggs/foo'}
+{'_type': 'FooType', '_path': '/foo'}
 {'_path': 'not/existing/bar',
  '_type': 'BarType',
  'title': 'Should not be constructed, not an existing path'}
@@ -73,4 +74,6 @@ object, with the last path segment being the id of the object to create.
  '_type': 'FooType',
  'title': 'Factories are allowed to change the id'}
 >>> pprint.pprint(plone.constructed)
-(('spam/eggs', 'foo', 'FooType'), ('spam/eggs', 'changedByFactory', 'FooType'))
+(('spam/eggs', 'foo', 'FooType'),
+ ('', 'foo', 'FooType'),
+ ('spam/eggs', 'changedByFactory', 'FooType'))
