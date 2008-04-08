@@ -329,7 +329,8 @@ def aTSchemaUpdaterSetUp(test):
         
         def Schema(self):
             return self
-        def editableFields(self):
+        def editableFields(self, obj):
+            assert obj == self
             return (MockField('fieldone'), MockField('fieldtwo'),
                     MockField('title'))
         
