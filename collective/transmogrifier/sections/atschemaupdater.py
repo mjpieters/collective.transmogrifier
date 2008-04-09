@@ -22,8 +22,7 @@ class ATSchemaUpdaterSection(object):
     
     def __iter__(self):
         for item in self.previous:
-            keys = item.keys()
-            pathkey = self.pathkey(*keys)[0]
+            pathkey = self.pathkey(*item.keys())[0]
             
             if not pathkey:         # not enough info
                 yield item; continue
@@ -37,11 +36,7 @@ class ATSchemaUpdaterSection(object):
                 yield item; continue
             
             if IBaseObject.providedBy(obj):
-                for field in obj.Schema().editableFields(obj):
-                    if not field.getName() in keys:
-                        continue
-                    setter = field.getMutator(obj)
-                    if setter is not None:
-                        setter(item[field.getName()])
+                obj.update(**dict((k,v) for k,v in item.iteritems() 
+                                  if k[0:1] != '_'))
             
             yield item

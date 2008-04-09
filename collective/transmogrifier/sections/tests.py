@@ -303,18 +303,6 @@ def constructorSetUp(test):
 def aTSchemaUpdaterSetUp(test):
     sectionsSetUp(test)
     
-    class MockField(object):
-        def __init__(self, name):
-            self.name = name
-        def getName(self):
-            return self.name
-        _instance = None
-        def getMutator(self, obj):
-            self._instance = obj
-            return self
-        def __call__(self, val):
-            self._instance._fieldSet(self.name, val)
-    
     from Products.Archetypes.interfaces import IBaseObject
     class MockPortal(object):
         implements(IBaseObject)
@@ -332,16 +320,11 @@ def aTSchemaUpdaterSetUp(test):
             self._last_path = path
             return self
         
-        def Schema(self):
-            return self
-        def editableFields(self, obj):
-            assert obj == self
-            return (MockField('fieldone'), MockField('fieldtwo'),
-                    MockField('title'))
-        
         updated = ()
-        def _fieldSet(self, name, val):
-            self.updated += ((self._last_path, name, val),)
+        def update(self, **kw):
+            for name, val in kw.iteritems():
+                if name.startswith('field'):
+                    self.updated += ((self._last_path, name, val),)
     
     test.globs['plone'] = MockPortal()
     test.globs['transmogrifier'].portal = test.globs['plone']
