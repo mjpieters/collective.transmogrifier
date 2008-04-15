@@ -2,9 +2,10 @@ ATSchema updater section
 ========================
 
 An AT schema updater pipeline section is another important transmogrifier
-content import pipeline element. It alters the schema of Archetypes content
-based on the items it processes. The AT schema updater section blueprint name
-is ``collective.transmogrifier.sections.atschemaupdater``. AT Schema updater
+content import pipeline element. It updates field values for Archetypes
+objects based on their schema based on the items it processes. The AT schema
+updater section blueprint name is
+``collective.transmogrifier.sections.atschemaupdater``. AT Schema updater
 sections operate on objects already present in the ZODB, be they created by a
 constructor or pre-existing objects.
 
