@@ -25,9 +25,10 @@ names the sections in order (one section per line):
 ... blueprint = collective.transmogrifier.tests.exampleconstructor
 ... """
 
-The format of the configuration files is defined by the Python ConfigParser
-module, with extensions that we'll describe later. At minimum, at least the
-transmogrifier section with an empty pipeline is required:
+As you can see this is also very similar to how you construct WSGI pipelines
+using paster. The format of the configuration files is defined by the Python
+ConfigParser module, with extensions that we'll describe later. At minimum, at
+least the transmogrifier section with an empty pipeline is required:
 
 >>> mimimalconfig = """\
 ... [transmogrifier]
@@ -266,7 +267,7 @@ u'Plone Test Site'
 Configuration file syntax
 -------------------------
 
-As mentioned earlier, buildout configuration files use the format
+As mentioned earlier, the configuration files use the format
 defined by the Python ConfigParser module with extensions. The
 extensions are based on the zc.buildout extensions and are:
 
@@ -284,9 +285,8 @@ contain any characters (within the ASCII character set) other than newlines,
 colons, and equal signs, can not start with a space, and don't include
 trailing spaces.
 
-Like in buildout configuration files, it is a good idea to keep section and
-option names simple, sticking to alphanumeric characters, hyphens, and
-periods.
+It is a good idea to keep section and option names simple, sticking to
+alphanumeric characters, hyphens, and periods.
 
 Variable substitution
 ~~~~~~~~~~~~~~~~~~~~~
