@@ -151,9 +151,9 @@ Plone site. However, transmogrifier itself only drives the pipeline, inserting
 an empty iterator and discarding whatever it pulls out of the last section.
 
 In order to create content then, a constructor section is required. Like
-source sections, you should be able to use multiple constructor, so
-constructors should include yielding the items passed in from the previous
-section on to a possible next section.
+source sections, you should be able to use multiple constructors, so
+constructors should always start with yielding the items passed in from the
+previous section on to a possible next section.
 
 So, a constructor section is an ISection that consumes items from the previous
 section, and affects the plone site based on items, usually by creating
