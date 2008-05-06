@@ -4,4 +4,6 @@
 
 <include package=".sections"/>
 
+<adapter factory=".transmogrifier.Transmogrifier"/>
+
 </configure>
