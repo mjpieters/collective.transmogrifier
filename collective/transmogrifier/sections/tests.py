@@ -325,6 +325,18 @@ def aTSchemaUpdaterSetUp(test):
             for name, val in kw.iteritems():
                 if name.startswith('field'):
                     self.updated += ((self._last_path, name, val),)
+        
+        def checkCreationFlag(self):
+            return len(self.updated) % 2
+        
+        def unmarkCreationFlag(self):
+            pass
+        
+        def at_post_create_script(self):
+            pass
+        
+        def at_post_edit_script(self):
+            pass
     
     test.globs['plone'] = MockPortal()
     test.globs['transmogrifier'].portal = test.globs['plone']
