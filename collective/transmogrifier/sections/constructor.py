@@ -24,7 +24,7 @@ class ConstructorSection(object):
         self.typekey = Matcher(*typekeys)
         
         if 'path-key' in options:
-            pathkeys = options['type-key'].splitlines()
+            pathkeys = options['path-key'].splitlines()
         else:
             pathkeys = defaultKeys(options['blueprint'], name, 'path')
         self.pathkey = Matcher(*pathkeys)
