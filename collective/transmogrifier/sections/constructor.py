@@ -6,6 +6,7 @@ from collective.transmogrifier.utils import defaultKeys
 
 from Acquisition import aq_base
 from Products.CMFCore.utils import getToolByName
+from Products.CMFPlone.utils import _createObjectByType
 
 class ConstructorSection(object):
     classProvides(ISectionBlueprint)
@@ -29,11 +30,18 @@ class ConstructorSection(object):
             pathkeys = defaultKeys(options['blueprint'], name, 'path')
         self.pathkey = Matcher(*pathkeys)
     
+        if 'unrestricted-create-key' in options:
+            unrestrictedcreatekeys = options['unrestricted-create-key'].splitlines()
+        else:
+            unrestrictedcreatekeys = defaultKeys(options['blueprint'], name, 'unrestricted_create')
+        self.unrestrictedcreatekey = Matcher(*unrestrictedcreatekeys)
+    
     def __iter__(self):
         for item in self.previous:
             keys = item.keys()
             typekey = self.typekey(*keys)[0]
             pathkey = self.pathkey(*keys)[0]
+            unrestrictedcreatekey = self.unrestrictedcreatekey(*keys)[0]
             
             if not (typekey and pathkey):              # not enough info
                 yield item; continue
@@ -54,8 +62,14 @@ class ConstructorSection(object):
             if getattr(aq_base(context), id, None) is not None: # item exists
                 yield item; continue
             
-            new_id = context.invokeFactory(id=id, type_name=type_)
-            if new_id and new_id != id:
-                item[pathkey] = '%s/%s' % (container, new_id)
+            if unrestrictedcreatekey and item[unrestrictedcreatekey] == True:
+                obj = _createObjectByType(type_, context, id)
+                new_id = obj.getId()
+                if new_id and new_id != id:
+                    item[pathkey] = '%s/%s' % (container, new_id)
+            else:
+                new_id = context.invokeFactory(id=id, type_name=type_)
+                if new_id and new_id != id:
+                    item[pathkey] = '%s/%s' % (container, new_id)
             
             yield item
