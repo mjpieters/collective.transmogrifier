@@ -18,6 +18,11 @@
     />
 
 <utility
+    component=".browserdefault.BrowserDefaultSection"
+    name="collective.transmogrifier.sections.browserdefault"
+    />
+
+<utility
     component=".codec.CodecSection"
     name="collective.transmogrifier.sections.codec"
     />

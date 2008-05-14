@@ -412,6 +412,53 @@ def workflowUpdaterSetUp(test):
         name=u'collective.transmogrifier.sections.tests.workflowsource')
 
 
+def browserDefaultSetUp(test):
+    sectionsSetUp(test)
+
+    from Products.CMFDynamicViewFTI.interface import ISelectableBrowserDefault
+    class MockPortal(object):
+        implements(ISelectableBrowserDefault)
+
+        _last_path = None
+        def unrestrictedTraverse(self, path, default):
+            if path[0] == '/':
+                return default # path is absolute
+            if isinstance(path, unicode):
+                return default
+            if path == 'not/existing/bar':
+                return default
+            self._last_path = path
+            return self
+
+        updated = ()
+        def setLayout(self, layout):
+            self.updated += ((self._last_path, 'layout', layout),)
+
+        def setDefaultPage(self, defaultpage):
+            self.updated += ((self._last_path, 'defaultpage', defaultpage),)
+
+    test.globs['plone'] = MockPortal()
+    test.globs['transmogrifier'].portal = test.globs['plone']
+
+    class BrowserDefaultSource(SampleSource):
+        classProvides(ISectionBlueprint)
+        implements(ISection)
+
+        def __init__(self, *args, **kw):
+            super(BrowserDefaultSource, self).__init__(*args, **kw)
+            self.sample = (
+                dict(_path=u'/spam/eggs/foo', _layout='spam'),
+                dict(_path='/spam/eggs/bar', _defaultpage='eggs'),
+                dict(_path='/spam/eggs/baz', _layout='spam', _defaultpage='eggs'),
+                dict(_path='not/existing/bar', _layout='spam',
+                     title='Should not be updated, not an existing path'),
+                dict(_path='spam/eggs/incomplete',
+                     title='Should not be updated, no layout or defaultpage'),
+            )
+    provideUtility(BrowserDefaultSource,
+        name=u'collective.transmogrifier.sections.tests.browserdefaultsource')
+
+
 def test_suite():
     return unittest.TestSuite((
         unittest.makeSuite(SplitterConditionSectionTests),
@@ -432,4 +479,7 @@ def test_suite():
         doctest.DocFileSuite(
             'workflowupdater.txt',
             setUp=workflowUpdaterSetUp, tearDown=tearDown),
+        doctest.DocFileSuite(
+            'browserdefault.txt',
+            setUp=browserDefaultSetUp, tearDown=tearDown),
     ))

@@ -1,0 +1,37 @@
+Browser default section
+=======================
+
+
+>>> import pprint
+>>> browserdefault = """
+... [transmogrifier]
+... pipeline =
+...     browserdefaultsource
+...     browserdefault
+...     printer
+...     
+... [browserdefaultsource]
+... blueprint = collective.transmogrifier.sections.tests.browserdefaultsource
+... 
+... [browserdefault]
+... blueprint = collective.transmogrifier.sections.browserdefault
+... 
+... [printer]
+... blueprint = collective.transmogrifier.sections.tests.pprinter
+... """
+>>> registerConfig(u'collective.transmogrifier.sections.tests.browserdefault',
+...                browserdefault)
+>>> transmogrifier(u'collective.transmogrifier.sections.tests.browserdefault')
+{'_layout': 'spam', '_path': u'/spam/eggs/foo'}
+{'_defaultpage': 'eggs', '_path': '/spam/eggs/bar'}
+{'_layout': 'spam', '_defaultpage': 'eggs', '_path': '/spam/eggs/baz'}
+{'_layout': 'spam',
+ '_path': 'not/existing/bar',
+ 'title': 'Should not be updated, not an existing path'}
+{'_path': 'spam/eggs/incomplete',
+ 'title': 'Should not be updated, no layout or defaultpage'}
+>>> pprint.pprint(plone.updated)
+(('spam/eggs/foo', 'layout', 'spam'),
+ ('spam/eggs/bar', 'defaultpage', 'eggs'),
+ ('spam/eggs/baz', 'layout', 'spam'),
+ ('spam/eggs/baz', 'defaultpage', 'eggs'))
