@@ -23,6 +23,11 @@
     />
 
 <utility
+    component=".criteria.CriterionAdder"
+    name="collective.transmogrifier.sections.criterionadder"
+    />
+
+<utility
     component=".codec.CodecSection"
     name="collective.transmogrifier.sections.codec"
     />

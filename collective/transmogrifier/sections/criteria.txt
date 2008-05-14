@@ -1,0 +1,4 @@
+Criterion adder section
+=======================
+
+Used to add criteria to collections.
