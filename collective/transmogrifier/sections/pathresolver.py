@@ -2,7 +2,7 @@ import collections
 from zope.interface import classProvides, implements
 from collective.transmogrifier.interfaces import ISectionBlueprint
 from collective.transmogrifier.interfaces import ISection
-from collective.transmogrifier.utils import Expression, Condition
+from collective.transmogrifier.utils import Matcher
 
 def boolean(val):
     return val.lower() in ('yes', 'true', 'on', '1')
@@ -21,8 +21,8 @@ class PathResolverSection(object):
     implements(ISection)
     
     def __init__(self, transmogrifier, name, options, previous):
-        self.keys = Matcher(self.options['keys'].splitlines())
-        self.defer = boolean(self.options.get('defer-until-present', 'no'))
+        self.keys = Matcher(*options['keys'].splitlines())
+        self.defer = boolean(options.get('defer-until-present', 'no'))
         self.previous = previous
         self._deferred = []
         self.portal = transmogrifier.portal
