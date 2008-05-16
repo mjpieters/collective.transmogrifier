@@ -11,6 +11,7 @@ def assequence(val):
     """If a string, make it a sequence
     
     Returns issingle (True, False), sequence
+    
     """
     if isinstance(val, basestring):
         return True, (val,)
@@ -31,6 +32,7 @@ class PathResolverSection(object):
         """Replace paths with objects
         
         Manipulates item in-place, returns success (True or False)
+        
         """
         if defer is None:
             defer = self.defer
@@ -59,6 +61,7 @@ class PathResolverSection(object):
         """Process deferred items
         
         Yields items that can now be completed
+        
         """
         deferred = self._deferred
         self._deferred = []
