@@ -48,6 +48,11 @@
     />
 
 <utility
+    component=".pathresolver.PathResolverSection"
+    name="collective.transmogrifier.sections.pathresolver"
+    />
+
+<utility
     component=".splitter.SplitterSection"
     name="collective.transmogrifier.sections.splitter"
     />
