@@ -82,10 +82,10 @@ class PathResolverSection(object):
                 for item in self.process_deferred():
                     yield item
             else:
-                self._deferred_items.append(item)
+                self._deferred.append(item)
         
         # anything in the queue still needs to be processed
         # without deferring (skipping non-existing items)
-        for item in self._deferred_items:
+        for item in self._deferred:
             self.process_item(item, defer=False)
             yield item
