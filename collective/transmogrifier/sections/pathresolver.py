@@ -25,7 +25,7 @@ class PathResolverSection(object):
         self.defer = boolean(options.get('defer-until-present', 'no'))
         self.previous = previous
         self._deferred = []
-        self.portal = transmogrifier.portal
+        self.context = transmogrifier.context
     
     def process_item(self, item, defer=None):
         """Replace paths with objects
@@ -34,14 +34,14 @@ class PathResolverSection(object):
         """
         if defer is None:
             defer = self.defer
-        portal = self.portal
+        context = self.context
         resolved = {}
         
         for key in item.keys():
             match = self.keys(key)[1]
             if match:
                 single, paths = assequence(item[key])
-                result = [portal.unrestrictedTraverse(p.lstrip('/'), None)
+                result = [context.unrestrictedTraverse(p.lstrip('/'), None)
                           for p in paths]
                 if defer and None in result:
                     return False

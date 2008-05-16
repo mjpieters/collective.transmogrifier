@@ -202,8 +202,8 @@ section and must be looped over when the section itself is iterated. The
 configuration file.
 
 The ``transmogrifier`` argument is a reference to the transmogrifier itself,
-and it can be used to reach the Portal we are importing to through it's
-``portal`` attribute. The transmogrifier also acts as a dictionary, mapping
+and it can be used to reach the context we are importing to through it's
+``context`` attribute. The transmogrifier also acts as a dictionary, mapping
 from section names to a mapping of the options in each section.
 
 Finally, as seen before, the ``options`` argument is a mapping of the current
@@ -226,7 +226,7 @@ A short example shows each of these arguments in action:
 ...         pipeline_size = len([s.strip() for s in pipeline.split('\n')
 ...                              if s.strip()])
 ...         self.size = options['pipeline-size'] = str(pipeline_size)
-...         self.site_title = transmogrifier.portal.Title()
+...         self.site_title = transmogrifier.context.Title()
 ...
 ...     def __iter__(self):
 ...         for item in self.previous:
@@ -398,7 +398,7 @@ pipeline, what defines a 'thing' or what ultimately gets accomplished.
 
 But as has been stated repeatedly, transmogrifier has been developed to
 facilitate importing legacy content, processing data in incremental steps
-until a final section constructs new content in the portal.
+until a final section constructs new content.
 
 To reach this end, several conventions have been established that help the
 various pipeline sections work together. 

@@ -275,7 +275,7 @@ def constructorSetUp(test):
             return id
     
     test.globs['plone'] = MockPortal()
-    test.globs['transmogrifier'].portal = test.globs['plone']
+    test.globs['transmogrifier'].context = test.globs['plone']
     
     class ContentSource(SampleSource):
         classProvides(ISectionBlueprint)
@@ -339,7 +339,7 @@ def aTSchemaUpdaterSetUp(test):
             pass
     
     test.globs['plone'] = MockPortal()
-    test.globs['transmogrifier'].portal = test.globs['plone']
+    test.globs['transmogrifier'].context = test.globs['plone']
     
     class SchemaSource(SampleSource):
         classProvides(ISectionBlueprint)
@@ -389,7 +389,7 @@ def workflowUpdaterSetUp(test):
             self.updated += ((self._last_path, action),)
 
     test.globs['plone'] = MockPortal()
-    test.globs['transmogrifier'].portal = test.globs['plone']
+    test.globs['transmogrifier'].context = test.globs['plone']
 
     class WorkflowSource(SampleSource):
         classProvides(ISectionBlueprint)
@@ -438,7 +438,7 @@ def browserDefaultSetUp(test):
             self.updated += ((self._last_path, 'defaultpage', defaultpage),)
 
     test.globs['plone'] = MockPortal()
-    test.globs['transmogrifier'].portal = test.globs['plone']
+    test.globs['transmogrifier'].context = test.globs['plone']
 
     class BrowserDefaultSource(SampleSource):
         classProvides(ISectionBlueprint)

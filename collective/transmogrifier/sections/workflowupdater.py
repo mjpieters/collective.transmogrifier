@@ -13,8 +13,8 @@ class WorkflowUpdaterSection(object):
     
     def __init__(self, transmogrifier, name, options, previous):
         self.previous = previous
-        self.portal = transmogrifier.portal
-        self.wftool = getToolByName(self.portal, 'portal_workflow')
+        self.context = transmogrifier.context
+        self.wftool = getToolByName(self.context, 'portal_workflow')
         
         if 'path-key' in options:
             pathkeys = options['type-key'].splitlines()
@@ -42,7 +42,7 @@ class WorkflowUpdaterSection(object):
             if isinstance(transitions, basestring):
                 transitions = (transitions,)
             
-            obj = self.portal.unrestrictedTraverse(path.lstrip('/'), None)
+            obj = self.context.unrestrictedTraverse(path.lstrip('/'), None)
             if obj is None:                      # path doesn't exist
                 yield item; continue
             

@@ -7,8 +7,6 @@ TODO
 
 - Reorganize sections to reduce dependencies
 
-- Transmogrifier context should be a folder, not a site
-
 - Create default utility sections:
 
   - catalog delaying (replace catalog index methods with queues until

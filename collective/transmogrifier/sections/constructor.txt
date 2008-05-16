@@ -35,7 +35,7 @@ order, with ``[sectionname]`` replaced).
 
 Unicode paths will be encoded to ASCII. Using the path and type, a new object
 will be constructed using invokeFactory; nothing else is done. Paths are
-always interpreted as relative to the portal object, with the last path
+always interpreted as relative to the context object, with the last path
 segment being the id of the object to create.
 
 >>> import pprint

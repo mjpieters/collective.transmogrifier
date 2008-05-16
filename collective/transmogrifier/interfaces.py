@@ -3,7 +3,7 @@ import zope.interface
 class ITransmogrifier(zope.interface.Interface):
     """The transmogrifier transforms objects through a pipeline"""
     
-    portal = zope.interface.Attribute("The targeted Plone portal")
+    context = zope.interface.Attribute("The targeted IFolderish context")
     
     def __call__(self, configuration_id, **overrides):
         """Load and execute the named pipeline configuration

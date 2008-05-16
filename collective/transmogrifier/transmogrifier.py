@@ -5,7 +5,7 @@ import UserDict
 from zope.component import adapts
 from zope.interface import implements
 
-from Products.CMFCore.interfaces import ISiteRoot
+from Products.CMFCore.interfaces import IFolderish
 
 from interfaces import ITransmogrifier
 from utils import constructPipeline
@@ -40,10 +40,10 @@ configuration_registry = ConfigurationRegistry()
 
 class Transmogrifier(UserDict.DictMixin):
     implements(ITransmogrifier)
-    adapts(ISiteRoot)
+    adapts(IFolderish)
     
-    def __init__(self, portal):
-        self.portal = portal
+    def __init__(self, context):
+        self.context = context
         
     def __call__(self, configuration_id, **overrides):
         self._raw = _load_config(configuration_id, **overrides)

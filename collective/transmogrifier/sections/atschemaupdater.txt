@@ -26,9 +26,9 @@ of keys to try (one key per line, use a ``re:`` or ``regexp:`` prefix to
 specify regular expressions).
 
 Unicode paths are encoded to ASCII. Paths to objects are always interpreted as
-relative to the portal object. Any writable field who's id matches a key in
-the current item will be updated with the corresponding value, using the
-field's mutator.
+relative to the context. Any writable field who's id matches a key in the
+current item will be updated with the corresponding value, using the field's
+mutator.
 
 >>> import pprint
 >>> atschema = """

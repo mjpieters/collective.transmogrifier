@@ -15,7 +15,7 @@ class ATSchemaUpdaterSection(object):
     
     def __init__(self, transmogrifier, name, options, previous):
         self.previous = previous
-        self.portal = transmogrifier.portal
+        self.context = transmogrifier.context
         
         if 'path-key' in options:
             pathkeys = options['path-key'].splitlines()
@@ -32,7 +32,7 @@ class ATSchemaUpdaterSection(object):
             
             path = item[pathkey]
             
-            obj = self.portal.unrestrictedTraverse(path.lstrip('/'), None)
+            obj = self.context.unrestrictedTraverse(path.lstrip('/'), None)
             if obj is None:         # path doesn't exist
                 yield item; continue
             

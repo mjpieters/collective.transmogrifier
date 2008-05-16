@@ -24,7 +24,7 @@ class CodecSection(object):
             from_ = options['from'].strip().lower()
             if from_ != 'unicode':
                 if from_ == 'default':
-                    from_ = _get_default_encoding(transmogrifier.portal)
+                    from_ = _get_default_encoding(transmogrifier.context)
                 
                 # Test if the decoder is available
                 codecs.getdecoder(from_)
@@ -40,7 +40,7 @@ class CodecSection(object):
             to = options['to'].strip().lower()
             if to != 'unicode':
                 if to == 'default':
-                    to = _get_default_encoding(transmogrifier.portal)
+                    to = _get_default_encoding(transmogrifier.context)
                 
                 # Test if the encoder is available
                 codecs.getencoder(to)

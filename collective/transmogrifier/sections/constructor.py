@@ -14,8 +14,8 @@ class ConstructorSection(object):
     
     def __init__(self, transmogrifier, name, options, previous):
         self.previous = previous
-        self.portal = transmogrifier.portal
-        self.ttool = getToolByName(self.portal, 'portal_types')
+        self.context = transmogrifier.context
+        self.ttool = getToolByName(self.context, 'portal_types')
         
         if 'type-key' in options:
             typekeys = options['type-key'].splitlines()
@@ -53,7 +53,7 @@ class ConstructorSection(object):
             
             elems = path.strip('/').rsplit('/', 1)
             container, id = (len(elems) == 1 and ('', elems[0]) or elems)
-            context = self.portal.unrestrictedTraverse(container, None)
+            context = self.context.unrestrictedTraverse(container, None)
             if context is None:                        # container doesn't exist
                 yield item; continue
             

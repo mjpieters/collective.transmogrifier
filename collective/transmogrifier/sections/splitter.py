@@ -23,7 +23,7 @@ from collective.transmogrifier.utils import Condition
 # A better solution would be to use co-routines (PEP 342), something not
 # available until python 2.5. Alternatively this could possibly be solved
 # using threads, which would mean that all sub-pipes would be in the wrong
-# thread to access transmogrifier.portal, with all that entails.
+# thread to access transmogrifier.context, with all that entails.
 
 # Unique marker tokens for the look-ahead buffer
 _empty = []

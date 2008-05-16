@@ -31,7 +31,7 @@ as ``path-key``), defaulting to
 ``_[sectionname]_transitions`` and ``_transitions``.
 
 Unicode paths are encoded to ASCII. Paths to objects are always interpreted as
-relative to the portal object. Transitions are specified as a sequence of
+relative to the context object. Transitions are specified as a sequence of
 transition names, or as a string specifying one transition. Transitions are
 executed in order, failing transitions are silently ignored.
 
