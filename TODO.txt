@@ -5,6 +5,10 @@ TODO
 
 - Sprinkle helpful logging statements throughout
 
+- Reorganize sections to reduce dependencies
+
+- Transmogrifier context should be a folder, not a site
+
 - Create default utility sections:
 
   - catalog delaying (replace catalog index methods with queues until
@@ -15,6 +19,9 @@ TODO
   - alternative path strategy: delay items until parents have been seen.
 
   - references
+
+    - For archetypes-field managed references, a path resolver would suffice,
+      as ReferenceField and ReverseReferenceField take objects or UIDs.
 
   - A logging section (log selected or all keys to a logging target (Z2, file,
     syslog, etc.) with configurable log level)
@@ -27,7 +34,18 @@ TODO
 
   - marker interfaces
 
+  - archetypes mimetype encapsulator. File, image and text fields need a 
+    mimetype, with the data wrapped in a OFS.Image.File object. This section
+    should take a mimetype key and a data key and replace these with the
+    OFS.Image.File object.
+
+  - Clean up docs and tests for new sections from Florian (criteria, 
+    browserdefault, changes to constructor)
+
 - Provide a UI for selecting and running pipelines
+
+- Add a GS profile step that reads one or more transmogrifier configuration 
+  names from an file to execute.
 
 - Define a 'default import pipeline' variable in the transmogrifier section,
   so you can include a default set of sections that'll work for 95% of the
