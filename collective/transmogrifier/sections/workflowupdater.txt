@@ -55,7 +55,7 @@ executed in order, failing transitions are silently ignored.
 >>> registerConfig(u'collective.transmogrifier.sections.tests.workflow',
 ...                workflow)
 >>> transmogrifier(u'collective.transmogrifier.sections.tests.workflow')
-{'_transitions': 'spam', '_path': u'/spam/eggs/foo'}
+{'_transitions': 'spam', '_path': '/spam/eggs/foo'}
 {'_transitions': ('spam', 'eggs'), '_path': '/spam/eggs/baz'}
 {'_path': 'not/existing/bar',
  '_transitions': ('spam', 'eggs'),

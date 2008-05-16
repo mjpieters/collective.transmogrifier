@@ -41,8 +41,6 @@ class WorkflowUpdaterSection(object):
             path, transitions = item[pathkey], item[transitionskey]
             if isinstance(transitions, basestring):
                 transitions = (transitions,)
-            if isinstance(path, unicode):
-                path = path.encode('ascii')
             
             obj = self.portal.unrestrictedTraverse(path.lstrip('/'), None)
             if obj is None:                      # path doesn't exist

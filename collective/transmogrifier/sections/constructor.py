@@ -47,8 +47,6 @@ class ConstructorSection(object):
                 yield item; continue
             
             type_, path = item[typekey], item[pathkey]
-            if isinstance(path, unicode):
-                path = path.encode('ascii')
             
             if self.ttool.getTypeInfo(type_) is None:  # not an existing type
                 yield item; continue

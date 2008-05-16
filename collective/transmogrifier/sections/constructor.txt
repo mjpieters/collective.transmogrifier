@@ -58,7 +58,7 @@ segment being the id of the object to create.
 >>> registerConfig(u'collective.transmogrifier.sections.tests.constructor',
 ...                constructor)
 >>> transmogrifier(u'collective.transmogrifier.sections.tests.constructor')
-{'_type': 'FooType', '_path': u'/spam/eggs/foo'}
+{'_type': 'FooType', '_path': '/spam/eggs/foo'}
 {'_type': 'FooType', '_path': '/foo'}
 {'_path': 'not/existing/bar',
  '_type': 'BarType',

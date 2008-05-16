@@ -43,8 +43,6 @@ class BrowserDefaultSection(object):
             defaultpagekey = self.defaultpagekey(*item.keys())[0]
 
             path = item[pathkey]
-            if isinstance(path, unicode):
-                path = path.encode('ascii')
 
             obj = self.portal.unrestrictedTraverse(path.lstrip('/'), None)
             if obj is None:

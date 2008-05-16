@@ -284,7 +284,7 @@ def constructorSetUp(test):
         def __init__(self, *args, **kw):
             super(ContentSource, self).__init__(*args, **kw)
             self.sample = (
-                dict(_type='FooType', _path=u'/spam/eggs/foo'),
+                dict(_type='FooType', _path='/spam/eggs/foo'),
                 dict(_type='FooType', _path='/foo'),
                 dict(_type='BarType', _path='not/existing/bar',
                      title='Should not be constructed, not an existing path'),
@@ -348,7 +348,7 @@ def aTSchemaUpdaterSetUp(test):
         def __init__(self, *args, **kw):
             super(SchemaSource, self).__init__(*args, **kw)
             self.sample = (
-                dict(_path=u'/spam/eggs/foo', fieldone='one value', 
+                dict(_path='/spam/eggs/foo', fieldone='one value', 
                      fieldtwo=2, nosuchfield='ignored'),
                 dict(_path='not/existing/bar', fieldone='one value',
                      title='Should not be updated, not an existing path'),
@@ -398,7 +398,7 @@ def workflowUpdaterSetUp(test):
         def __init__(self, *args, **kw):
             super(WorkflowSource, self).__init__(*args, **kw)
             self.sample = (
-                dict(_path=u'/spam/eggs/foo', _transitions='spam'),
+                dict(_path='/spam/eggs/foo', _transitions='spam'),
                 dict(_path='/spam/eggs/baz', _transitions=('spam', 'eggs')),
                 dict(_path='not/existing/bar', _transitions=('spam', 'eggs'),
                      title='Should not be updated, not an existing path'),
@@ -447,7 +447,7 @@ def browserDefaultSetUp(test):
         def __init__(self, *args, **kw):
             super(BrowserDefaultSource, self).__init__(*args, **kw)
             self.sample = (
-                dict(_path=u'/spam/eggs/foo', _layout='spam'),
+                dict(_path='/spam/eggs/foo', _layout='spam'),
                 dict(_path='/spam/eggs/bar', _defaultpage='eggs'),
                 dict(_path='/spam/eggs/baz', _layout='spam', _defaultpage='eggs'),
                 dict(_path='not/existing/bar', _layout='spam',

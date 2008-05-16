@@ -22,7 +22,7 @@ Browser default section
 >>> registerConfig(u'collective.transmogrifier.sections.tests.browserdefault',
 ...                browserdefault)
 >>> transmogrifier(u'collective.transmogrifier.sections.tests.browserdefault')
-{'_layout': 'spam', '_path': u'/spam/eggs/foo'}
+{'_layout': 'spam', '_path': '/spam/eggs/foo'}
 {'_defaultpage': 'eggs', '_path': '/spam/eggs/bar'}
 {'_layout': 'spam', '_defaultpage': 'eggs', '_path': '/spam/eggs/baz'}
 {'_layout': 'spam',
