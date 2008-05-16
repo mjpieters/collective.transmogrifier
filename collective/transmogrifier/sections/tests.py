@@ -254,7 +254,8 @@ def constructorSetUp(test):
         @property
         def portal_types(self): return self
         def getTypeInfo(self, type_name):
-            if type_name in ('FooType', 'BarType'): return True
+            self._last_type = type_name
+            if type_name in ('FooType', 'BarType'): return self
         
         _last_path = None
         def unrestrictedTraverse(self, path, default):
@@ -268,11 +269,18 @@ def constructorSetUp(test):
             return self
         
         constructed = ()
-        def invokeFactory(self, id, type_name):
+        def _constructInstance(self, context, id):
             if id == 'changeme':
                 id = 'changedByFactory'
-            self.constructed += ((self._last_path, id, type_name),)
-            return id
+            self._last_id = id
+            self.constructed += ((self._last_path, id, self._last_type),)
+            return self
+        
+        def _finishConstruction(self, obj):
+            return obj
+        
+        def getId(self):
+            return self._last_id
     
     test.globs['plone'] = MockPortal()
     test.globs['transmogrifier'].context = test.globs['plone']

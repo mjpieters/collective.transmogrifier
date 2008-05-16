@@ -6,6 +6,8 @@ pipeline. It constructs Plone content based on the items it processes. The
 constructor section blueprint name is
 ``collective.transmogrifier.sections.constructor``. Constructor sections do
 only one thing, they construct *new* content. No schema changes are made.
+Also, constructors create content without restrictions, no security checks or
+containment constraints are checked.
 
 Construction needs 2 pieces of information: the path to the item (including
 the id for the new item itself) and it's portal type. To determine both of
