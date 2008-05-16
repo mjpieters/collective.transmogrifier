@@ -31,7 +31,11 @@ class PathResolverSection(object):
     def process_item(self, item, defer=None):
         """Replace paths with objects
         
-        Manipulates item in-place, returns success (True or False)
+        Manipulates item in-place, returns success (True or False). Success
+        is defined as 'all paths resolved' if defer is true, and otherwise
+        means 'all existing paths resolved'.
+        
+        If defer is None, self.defer is used instead.
         
         """
         if defer is None:
