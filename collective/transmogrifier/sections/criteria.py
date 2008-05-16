@@ -2,8 +2,7 @@ from zope.interface import classProvides, implements
 from zope.component import queryUtility
 
 from collective.transmogrifier.interfaces import ISection, ISectionBlueprint
-from collective.transmogrifier.utils import Matcher
-from collective.transmogrifier.utils import defaultKeys
+from collective.transmogrifier.utils import defaultMatcher
 
 from Acquisition import aq_base
 from Products.ATContentTypes.interface import IATTopic
@@ -17,21 +16,10 @@ class CriterionAdder(object):
         self.previous = previous
         self.context = transmogrifier.context
 
-        if 'path-key' in options:
-            pathkeys = options['path-key'].splitlines()
-        else:
-            pathkeys = defaultKeys(options['blueprint'], name, 'path')
-        self.pathkey = Matcher(*pathkeys)
-        if 'criterion-key' in options:
-            criterionkeys = options['criterion-key'].splitlines()
-        else:
-            criterionkeys = defaultKeys(options['blueprint'], name, 'criterion')
-        self.criterionkey = Matcher(*criterionkeys)
-        if 'field-key' in options:
-            fieldkeys = options['field-key'].splitlines()
-        else:
-            fieldkeys = defaultKeys(options['blueprint'], name, 'field')
-        self.fieldkey = Matcher(*fieldkeys)
+        self.pathkey = defaultMatcher(options, 'path-key', name, 'path')
+        self.criterionkey = defaultMatcher(options, 'criterion-key', name,
+                                           'criterion')
+        self.fieldkey = defaultMatcher(options, 'field-key', name, 'field')
 
     def __iter__(self):
         for item in self.previous:

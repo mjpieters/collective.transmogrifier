@@ -92,6 +92,25 @@ class Matcher(object):
                     return value, match
         return None, False
 
+def defaultMatcher(options, optionname, section, key=None, extra=()):
+    """Create a Matcher from an option, with a defaultKeys fallback
+    
+    If optionname is present in options, that option is used to create a
+    Matcher, with the assumption the option holds newline-separated keys.
+    
+    Otherwise, defaultKeys is called to generate a default set of keys
+    based on options['blueprint'], section and the optional key. Any
+    keys in extra are also considered part of the default keys.
+    
+    """
+    if optionname in options:
+        keys = options[optionname].splitlines()
+    else:
+        keys = defaultKeys(options['blueprint'], section, key)
+        for key in extra:
+            keys += (key,)
+    return Matcher(*keys)
+
 class Expression(object):
     """A transmogrifier expression
     

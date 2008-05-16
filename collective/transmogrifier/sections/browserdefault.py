@@ -2,8 +2,7 @@ from zope.interface import classProvides, implements
 from zope.component import queryUtility
 
 from collective.transmogrifier.interfaces import ISection, ISectionBlueprint
-from collective.transmogrifier.utils import Matcher
-from collective.transmogrifier.utils import defaultKeys
+from collective.transmogrifier.utils import defaultMatcher
 
 from Products.CMFDynamicViewFTI.interface import ISelectableBrowserDefault
 
@@ -16,21 +15,10 @@ class BrowserDefaultSection(object):
         self.previous = previous
         self.context = transmogrifier.context
 
-        if 'path-key' in options:
-            pathkeys = options['path-key'].splitlines()
-        else:
-            pathkeys = defaultKeys(options['blueprint'], name, 'path')
-        self.pathkey = Matcher(*pathkeys)
-        if 'layout-key' in options:
-            layoutkeys = options['layout-key'].splitlines()
-        else:
-            layoutkeys = defaultKeys(options['blueprint'], name, 'layout')
-        self.layoutkey = Matcher(*layoutkeys)
-        if 'default-page-key' in options:
-            defaultpagekeys = options['default-page-key'].splitlines()
-        else:
-            defaultpagekeys = defaultKeys(options['blueprint'], name, 'defaultpage')
-        self.defaultpagekey = Matcher(*defaultpagekeys)
+        self.pathkey = defaultMatcher(options, 'path-key', name, 'path')
+        self.layoutkey = defaultMatcher(options, 'layout-key', name, 'layout')
+        self.defaultpagekey = defaultMatcher(options, 'default-page-key', name,
+                                             'defaultpage')
 
     def __iter__(self):
         defered_links = []

@@ -1,8 +1,7 @@
 from zope.interface import classProvides, implements
 from collective.transmogrifier.interfaces import ISectionBlueprint
 from collective.transmogrifier.interfaces import ISection
-from collective.transmogrifier.utils import Matcher
-from collective.transmogrifier.utils import defaultKeys
+from collective.transmogrifier.utils import defaultMatcher
 
 from Products.CMFCore.utils import getToolByName
 from Products.CMFCore.WorkflowCore import WorkflowException
@@ -16,18 +15,9 @@ class WorkflowUpdaterSection(object):
         self.context = transmogrifier.context
         self.wftool = getToolByName(self.context, 'portal_workflow')
         
-        if 'path-key' in options:
-            pathkeys = options['type-key'].splitlines()
-        else:
-            pathkeys = defaultKeys(options['blueprint'], name, 'path')
-        self.pathkey = Matcher(*pathkeys)
-        
-        if 'transitions-key' in options:
-            transitionskeys = options['transitions-key'].splitlines()
-        else:
-            transitionskeys = defaultKeys(options['blueprint'], name, 
-                                           'transitions')
-        self.transitionskey = Matcher(*transitionskeys)
+        self.pathkey = defaultMatcher(options, 'path-key', name, 'path')
+        self.transitionskey = defaultMatcher(options, 'transitions-key', name,
+                                             'transitions')
     
     def __iter__(self):
         for item in self.previous:

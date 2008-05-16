@@ -1,8 +1,7 @@
 from zope.interface import classProvides, implements
 from collective.transmogrifier.interfaces import ISectionBlueprint
 from collective.transmogrifier.interfaces import ISection
-from collective.transmogrifier.utils import Matcher
-from collective.transmogrifier.utils import defaultKeys
+from collective.transmogrifier.utils import defaultMatcher
 
 from Acquisition import aq_base
 from Products.CMFCore.utils import getToolByName
@@ -17,24 +16,11 @@ class ConstructorSection(object):
         self.context = transmogrifier.context
         self.ttool = getToolByName(self.context, 'portal_types')
         
-        if 'type-key' in options:
-            typekeys = options['type-key'].splitlines()
-        else:
-            typekeys = defaultKeys(options['blueprint'], name, 'type')
-            typekeys += ('portal_type', 'Type')
-        self.typekey = Matcher(*typekeys)
-        
-        if 'path-key' in options:
-            pathkeys = options['path-key'].splitlines()
-        else:
-            pathkeys = defaultKeys(options['blueprint'], name, 'path')
-        self.pathkey = Matcher(*pathkeys)
-    
-        if 'unrestricted-create-key' in options:
-            unrestrictedcreatekeys = options['unrestricted-create-key'].splitlines()
-        else:
-            unrestrictedcreatekeys = defaultKeys(options['blueprint'], name, 'unrestricted_create')
-        self.unrestrictedcreatekey = Matcher(*unrestrictedcreatekeys)
+        self.typekey = defaultMatcher(options, 'type-key', name, 'type', 
+                                      ('portal_type', 'Type'))
+        self.pathkey = defaultMatcher(options, 'path-key', name, 'path')
+        self.unrestrictedcreatekey = defaultMatcher(
+            options, 'unrestricted-create-key', name, 'unrestricted_create')
     
     def __iter__(self):
         for item in self.previous:
