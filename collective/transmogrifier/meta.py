@@ -53,3 +53,8 @@ def registerConfig(_context, configuration, name=u'default', title=None,
         callable=configuration_registry.registerConfiguration,
         args=(name, title, description, configuration))
 
+
+# Test cleanup support
+from zope.testing.cleanup import addCleanUp
+addCleanUp(configuration_registry.clear)
+del addCleanUp
