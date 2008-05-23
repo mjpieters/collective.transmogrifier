@@ -9,8 +9,9 @@ class ManipulatorSection(object):
     implements(ISection)
     
     def __init__(self, transmogrifier, name, options, previous):
-        self.keys = Matcher(*options.get('keys', '').splitlines())
-        if keys:
+        keys = options.get('keys') or ''
+        self.keys = Matcher(*keys.splitlines())
+        if self.keys:
             self.dest = Expression(options['destination'], transmogrifier,
                                    name, options)
         self.delete = Matcher(*options.get('delete', '').splitlines())
