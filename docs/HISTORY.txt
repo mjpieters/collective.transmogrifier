@@ -3,6 +3,11 @@ Change History
 
 (name of developer listed in brackets)
 
+0.1.jarn.1 (2008-05-23)
+=======================
+
+- Internal Jarn release for customer
+
 0.1 (unreleased)
 ================
 
