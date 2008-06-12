@@ -37,6 +37,12 @@ TODO
     should take a mimetype key and a data key and replace these with the
     OFS.Image.File object.
 
+  - Unique path generator. If a path has been seen before, append an integer
+    until it is unique again. Check against an internal list or against the
+    context.
+
+  - URLNormalizer section to generate suitable ids.
+
   - Clean up docs and tests for new sections from Florian (criteria, 
     browserdefault, changes to constructor)
 
