@@ -121,7 +121,67 @@ class OptionSubstitutionTests(unittest.TestCase):
         self.assertRaises(KeyError, operator.itemgetter('dontexist'), opts)
         self.assertRaises(KeyError, operator.itemgetter('dontexist'),
                           opts['empty'])
+
+class InclusionManipulationTests(cleanup.CleanUp, unittest.TestCase):
+    def setUp(self):
+        super(InclusionManipulationTests, self).setUp()
+        self._basedir = tempfile.mkdtemp('transmogrifierTestConfigs')
+        self._registerConfig(
+            u'collective.transmogrifier.tests.included',
+            '''\
+[foo]
+bar=
+    monty
+    python
+''')
+    
+    def tearDown(self):
+        super(InclusionManipulationTests, self).tearDown()
+        shutil.rmtree(self._basedir)
+    
+    def _registerConfig(self, name, configuration):
+        filename = os.path.join(self._basedir, '%s.cfg' % name)
+        open(filename, 'w').write(configuration)
+        configuration_registry.registerConfiguration(
+            name,
+            u"Pipeline configuration '%s' from "
+            u"'collective.transmogrifier.tests'" % name,
+            u'', filename)
+    
+    def _loadConfig(self, config):
+        from collective.transmogrifier.transmogrifier import _load_config
+        config = (
+            '[transmogrifier]\n'
+            'include=collective.transmogrifier.tests.included\n\n'
+            ) + config
+        self._registerConfig(
+            u'collective.transmogrifier.tests.includer', config)
+        return _load_config(u'collective.transmogrifier.tests.includer')
+    
+    def testAdd(self):
+        opts = self._loadConfig('[foo]\nbar+=eggs\n')
+        self.assertEquals(opts['foo']['bar'], 'monty\npython\neggs')
         
+    def testRemove(self):
+        opts = self._loadConfig('[foo]\nbar-=python\n')
+        self.assertEquals(opts['foo']['bar'], 'monty')
+    
+    def testAddAndRemove(self):
+        opts = self._loadConfig('''\
+[foo]
+bar -=
+    monty
+bar +=
+    monty
+    eggs
+''')
+        self.assertEquals(opts['foo']['bar'], 'python\nmonty\neggs')
+    
+    def testNonExistent(self):
+        opts = self._loadConfig('[bar]\nfoo+=spam\nbaz-=monty\n')
+        self.assertEquals(opts['bar']['foo'], 'spam')
+        self.assertEquals(opts['bar']['baz'], '')
+
 class ConstructPipelineTests(cleanup.CleanUp, unittest.TestCase):
     def _doConstruct(self, transmogrifier, sections, pipeline=None):
         from collective.transmogrifier.utils import constructPipeline
@@ -194,17 +254,15 @@ def setUp(test):
 
 def tearDown(test):
     from collective.transmogrifier import transmogrifier
-    transmogrifier.configuration_registry.clear()
     shutil.rmtree(BASEDIR)
     cleanup.cleanUp()
 
 def test_suite():
-    return unittest.TestSuite((
-        unittest.makeSuite(MetaDirectivesTests),
-        unittest.makeSuite(OptionSubstitutionTests),
-        unittest.makeSuite(ConstructPipelineTests),
-        unittest.makeSuite(DefaultKeysTest),
+    import sys
+    suite = unittest.findTestCases(sys.modules[__name__])
+    suite.addTests((
         doctest.DocFileSuite(
             'transmogrifier.txt',
             setUp=setUp, tearDown=tearDown),
     ))
+    return suite

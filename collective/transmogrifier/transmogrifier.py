@@ -37,6 +37,11 @@ class ConfigurationRegistry(object):
 
 configuration_registry = ConfigurationRegistry()
 
+# Test cleanup support
+from zope.testing.cleanup import addCleanUp
+addCleanUp(configuration_registry.clear)
+del addCleanUp
+
 
 class Transmogrifier(UserDict.DictMixin):
     implements(ITransmogrifier)
@@ -184,6 +189,41 @@ class Options(UserDict.DictMixin):
         result.update(self._data)
         return result
 
+def _update_section(section, included):
+    """Update section dictionary with included options
+    
+    Included options are only put into the section if not already defined.
+    Section keys ending with + or - are the sum or difference respectively
+    of that option and the included options. Note that - options are processed
+    before + options.
+    
+    """
+    keys = set(section.keys())
+    add = set([k for k in keys if k.endswith('+')])
+    remove = set([k for k in keys if k.endswith('-')])
+    
+    for key in remove:
+        option = key.strip(' -')
+        if option in keys:
+            raise ValueError('Option %s specified twice', option)
+        included[option] = '\n'.join([
+            v for v in included.get(option, '').splitlines()
+            if v and v not in section[key].splitlines()])
+        del section[key]
+    
+    for key in add:
+        option = key.strip(' +')
+        if option in keys:
+            raise ValueError('Option %s specified twice', option)
+        included[option] = '\n'.join([
+            v for v in included.get(option, '').splitlines() +
+                       section[key].splitlines()
+            if v])
+        del section[key]
+    
+    included.update(section)
+    return included
+
 def _load_config(configuration_id, seen=None, **overrides):
     if seen is None:
         seen = []
@@ -209,9 +249,10 @@ def _load_config(configuration_id, seen=None, **overrides):
     if includes:
         for configuration_id in includes.split()[::-1]:
             include = _load_config(configuration_id, seen)
-            for section, options in include.iteritems():
-                options.update(result.get(section, {}))
-                result[section] = options
+            sections = set(include.keys()) | set(result.keys())
+            for section in sections:
+                result[section] = _update_section(
+                    result.get(section, {}), include.get(section, {}))
     
     seen.pop()
     

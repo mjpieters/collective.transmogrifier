@@ -380,6 +380,31 @@ configuration files are honoured too:
 {'exampletransformname': 'section2', 'id': 'item01'}
 {'exampletransformname': 'section2', 'id': 'item02'}
 
+Like zc.buildout configurations, we can also add or remove lines from included
+configuration options, by using the += and -= syntax:
+
+>>> advancedinclusionexample = """\
+... [transmogrifier]
+... include = 
+...     collective.transmogrifier.tests.inclusionexample
+... pipeline -=
+...     section2
+...     section3
+... pipeline +=
+...     section4
+...     section3
+...
+... [section4]
+... blueprint = collective.transmogrifier.tests.titleexample
+... """
+>>> registerConfig(u'collective.transmogrifier.tests.advancedinclusionexample', 
+...                advancedinclusionexample)
+>>> transmogrifier = Transmogrifier(plone)
+>>> transmogrifier(u'collective.transmogrifier.tests.advancedinclusionexample')
+{'title': u'Plone Test Site - item00', 'id': 'item00', 'pipeline-size': '3'}
+{'title': u'Plone Test Site - item01', 'id': 'item01', 'pipeline-size': '3'}
+{'title': u'Plone Test Site - item02', 'id': 'item02', 'pipeline-size': '3'}
+
 When calling transmogrifier, you can provide your own sections too: any extra
 keyword is interpreted as a section dictionary. Do make sure you use string
 values though:
