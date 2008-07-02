@@ -118,7 +118,7 @@ class Expression(object):
     
     """
     def __init__(self, expression, transmogrifier, name, options, **extras):
-        self.expression = engine.Engine.compile(expression)
+        self.expression = engine.TrustedEngine.compile(expression)
         self.transmogrifier = transmogrifier
         self.name = name
         self.options = options
@@ -126,7 +126,7 @@ class Expression(object):
 
     def __call__(self, item, **extras):
         extras.update(self.extras)
-        return self.expression(engine.Engine.getContext(
+        return self.expression(engine.TrustedEngine.getContext(
             item = item,
             transmogrifier = self.transmogrifier,
             name = self.name,
