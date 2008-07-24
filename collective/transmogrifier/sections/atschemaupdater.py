@@ -38,8 +38,18 @@ class ATSchemaUpdaterSection(object):
             
             if IBaseObject.providedBy(obj):
                 is_new_object = obj.checkCreationFlag()
-                obj.update(**dict((k,v) for k,v in item.iteritems() 
-                                  if k[0:1] != '_'))
+                for k,v in item.iteritems():
+                    if k.startswith('_'):
+                        continue
+                    field = obj.getField(k)
+                    if field is None:
+                        continue
+                    if isinstance(v, unicode):
+                        if field.getRaw(obj) != v.encode('utf-8'):
+                            field.set(obj, v)
+                    else:
+                        if field.getRaw(obj) != v:
+                            field.set(obj, v)
                 obj.unmarkCreationFlag()
                 if is_new_object:
                     event.notify(ObjectInitializedEvent(obj))
