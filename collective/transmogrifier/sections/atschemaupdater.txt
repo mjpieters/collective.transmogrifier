@@ -25,10 +25,9 @@ use for the path by specifying the ``path-key`` option, which should be a list
 of keys to try (one key per line, use a ``re:`` or ``regexp:`` prefix to
 specify regular expressions).
 
-Unicode paths are encoded to ASCII. Paths to objects are always interpreted as
-relative to the context. Any writable field who's id matches a key in the
-current item will be updated with the corresponding value, using the field's
-mutator.
+Paths to objects are always interpreted as relative to the context. Any
+writable field who's id matches a key in the current item will be updated with
+the corresponding value, using the field's mutator.
 
 >>> import pprint
 >>> atschema = """
