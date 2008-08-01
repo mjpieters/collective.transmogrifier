@@ -8,26 +8,6 @@
     />
 
 <utility
-    component=".atschemaupdater.ATSchemaUpdaterSection"
-    name="collective.transmogrifier.sections.atschemaupdater"
-    />
-
-<utility
-    component=".workflowupdater.WorkflowUpdaterSection"
-    name="collective.transmogrifier.sections.workflowupdater"
-    />
-
-<utility
-    component=".browserdefault.BrowserDefaultSection"
-    name="collective.transmogrifier.sections.browserdefault"
-    />
-
-<utility
-    component=".criteria.CriterionAdder"
-    name="collective.transmogrifier.sections.criterionadder"
-    />
-
-<utility
     component=".codec.CodecSection"
     name="collective.transmogrifier.sections.codec"
     />
@@ -60,11 +40,6 @@
 <utility
     component=".savepoint.SavepointSection"
     name="collective.transmogrifier.sections.savepoint"
-    />
-
-<utility
-    component=".portaltransforms.PortalTransformsSection"
-    name="collective.transmogrifier.sections.portaltransforms"
     />
 
 <utility
