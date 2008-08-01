@@ -50,6 +50,7 @@ the corresponding value, using the field's mutator.
 ...                atschema)
 >>> transmogrifier(u'collective.transmogrifier.sections.tests.atschema')
 {'_path': '/spam/eggs/foo',
+ 'fieldnotchanged': 'nochange',
  'fieldone': 'one value',
  'fieldtwo': 2,
  'nosuchfield': 'ignored'}

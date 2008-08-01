@@ -37,6 +37,7 @@ class ATSchemaUpdaterSection(object):
                 yield item; continue
             
             if IBaseObject.providedBy(obj):
+                changed = False
                 is_new_object = obj.checkCreationFlag()
                 for k,v in item.iteritems():
                     if k.startswith('_'):
@@ -44,17 +45,15 @@ class ATSchemaUpdaterSection(object):
                     field = obj.getField(k)
                     if field is None:
                         continue
-                    if isinstance(v, unicode):
-                        if field.getRaw(obj) != v.encode('utf-8'):
-                            field.set(obj, v)
-                    else:
-                        if field.getRaw(obj) != v:
-                            field.set(obj, v)
+                    if field.get(obj) != v:
+                        field.set(obj, v)
+                        changed = True
                 obj.unmarkCreationFlag()
+                
                 if is_new_object:
                     event.notify(ObjectInitializedEvent(obj))
                     obj.at_post_create_script()
-                else:
+                elif changed:
                     event.notify(ObjectEditedEvent(obj))
                     obj.at_post_edit_script()
             

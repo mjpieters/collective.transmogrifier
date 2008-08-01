@@ -328,11 +328,19 @@ def aTSchemaUpdaterSetUp(test):
             self._last_path = path
             return self
         
+        _last_field = None
+        def getField(self, name):
+            if name.startswith('field'):
+                self._last_field = name
+                return self
+        
+        def get(self, ob):
+            if self._last_field.endswith('notchanged'):
+                return 'nochange'
+        
         updated = ()
-        def update(self, **kw):
-            for name, val in kw.iteritems():
-                if name.startswith('field'):
-                    self.updated += ((self._last_path, name, val),)
+        def set(self, ob, val):
+            self.updated += ((self._last_path, self._last_field, val),)
         
         def checkCreationFlag(self):
             return len(self.updated) % 2
@@ -357,7 +365,8 @@ def aTSchemaUpdaterSetUp(test):
             super(SchemaSource, self).__init__(*args, **kw)
             self.sample = (
                 dict(_path='/spam/eggs/foo', fieldone='one value', 
-                     fieldtwo=2, nosuchfield='ignored'),
+                     fieldtwo=2, nosuchfield='ignored',
+                     fieldnotchanged='nochange'),
                 dict(_path='not/existing/bar', fieldone='one value',
                      title='Should not be updated, not an existing path'),
                 dict(fieldone='one value',
