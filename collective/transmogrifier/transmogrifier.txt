@@ -35,6 +35,9 @@ least the transmogrifier section with an empty pipeline is required:
 ... pipeline = 
 ... """
 
+Transmogrifier can load these configuration files either by looking them up
+in a registry or by loading them from a python package.
+
 You register transmogrifier configurations using the ``registerConfig``
 directive in the http://namespaces.plone.org/transmogrifier namespace,
 together with a name, and optionally a title and description::
@@ -53,7 +56,17 @@ together with a name, and optionally a title and description::
       
   </configure>
 
-However, in this document we'll use the shorthand *registerConfig* to register
+You can then tell transmogrifier to load the 'exampleconfig' configuration. To
+load configuration files directly from a python package, name the package and
+the configuration file separated by a colon, such as
+'collective.transmogrifier.tests:exampleconfig.cfg'.
+
+Registering files with the transmogrifier registry allows other uses, such as
+listing available configurations in a user interface, together with the
+registered description. Loading files directly let's you build reusable
+libraries of configuration files more quickly though.
+
+In this document we'll use the shorthand *registerConfig* to register
 example configurations:
 
 >>> registerConfig(u'collective.transmogrifier.tests.exampleconfig', 

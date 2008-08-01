@@ -224,6 +224,22 @@ class DefaultKeysTest(unittest.TestCase):
             self._defaultKeys('foo.bar.baz', 'spam'),
             ('_foo.bar.baz_spam', '_foo.bar.baz', '_spam'))
 
+class PackageReferenceResolverTest(unittest.TestCase):
+    def setUp(self):
+        self._package_path = os.path.dirname(__file__)
+    
+    def _resolvePackageReference(self, ref):
+        from collective.transmogrifier.utils import resolvePackageReference
+        return resolvePackageReference(ref)
+    
+    def testPackageResolver(self):
+        res = self._resolvePackageReference('collective.transmogrifier:test')
+        self.assertEqual(res, os.path.join(self._package_path, 'test'))
+    
+    def testNonexistingPackage(self):
+        self.assertRaises(ImportError, self._resolvePackageReference,
+                          'collective.transmogrifier.nonexistent:test')
+
 # Doctest support
 
 BASEDIR = None

@@ -1,3 +1,4 @@
+import os.path
 import re
 import sys
 
@@ -6,6 +7,17 @@ from zope.app.pagetemplate import engine
 
 from interfaces import ISection
 from interfaces import ISectionBlueprint
+
+def resolvePackageReference(reference):
+    """Given a package:filename reference, return the filesystem path
+    
+    ``package`` is a dotted name to a python package, ``filename`` is assumed
+    to be a filename located within the package directory.
+    
+    """
+    package, filename = reference.strip().split(':', 1)
+    package = __import__(package, {}, {}, ('*',))
+    return os.path.join(os.path.dirname(package.__file__), filename)
 
 def constructPipeline(transmogrifier, sections, pipeline=None):
     """Construct a transmogrifier pipeline

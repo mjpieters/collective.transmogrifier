@@ -8,7 +8,7 @@ from zope.interface import implements
 from Products.CMFCore.interfaces import IFolderish
 
 from interfaces import ITransmogrifier
-from utils import constructPipeline
+from utils import resolvePackageReference, constructPipeline
 
 class ConfigurationRegistry(object):
     def __init__(self):
@@ -233,11 +233,14 @@ def _load_config(configuration_id, seen=None, **overrides):
                 configuration_id, seen))
     seen.append(configuration_id)
     
-    config_info = configuration_registry.getConfiguration(
-        configuration_id)
+    if ':' in configuration_id:
+        configuration_file = resolvePackageReference(configuration_id)
+    else:
+        config_info = configuration_registry.getConfiguration(configuration_id)
+        configuration_file = config_info['configuration']
     parser = ConfigParser.RawConfigParser()
     parser.optionxform = str # case sensitive
-    parser.readfp(open(config_info['configuration']))
+    parser.readfp(open(configuration_file))
     
     includes = None
     result = {}
