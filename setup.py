@@ -42,7 +42,8 @@ open('doc.txt', 'w').write(long_description)
 name='collective.transmogrifier'
 setup(name=name,
       version=version,
-      description="A configurable pipeline, transforming non-plone content for import",
+      description='A configurable pipeline, aimed at transforming content for '
+                  'import and export',
       long_description=long_description,
       # Get more strings from http://www.python.org/pypi?%3Aaction=list_classifiers
       classifiers=[
