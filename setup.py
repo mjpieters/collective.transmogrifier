@@ -1,4 +1,4 @@
-version = '0.1'
+version = '0.1.jarn.2'
 
 import os
 from setuptools import setup, find_packages
