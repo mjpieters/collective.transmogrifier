@@ -11,6 +11,7 @@ long_description = ('\n'.join((
     'Detailed Documentation',
     '**********************', '',
     read('collective', 'transmogrifier', 'transmogrifier.txt'), '',
+    read('collective', 'transmogrifier', 'genericsetup.txt'), '',
 
     'Default section blueprints',
     '**************************',
