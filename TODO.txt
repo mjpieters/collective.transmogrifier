@@ -31,7 +31,4 @@ TODO
 
 - Provide a UI for selecting and running pipelines
 
-- Add a GS profile step that reads one or more transmogrifier configuration 
-  names from an file to execute.
-
 - Perhaps utils.Expressions should grow an TAL iterator-like interface? YAGNI?
