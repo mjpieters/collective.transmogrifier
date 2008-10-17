@@ -17,7 +17,9 @@
       title="Run transmogrifier pipeline"
       description="Runs the pipeline named in transmogrifier.txt in the current profile"
       handler=".genericsetup.importTransmogrifier"
-      />
+      >
+    <gs:depends name="toolset" />
+  </gs:importStep>
 </configure>
 
 <configure zcml:condition="installed zope.annotation">
