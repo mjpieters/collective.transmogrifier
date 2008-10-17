@@ -20,4 +20,10 @@
       />
 </configure>
 
+<configure zcml:condition="installed zope.annotation">
+  <class class=".transmogrifier.Transmogrifier">
+    <implements interface="zope.annotation.interfaces.IAttributeAnnotatable" />
+  </class>
+</configure>
+
 </configure>
