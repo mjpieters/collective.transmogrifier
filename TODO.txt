@@ -5,8 +5,6 @@ TODO
 
 - Sprinkle helpful logging statements throughout
 
-- Reorganize sections to reduce dependencies
-
 - Create default utility sections:
 
   - catalog delaying (replace catalog index methods with queues until
