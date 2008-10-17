@@ -1,9 +1,18 @@
 <configure
     xmlns="http://namespaces.zope.org/zope"
-    i18n_domain="collective.transmogrifier">
+    xmlns:gs="http://namespaces.zope.org/genericsetup"
+    i18n_domain="collective.transmogrifier"
+    >
 
 <include package=".sections"/>
 
 <adapter factory=".transmogrifier.Transmogrifier"/>
+
+<gs:importStep
+    name="transmogrifier"
+    title="Run transmogrifier pipeline"
+    description="Runs the pipeline named in transmogrifier.txt in the current profile"
+    handler=".genericsetup.importTransmogrifier"
+    />
 
 </configure>

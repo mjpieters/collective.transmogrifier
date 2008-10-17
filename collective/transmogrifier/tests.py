@@ -3,7 +3,7 @@ import shutil
 import tempfile
 import unittest
 import operator
-from zope.interface import classImplements
+from zope.interface import classImplements, implements
 from zope.component import provideUtility
 from zope.testing import doctest, cleanup
 from Products.Five import zcml
@@ -12,6 +12,7 @@ import collective.transmogrifier
 from collective.transmogrifier.transmogrifier import configuration_registry
 from collective.transmogrifier.interfaces import ISectionBlueprint
 from collective.transmogrifier.interfaces import ISection
+from collective.transmogrifier.interfaces import ITransmogrifier
 
 # Unit tests
 
@@ -239,6 +240,66 @@ class PackageReferenceResolverTest(unittest.TestCase):
     def testNonexistingPackage(self):
         self.assertRaises(ImportError, self._resolvePackageReference,
                           'collective.transmogrifier.nonexistent:test')
+
+class MockImportContext(object):
+    implements(ITransmogrifier)
+    
+    def __init__(self, configfile=None):
+        self.configfile = configfile
+    
+    def readDataFile(self, filename):
+        assert filename == 'transmogrifier.txt'
+        return self.configfile
+    
+    def getSite(self):
+        return self
+    
+    def getLogger(self, name):
+        assert name == 'collective.transmogrifier.genericsetup'
+        return self
+    
+    log = ()
+    def info(self, msg):
+        self.log += (msg,)
+    
+    run = ()
+    def __call__(self, config):
+        self.run += (config,)
+
+class GenericSetupImporterTest(unittest.TestCase):
+    def runOne(self, configfile=None):
+        from genericsetup import importTransmogrifier
+        context = MockImportContext(configfile)
+        importTransmogrifier(context)
+        return context
+    
+    def testNoDataFile(self):
+        context = self.runOne()
+        self.assertEqual(context.log, ())
+        self.assertEqual(context.run, ())
+    
+    def testEmptyDataFile(self):
+        context = self.runOne('')
+        self.assertEqual(context.log, ())
+        self.assertEqual(context.run, ())
+    
+    def testOneConfigDataFile(self):
+        context = self.runOne('foo.bar')
+        self.assertEqual(context.log, (
+            'Running transmogrier pipeline foo.bar', 
+            'Transmogrifier pipeline foo.bar complete',
+        ))
+        self.assertEqual(context.run, ('foo.bar',))
+
+    def testMultiConfigDataFile(self):
+        context = self.runOne('foo.bar\n  # ignored\nspam.eggs\n')
+        self.assertEqual(context.log, (
+            'Running transmogrier pipeline foo.bar', 
+            'Transmogrifier pipeline foo.bar complete',
+            'Running transmogrier pipeline spam.eggs', 
+            'Transmogrifier pipeline spam.eggs complete',
+        ))
+        self.assertEqual(context.run, ('foo.bar', 'spam.eggs'))
 
 # Doctest support
 
