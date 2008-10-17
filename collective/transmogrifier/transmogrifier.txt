@@ -580,9 +580,6 @@ referenced object has been created too and periodically create these
 references. This would keep memory requirements smaller as not *all*
 references to create have to be remembered.
 
-.. _buildout: http://pypi.python.org/pypi/zc.buildout
-.. _iterator protocol: http://www.python.org/dev/peps/pep-0234/
-
 Store pipeline-wide information in annotations
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -603,3 +600,6 @@ counters), such information should be stored as annotations on the transmogrifie
         ...
         self.storage['spam'] += 1
         ...
+
+.. _buildout: http://pypi.python.org/pypi/zc.buildout
+.. _iterator protocol: http://www.python.org/dev/peps/pep-0234/
