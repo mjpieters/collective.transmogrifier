@@ -1,6 +1,5 @@
 <configure
     xmlns="http://namespaces.zope.org/zope"
-    xmlns:gs="http://namespaces.zope.org/genericsetup"
     i18n_domain="collective.transmogrifier"
     >
 
@@ -8,11 +7,16 @@
 
 <adapter factory=".transmogrifier.Transmogrifier"/>
 
-<gs:importStep
-    name="transmogrifier"
-    title="Run transmogrifier pipeline"
-    description="Runs the pipeline named in transmogrifier.txt in the current profile"
-    handler=".genericsetup.importTransmogrifier"
-    />
+<configure 
+    zcml:condition="installed Products.GenericSetup"
+    xmlns:gs="http://namespaces.zope.org/genericsetup"
+    >
+  <gs:importStep
+      name="transmogrifier"
+      title="Run transmogrifier pipeline"
+      description="Runs the pipeline named in transmogrifier.txt in the current profile"
+      handler=".genericsetup.importTransmogrifier"
+      />
+</configure>
 
 </configure>
