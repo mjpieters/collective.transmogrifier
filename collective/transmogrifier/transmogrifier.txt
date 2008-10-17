@@ -582,3 +582,24 @@ references to create have to be remembered.
 
 .. _buildout: http://pypi.python.org/pypi/zc.buildout
 .. _iterator protocol: http://www.python.org/dev/peps/pep-0234/
+
+Store pipeline-wide information in annotations
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+If, for some reason or other, you need to remember state across section
+instances that is pipeline-wide (such as database connections, or data
+counters), such information should be stored as annotations on the transmogrifier object::
+
+    from zope.annotation.interfaces import IAnnotations
+    
+    MYKEY = 'foo.bar.baz'
+    
+    def __init__(self, transmogrifier, name, options, previous):
+        self.storage = IAnnotations(transmogrifier).setdefault(MYKEY, {})
+        self.storage.setdefault('spam', 0)
+        ...
+    
+    def __iter__(self):
+        ...
+        self.storage['spam'] += 1
+        ...
