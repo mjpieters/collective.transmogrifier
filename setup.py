@@ -33,34 +33,29 @@ long_description = ('\n'.join((
 open('doc.txt', 'w').write(long_description)
 
 name='collective.transmogrifier'
-setup(name=name,
-      version=version,
-      description='A configurable pipeline, aimed at transforming content for '
-                  'import and export',
-      long_description=long_description,
-      # Get more strings from http://www.python.org/pypi?%3Aaction=list_classifiers
-      classifiers=[
-        "Framework :: Zope2",
-        "Framework :: Zope3",
-        "License :: OSI Approved :: GNU General Public License (GPL)",
-        "Programming Language :: Python",
-        "Topic :: Software Development :: Libraries :: Application Frameworks",
-        "Topic :: Software Development :: Libraries :: Python Modules",
-        ],
-      keywords='content import filtering',
-      author='Jarn',
-      author_email='info@jarn.com',
-      url='http://pypi.python.org/pypi/collective.transmogrifier',
-      license='GPL',
-      packages=find_packages(exclude=['ez_setup']),
-      namespace_packages=['collective'],
-      include_package_data=True,
-      zip_safe=False,
-      install_requires=[
-          'setuptools',
-          # -*- Extra requirements: -*-
-      ],
-      entry_points="""
-      # -*- Entry points: -*-
-      """,
-      )
+setup(
+    name=name,
+    version=version,
+    description='A configurable pipeline, aimed at transforming content for '
+                'import and export',
+    long_description=long_description,
+    # Get more strings from http://www.python.org/pypi?%3Aaction=list_classifiers
+    classifiers=[
+    ],
+    keywords='content import filtering',
+    author='Jarn',
+    author_email='info@jarn.com',
+    url='http://pypi.python.org/pypi/collective.transmogrifier',
+    license='GPL',
+    packages=find_packages(exclude=['ez_setup']),
+    namespace_packages=['collective'],
+    include_package_data=True,
+    zip_safe=False,
+    install_requires=[
+        'setuptools',
+        # -*- Extra requirements: -*-
+    ],
+    entry_points="""
+        # -*- Entry points: -*-
+    """,
+)
