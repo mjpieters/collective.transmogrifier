@@ -500,14 +500,16 @@ only using the blueprint name.
 The collective.transmogrifier.utils module has a handy utility method called
 ``defaultKeys`` that'll generate these keys for you for easy matching:
 
->>> from collective.transmogrifier.utils import defaultKeys
->>> keys = defaultKeys('acme.transmogrifier.fileloader',
-...                    'imageloader1', 'filename')
+>>> from collective.transmogrifier import utils
+>>> keys = utils.defaultKeys('acme.transmogrifier.fileloader',
+...                          'imageloader1', 'filename')
 >>> pprint.pprint(keys)
 ('_acme.transmogrifier.fileloader_imageloader1_filename',
  '_acme.transmogrifier.fileloader_filename',
  '_imageloader1_filename',
  '_filename')
+>>> utils.Matcher(*keys)('_filename', '_imageloader1_filename')
+('_imageloader1_filename', True)
 
 
 Keep memory use to a minimum

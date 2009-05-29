@@ -116,8 +116,8 @@ class Matcher(object):
             self.expressions.append(expr)
     
     def __call__(self, *values):
-        for value in values:
-            for expr in self.expressions:
+        for expr in self.expressions:
+            for value in values:
                 match = expr(value)
                 if match:
                     return value, match
