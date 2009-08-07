@@ -3,7 +3,10 @@ Change History
 
 (name of developer listed in brackets)
 
-0.1 (unreleased)
+1.1 (unreleased)
+================
+
+1.0 (2009-08-07)
 ================
 
 - Initial transmogrifier architecture.
