@@ -38,6 +38,7 @@ class ConstructorSection(object):
             container, id = (len(elems) == 1 and ('', elems[0]) or elems)
             context = self.context.unrestrictedTraverse(container, None)
             if context is None:                       # container doesn't exist
+                # XXX There should be an error log here.
                 yield item; continue
             
             if getattr(aq_base(context), id, None) is not None: # item exists
