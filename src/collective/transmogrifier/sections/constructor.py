@@ -6,6 +6,9 @@ from collective.transmogrifier.utils import defaultMatcher
 from Acquisition import aq_base
 from Products.CMFCore.utils import getToolByName
 
+import logging
+logger = logging.getLogger('collective.transmogrifier.constructor')
+
 class ConstructorSection(object):
     classProvides(ISectionBlueprint)
     implements(ISection)
@@ -18,6 +21,7 @@ class ConstructorSection(object):
         self.typekey = defaultMatcher(options, 'type-key', name, 'type', 
                                       ('portal_type', 'Type'))
         self.pathkey = defaultMatcher(options, 'path-key', name, 'path')
+        self.required = bool(options.get('required'))
     
     def __iter__(self):
         for item in self.previous:
@@ -27,7 +31,7 @@ class ConstructorSection(object):
             
             if not (typekey and pathkey):             # not enough info
                 yield item; continue
-            
+                        
             type_, path = item[typekey], item[pathkey]
             
             fti = self.ttool.getTypeInfo(type_)
@@ -38,7 +42,10 @@ class ConstructorSection(object):
             container, id = (len(elems) == 1 and ('', elems[0]) or elems)
             context = self.context.unrestrictedTraverse(container, None)
             if context is None:                       # container doesn't exist
-                # XXX There should be an error log here.
+                error = 'Container %s does not exist for item %s' % (container, path)
+                if self.required:
+                    raise KeyError(error)
+                logger.warn(error)
                 yield item; continue
             
             if getattr(aq_base(context), id, None) is not None: # item exists

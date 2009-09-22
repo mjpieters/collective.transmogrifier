@@ -40,6 +40,10 @@ will be constructed using invokeFactory; nothing else is done. Paths are
 always interpreted as relative to the context object, with the last path
 segment being the id of the object to create.
 
+By default the constructor section will log a warning if the container for
+the item is missing and the item can't be constructed. However if you add a
+required = True key to the constructor section it will instead raise a KeyError.
+
 >>> import pprint
 >>> constructor = """
 ... [transmogrifier]
@@ -80,3 +84,30 @@ segment being the id of the object to create.
 (('spam/eggs', 'foo', 'FooType'),
  ('', 'foo', 'FooType'),
  ('spam/eggs', 'changedByFactory', 'FooType'))
+
+>>> constructor = """
+... [transmogrifier]
+... pipeline =
+...     contentsource
+...     constructor
+...     printer
+...     
+... [contentsource]
+... blueprint = collective.transmogrifier.sections.tests.contentsource
+... 
+... [constructor]
+... blueprint = collective.transmogrifier.sections.constructor
+... required = True
+... 
+... [printer]
+... blueprint = collective.transmogrifier.sections.tests.pprinter
+... """
+>>> registerConfig(u'collective.transmogrifier.sections.tests.constructor2',
+...                constructor)
+>>> try:
+...     transmogrifier(u'collective.transmogrifier.sections.tests.constructor2')
+...     raise AssertionError("Required constructor did not raise an error for missing folder")
+... except KeyError:
+...     pass
+{'_type': 'FooType', '_path': '/spam/eggs/foo'}
+{'_type': 'FooType', '_path': '/foo'}
