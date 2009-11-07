@@ -54,9 +54,6 @@ setup(
     zip_safe=False,
     install_requires=[
         'setuptools',
-        # -*- Extra requirements: -*-
+        'Products.CMFCore',
     ],
-    entry_points="""
-        # -*- Entry points: -*-
-    """,
 )
