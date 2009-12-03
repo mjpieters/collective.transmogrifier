@@ -68,6 +68,8 @@ instead of copied.
  'title': u"Monty Python's Flying Circus \xa9",
  'title-duplicate': u"Monty Python's Flying Circus \xa9"}
 
+ XXX: Test the condition
+ 
 The ``destination`` expression has access to the following:
 
 =================== ==========================================================
