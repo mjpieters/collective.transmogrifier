@@ -52,7 +52,11 @@ class ConstructorSection(object):
                 yield item; continue
             
             obj = fti._constructInstance(context, id)
-            obj = fti._finishConstruction(obj)
+            
+            # For CMF <= 2.1 (aka Plone 3)
+            if hasattr(fti, '_finishConstruction'):
+                obj = fti._finishConstruction(obj)
+            
             if obj.getId() != id:
                 item[pathkey] = '%s/%s' % (container, obj.getId())
             

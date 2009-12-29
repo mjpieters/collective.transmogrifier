@@ -6,6 +6,9 @@ Change History
 1.1 (unreleased)
 ================
 
+- Add CMF 2.2/Plone 4 compatibility for the content constructor
+  [optilude]
+
 1.0 (2009-08-07)
 ================
 
