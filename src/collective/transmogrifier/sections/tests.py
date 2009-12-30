@@ -295,6 +295,42 @@ def constructorSetUp(test):
     provideUtility(ContentSource,
         name=u'collective.transmogrifier.sections.tests.contentsource')
 
+def foldersSetUp(test):
+    sectionsSetUp(test)
+    
+    class MockPortal(object):
+        existing = True # Existing object
+        
+        _last_path = None
+        def unrestrictedTraverse(self, path, default):
+            if path[0:1] == '/':
+                return default # path is absolute
+            if isinstance(path, unicode):
+                return default
+            if not path.startswith('existing'):
+                return default
+            self._last_path = path
+            return self
+    
+    test.globs['plone'] = MockPortal()
+    test.globs['transmogrifier'].context = test.globs['plone']
+    
+    class FoldersSource(SampleSource):
+        classProvides(ISectionBlueprint)
+        implements(ISection)
+        
+        def __init__(self, *args, **kw):
+            super(FoldersSource, self).__init__(*args, **kw)
+            self.sample = (
+                dict(_type='Document', _path='/foo'),                   # in root, do nothing
+                dict(_type='Document', _path='/existing/foo'),          # in existing folder, do nothing
+                dict(_type='Document', _path='/nonexisting/alpha/foo'), # neither parent exists, yield both
+                dict(_type='Document', _path='/nonexisting/beta/foo'),  # this time yield only beta
+                dict(_type='Document'),                                 # no path key
+                dict(_type='Document', _folders_path='/delta/foo'),     # specific path key
+            )
+    provideUtility(FoldersSource,
+        name=u'collective.transmogrifier.sections.tests.folderssource')
 
 def test_suite():
     return unittest.TestSuite((
@@ -308,5 +344,9 @@ def test_suite():
         doctest.DocFileSuite(
             'constructor.txt',
             setUp=constructorSetUp, tearDown=tearDown,
+            optionflags = doctest.NORMALIZE_WHITESPACE),
+        doctest.DocFileSuite(
+            'folders.txt',
+            setUp=foldersSetUp, tearDown=tearDown,
             optionflags = doctest.NORMALIZE_WHITESPACE),
     ))
