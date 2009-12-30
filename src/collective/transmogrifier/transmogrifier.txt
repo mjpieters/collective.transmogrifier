@@ -184,7 +184,7 @@ For example purposes, we simply pretty print the items instead:
     ...     
     ...     def __iter__(self):
     ...         for item in self.previous:
-    ...             self.pprint(item)
+    ...             self.pprint(sorted(item.items()))
     ...             yield item
     ...
     >>> provideUtility(ExampleConstructor, 
@@ -196,11 +196,11 @@ configuration we created earlier, and run our transmogrification:
     >>> from collective.transmogrifier.transmogrifier import Transmogrifier
     >>> transmogrifier = Transmogrifier(plone)
     >>> transmogrifier(u'collective.transmogrifier.tests.exampleconfig')
-    {'exampletransformname': 'section 2', 'id': 'item00'}
-    {'exampletransformname': 'section 2', 'id': 'item01'}
-    {'exampletransformname': 'section 2', 'id': 'item02'}
-    {'exampletransformname': 'section 2', 'id': 'item03'}
-    {'exampletransformname': 'section 2', 'id': 'item04'}
+    [('exampletransformname', 'section 2'), ('id', 'item00')]
+    [('exampletransformname', 'section 2'), ('id', 'item01')]
+    [('exampletransformname', 'section 2'), ('id', 'item02')]
+    [('exampletransformname', 'section 2'), ('id', 'item03')]
+    [('exampletransformname', 'section 2'), ('id', 'item04')]
   
 Developing blueprints
 ~~~~~~~~~~~~~~~~~~~~~
@@ -271,11 +271,21 @@ A short example shows each of these arguments in action:
     u'Plone Test Site'
     >>> transmogrifier = Transmogrifier(plone)
     >>> transmogrifier(u'collective.transmogrifier.tests.titlepipeline')
-    {'title': u'Plone Test Site - item00', 'id': 'item00', 'pipeline-size': '3'}
-    {'title': u'Plone Test Site - item01', 'id': 'item01', 'pipeline-size': '3'}
-    {'title': u'Plone Test Site - item02', 'id': 'item02', 'pipeline-size': '3'}
-    {'title': u'Plone Test Site - item03', 'id': 'item03', 'pipeline-size': '3'}
-    {'title': u'Plone Test Site - item04', 'id': 'item04', 'pipeline-size': '3'}
+    [('id', 'item00'),
+     ('pipeline-size', '3'),
+     ('title', u'Plone Test Site - item00')]
+    [('id', 'item01'),
+     ('pipeline-size', '3'),
+     ('title', u'Plone Test Site - item01')]
+    [('id', 'item02'),
+     ('pipeline-size', '3'),
+     ('title', u'Plone Test Site - item02')]
+    [('id', 'item03'),
+     ('pipeline-size', '3'),
+     ('title', u'Plone Test Site - item03')]
+    [('id', 'item04'),
+     ('pipeline-size', '3'),
+     ('title', u'Plone Test Site - item04')]
 
 Configuration file syntax
 -------------------------
@@ -336,9 +346,9 @@ substitution, using both the section and the option name joined by a colon:
 
     >>> transmogrifier = Transmogrifier(plone)
     >>> transmogrifier(u'collective.transmogrifier.tests.substitutionexample')
-    {'exampletransformname': 'section2', 'id': 'item00'}
-    {'exampletransformname': 'section2', 'id': 'item01'}
-    {'exampletransformname': 'section2', 'id': 'item02'}
+    [('exampletransformname', 'section2'), ('id', 'item00')]
+    [('exampletransformname', 'section2'), ('id', 'item01')]
+    [('exampletransformname', 'section2'), ('id', 'item02')]
 
 Including other configurations
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -389,9 +399,9 @@ configuration files are honoured too:
     ...                constructor)
     >>> transmogrifier = Transmogrifier(plone)
     >>> transmogrifier(u'collective.transmogrifier.tests.inclusionexample')
-    {'exampletransformname': 'section2', 'id': 'item00'}
-    {'exampletransformname': 'section2', 'id': 'item01'}
-    {'exampletransformname': 'section2', 'id': 'item02'}
+    [('exampletransformname', 'section2'), ('id', 'item00')]
+    [('exampletransformname', 'section2'), ('id', 'item01')]
+    [('exampletransformname', 'section2'), ('id', 'item02')]
 
 Like zc.buildout configurations, we can also add or remove lines from included
 configuration options, by using the += and -= syntax:
@@ -414,9 +424,15 @@ configuration options, by using the += and -= syntax:
     ...                advancedinclusionexample)
     >>> transmogrifier = Transmogrifier(plone)
     >>> transmogrifier(u'collective.transmogrifier.tests.advancedinclusionexample')
-    {'title': u'Plone Test Site - item00', 'id': 'item00', 'pipeline-size': '3'}
-    {'title': u'Plone Test Site - item01', 'id': 'item01', 'pipeline-size': '3'}
-    {'title': u'Plone Test Site - item02', 'id': 'item02', 'pipeline-size': '3'}
+    [('id', 'item00'),
+     ('pipeline-size', '3'),
+     ('title', u'Plone Test Site - item00')]
+    [('id', 'item01'),
+     ('pipeline-size', '3'),
+     ('title', u'Plone Test Site - item01')]
+    [('id', 'item02'),
+     ('pipeline-size', '3'),
+     ('title', u'Plone Test Site - item02')]
 
 When calling transmogrifier, you can provide your own sections too: any extra
 keyword is interpreted as a section dictionary. Do make sure you use string
@@ -424,7 +440,7 @@ values though:
 
     >>> transmogrifier(u'collective.transmogrifier.tests.inclusionexample',
     ...               section1=dict(size='1'))
-    {'exampletransformname': 'section2', 'id': 'item00'}
+    [('exampletransformname', 'section2'), ('id', 'item00')]
 
 Conventions
 -----------

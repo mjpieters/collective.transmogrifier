@@ -210,7 +210,7 @@ class PrettyPrinter(object):
     
     def __iter__(self):
         for item in self.previous:
-            self.pprint(item)
+            self.pprint(sorted(item.items()))
             yield item
 
 def sectionsSetUp(test):
@@ -303,8 +303,10 @@ def test_suite():
         doctest.DocFileSuite(
             'codec.txt', 'inserter.txt', 'manipulator.txt', 'condition.txt',
             'splitter.txt', 'savepoint.txt', 'csvsource.txt',
-            setUp=sectionsSetUp, tearDown=tearDown),
+            setUp=sectionsSetUp, tearDown=tearDown,
+            optionflags = doctest.NORMALIZE_WHITESPACE),
         doctest.DocFileSuite(
             'constructor.txt',
-            setUp=constructorSetUp, tearDown=tearDown),
+            setUp=constructorSetUp, tearDown=tearDown,
+            optionflags = doctest.NORMALIZE_WHITESPACE),
     ))

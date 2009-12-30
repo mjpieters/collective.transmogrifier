@@ -41,14 +41,14 @@ the ``dialect`` option.
     >>> registerConfig(u'collective.transmogrifier.sections.tests.csvsource.file',
     ...                csvsource)
     >>> transmogrifier(u'collective.transmogrifier.sections.tests.csvsource.file')
-    {'baz': 'first-baz', 'foo': 'first-foo', 'bar': 'first-bar'}
-    {'baz': 'second-baz', 'foo': 'second-foo', 'bar': 'second-bar'}
+    [('bar', 'first-bar'), ('baz', 'first-baz'), ('foo', 'first-foo')]
+    [('bar', 'second-bar'), ('baz', 'second-baz'), ('foo', 'second-foo')]
 
     >>> transmogrifier(u'collective.transmogrifier.sections.tests.csvsource.file',
     ...                csvsource=dict(fieldnames='monty spam eggs'))
-    {'eggs': 'baz', 'monty': 'foo', 'spam': 'bar'}
-    {'eggs': 'first-baz', 'monty': 'first-foo', 'spam': 'first-bar'}
-    {'eggs': 'second-baz', 'monty': 'second-foo', 'spam': 'second-bar'}
+    [('eggs', 'baz'), ('monty', 'foo'), ('spam', 'bar')]
+    [('eggs', 'first-baz'), ('monty', 'first-foo'), ('spam', 'first-bar')]
+    [('eggs', 'second-baz'), ('monty', 'second-foo'), ('spam', 'second-bar')]
 
 Here is the same example, loading a file from a package instead:
 
@@ -68,11 +68,11 @@ Here is the same example, loading a file from a package instead:
     >>> registerConfig(u'collective.transmogrifier.sections.tests.csvsource.package',
     ...                csvsource)
     >>> transmogrifier(u'collective.transmogrifier.sections.tests.csvsource.package')
-    {'baz': 'first-baz', 'foo': 'first-foo', 'bar': 'first-bar'}
-    {'baz': 'second-baz', 'foo': 'second-foo', 'bar': 'second-bar'}
+    [('bar', 'first-bar'), ('baz', 'first-baz'), ('foo', 'first-foo')]
+    [('bar', 'second-bar'), ('baz', 'second-baz'), ('foo', 'second-foo')]
 
     >>> transmogrifier(u'collective.transmogrifier.sections.tests.csvsource.package',
     ...                csvsource=dict(fieldnames='monty spam eggs'))
-    {'eggs': 'baz', 'monty': 'foo', 'spam': 'bar'}
-    {'eggs': 'first-baz', 'monty': 'first-foo', 'spam': 'first-bar'}
-    {'eggs': 'second-baz', 'monty': 'second-foo', 'spam': 'second-bar'}
+    [('eggs', 'baz'), ('monty', 'foo'), ('spam', 'bar')]
+    [('eggs', 'first-baz'), ('monty', 'first-foo'), ('spam', 'first-bar')]
+    [('eggs', 'second-baz'), ('monty', 'second-foo'), ('spam', 'second-bar')]

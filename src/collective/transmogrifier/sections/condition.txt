@@ -30,8 +30,8 @@ to the next pipe section, otherwise it is not:
     >>> registerConfig(u'collective.transmogrifier.sections.tests.condition',
     ...                condition)
     >>> transmogrifier(u'collective.transmogrifier.sections.tests.condition')
-    {'id': 'item-03'}
-    {'id': 'item-04'}
+    [('id', 'item-03')]
+    [('id', 'item-04')]
 
 The ``condition`` expression has access to the following:
 

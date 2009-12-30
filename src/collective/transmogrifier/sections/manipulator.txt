@@ -55,18 +55,18 @@ instead of copied.
     >>> registerConfig(u'collective.transmogrifier.sections.tests.manipulator',
     ...                manipulator)
     >>> transmogrifier(u'collective.transmogrifier.sections.tests.manipulator')
-    {'id': 'foo',
-     'id-duplicate': 'foo',
-     'title': u'The Foo Fighters \u2117',
-     'title-duplicate': u'The Foo Fighters \u2117'}
-    {'id': 'bar',
-     'id-duplicate': 'bar',
-     'title': u'Brand Chocolate Bar \u2122',
-     'title-duplicate': u'Brand Chocolate Bar \u2122'}
-    {'id': 'monty-python',
-     'id-duplicate': 'monty-python',
-     'title': u"Monty Python's Flying Circus \xa9",
-     'title-duplicate': u"Monty Python's Flying Circus \xa9"}
+    [('id', 'foo'),
+     ('id-duplicate', 'foo'),
+     ('title', u'The Foo Fighters \u2117'),
+     ('title-duplicate', u'The Foo Fighters \u2117')]
+    [('id', 'bar'),
+     ('id-duplicate', 'bar'),
+     ('title', u'Brand Chocolate Bar \u2122'),
+     ('title-duplicate', u'Brand Chocolate Bar \u2122')]
+    [('id', 'monty-python'),
+     ('id-duplicate', 'monty-python'),
+     ('title', u"Monty Python's Flying Circus \xa9"),
+     ('title-duplicate', u"Monty Python's Flying Circus \xa9")]
 
  XXX: Test the condition
  

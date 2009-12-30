@@ -64,22 +64,22 @@ required = True key to the constructor section it will instead raise a KeyError.
     >>> registerConfig(u'collective.transmogrifier.sections.tests.constructor',
     ...                constructor)
     >>> transmogrifier(u'collective.transmogrifier.sections.tests.constructor')
-    {'_type': 'FooType', '_path': '/spam/eggs/foo'}
-    {'_type': 'FooType', '_path': '/foo'}
-    {'_path': 'not/existing/bar',
-     '_type': 'BarType',
-     'title': 'Should not be constructed, not an existing path'}
-    {'_path': '/spam/eggs/existing',
-     '_type': 'FooType',
-     'title': 'Should not be constructed, an existing object'}
-    {'_path': '/spam/eggs/incomplete',
-     'title': 'Should not be constructed, no type'}
-    {'_path': '/spam/eggs/nosuchtype',
-     '_type': 'NonExisting',
-     'title': 'Should not be constructed, not an existing type'}
-    {'_path': 'spam/eggs/changedByFactory',
-     '_type': 'FooType',
-     'title': 'Factories are allowed to change the id'}
+    [('_path', '/spam/eggs/foo'), ('_type', 'FooType')]
+    [('_path', '/foo'), ('_type', 'FooType')]
+    [('_path', 'not/existing/bar'),
+     ('_type', 'BarType'),
+     ('title', 'Should not be constructed, not an existing path')]
+    [('_path', '/spam/eggs/existing'),
+     ('_type', 'FooType'),
+     ('title', 'Should not be constructed, an existing object')]
+    [('_path', '/spam/eggs/incomplete'),
+     ('title', 'Should not be constructed, no type')]
+    [('_path', '/spam/eggs/nosuchtype'),
+     ('_type', 'NonExisting'),
+     ('title', 'Should not be constructed, not an existing type')]
+    [('_path', 'spam/eggs/changedByFactory'),
+     ('_type', 'FooType'),
+     ('title', 'Factories are allowed to change the id')]
     >>> pprint.pprint(plone.constructed)
     (('spam/eggs', 'foo', 'FooType'),
      ('', 'foo', 'FooType'),
@@ -109,5 +109,5 @@ required = True key to the constructor section it will instead raise a KeyError.
     ...     raise AssertionError("Required constructor did not raise an error for missing folder")
     ... except KeyError:
     ...     pass
-    {'_type': 'FooType', '_path': '/spam/eggs/foo'}
-    {'_type': 'FooType', '_path': '/foo'}
+    [('_path', '/spam/eggs/foo'), ('_type', 'FooType')]
+    [('_path', '/foo'), ('_type', 'FooType')]

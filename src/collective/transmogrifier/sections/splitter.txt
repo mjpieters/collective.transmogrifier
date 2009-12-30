@@ -31,12 +31,12 @@ own copy [*]_ of the items:
     >>> registerConfig(u'collective.transmogrifier.sections.tests.emptysplitter',
     ...                emptysplitter)
     >>> transmogrifier(u'collective.transmogrifier.sections.tests.emptysplitter')
-    {'id': 'item-00'}
-    {'id': 'item-00'}
-    {'id': 'item-01'}
-    {'id': 'item-01'}
-    {'id': 'item-02'}
-    {'id': 'item-02'}
+    [('id', 'item-00')]
+    [('id', 'item-00')]
+    [('id', 'item-01')]
+    [('id', 'item-01')]
+    [('id', 'item-02')]
+    [('id', 'item-02')]
 
 Although the pipeline definitions in the splitter are empty, we end up with 2
 copies of every item in the pipeline as both splitter pipelines get to process
@@ -80,9 +80,9 @@ optional and use the pipeline option name plus ``-condition``:
     >>> registerConfig(u'collective.transmogrifier.sections.tests.evenodd',
     ...                evenoddsplitter)
     >>> transmogrifier(u'collective.transmogrifier.sections.tests.evenodd')
-    {'even': 'The even pipe', 'id': 'item-00'}
-    {'odd': 'The odd pipe', 'id': 'item-01'}
-    {'even': 'The even pipe', 'id': 'item-02'}
+    [('even', 'The even pipe'), ('id', 'item-00')]
+    [('id', 'item-01'), ('odd', 'The odd pipe')]
+    [('even', 'The even pipe'), ('id', 'item-02')]
 
 Conditions are expressed as TALES statements, and have access to:
 
