@@ -20,53 +20,53 @@ like the ``keys`` option. These keys will be deleted from the item; if used
 together with the ``keys`` and ``destination`` options, keys will be renamed
 instead of copied.
 
->>> manipulator = """
-... [transmogrifier]
-... pipeline =
-...     source
-...     copy
-...     rename
-...     delete
-...     printer
-...     
-... [source]
-... blueprint = collective.transmogrifier.sections.tests.samplesource
-... 
-... [copy]
-... blueprint = collective.transmogrifier.sections.manipulator
-... keys = 
-...     title
-...     id
-... destination = string:$key-copy
-...
-... [rename]
-... blueprint = collective.transmogrifier.sections.manipulator
-... keys = re:([^-]+)-copy$
-... destination = python:'%s-duplicate' % match.group(1)
-... delete = ${rename:keys}
-...
-... [delete]
-... blueprint = collective.transmogrifier.sections.manipulator
-... delete = status
-... 
-... [printer]
-... blueprint = collective.transmogrifier.sections.tests.pprinter
-... """
->>> registerConfig(u'collective.transmogrifier.sections.tests.manipulator',
-...                manipulator)
->>> transmogrifier(u'collective.transmogrifier.sections.tests.manipulator')
-{'id': 'foo',
- 'id-duplicate': 'foo',
- 'title': u'The Foo Fighters \u2117',
- 'title-duplicate': u'The Foo Fighters \u2117'}
-{'id': 'bar',
- 'id-duplicate': 'bar',
- 'title': u'Brand Chocolate Bar \u2122',
- 'title-duplicate': u'Brand Chocolate Bar \u2122'}
-{'id': 'monty-python',
- 'id-duplicate': 'monty-python',
- 'title': u"Monty Python's Flying Circus \xa9",
- 'title-duplicate': u"Monty Python's Flying Circus \xa9"}
+    >>> manipulator = """
+    ... [transmogrifier]
+    ... pipeline =
+    ...     source
+    ...     copy
+    ...     rename
+    ...     delete
+    ...     printer
+    ...     
+    ... [source]
+    ... blueprint = collective.transmogrifier.sections.tests.samplesource
+    ... 
+    ... [copy]
+    ... blueprint = collective.transmogrifier.sections.manipulator
+    ... keys = 
+    ...     title
+    ...     id
+    ... destination = string:$key-copy
+    ...
+    ... [rename]
+    ... blueprint = collective.transmogrifier.sections.manipulator
+    ... keys = re:([^-]+)-copy$
+    ... destination = python:'%s-duplicate' % match.group(1)
+    ... delete = ${rename:keys}
+    ...
+    ... [delete]
+    ... blueprint = collective.transmogrifier.sections.manipulator
+    ... delete = status
+    ... 
+    ... [printer]
+    ... blueprint = collective.transmogrifier.sections.tests.pprinter
+    ... """
+    >>> registerConfig(u'collective.transmogrifier.sections.tests.manipulator',
+    ...                manipulator)
+    >>> transmogrifier(u'collective.transmogrifier.sections.tests.manipulator')
+    {'id': 'foo',
+     'id-duplicate': 'foo',
+     'title': u'The Foo Fighters \u2117',
+     'title-duplicate': u'The Foo Fighters \u2117'}
+    {'id': 'bar',
+     'id-duplicate': 'bar',
+     'title': u'Brand Chocolate Bar \u2122',
+     'title-duplicate': u'Brand Chocolate Bar \u2122'}
+    {'id': 'monty-python',
+     'id-duplicate': 'monty-python',
+     'title': u"Monty Python's Flying Circus \xa9",
+     'title-duplicate': u"Monty Python's Flying Circus \xa9"}
 
  XXX: Test the condition
  
