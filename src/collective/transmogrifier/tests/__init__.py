@@ -339,7 +339,7 @@ def test_suite():
     suite = unittest.findTestCases(sys.modules[__name__])
     suite.addTests((
         doctest.DocFileSuite(
-            'transmogrifier.txt',
+            '../transmogrifier.txt',
             setUp=setUp, tearDown=tearDown),
     ))
     return suite

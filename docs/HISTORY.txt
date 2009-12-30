@@ -6,6 +6,11 @@ Change History
 1.1 (unreleased)
 ================
 
+- Allow the CSV source to load its file from a package as well as from an
+  absolute or relative file path. To load from a package, pass
+  ``package.name:filename.csv`` to the ``filename`` option.
+  [optilude]
+
 - Add CMF 2.2/Plone 4 compatibility for the content constructor
   [optilude]
 

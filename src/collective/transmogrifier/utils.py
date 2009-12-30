@@ -8,6 +8,18 @@ from zope.app.pagetemplate import engine
 from interfaces import ISection
 from interfaces import ISectionBlueprint
 
+def resolvePackageReferenceOrFile(reference):
+    """A wrapper around def ``resolvePackageReference`` which also work if
+    reference is a "plain" filename.
+    """
+    
+    if ':' not in reference:
+        return reference
+    try:
+        return resolvePackageReference(reference)
+    except ImportError:
+        return reference
+
 def resolvePackageReference(reference):
     """Given a package:filename reference, return the filesystem path
     

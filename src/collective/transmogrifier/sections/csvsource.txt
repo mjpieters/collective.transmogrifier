@@ -38,12 +38,40 @@ the ``dialect`` option.
     ... [printer]
     ... blueprint = collective.transmogrifier.sections.tests.pprinter
     ... """ % tmp.name
-    >>> registerConfig(u'collective.transmogrifier.sections.tests.csvsource',
+    >>> registerConfig(u'collective.transmogrifier.sections.tests.csvsource.file',
     ...                csvsource)
-    >>> transmogrifier(u'collective.transmogrifier.sections.tests.csvsource')
+    >>> transmogrifier(u'collective.transmogrifier.sections.tests.csvsource.file')
     {'baz': 'first-baz', 'foo': 'first-foo', 'bar': 'first-bar'}
     {'baz': 'second-baz', 'foo': 'second-foo', 'bar': 'second-bar'}
-    >>> transmogrifier(u'collective.transmogrifier.sections.tests.csvsource',
+
+    >>> transmogrifier(u'collective.transmogrifier.sections.tests.csvsource.file',
+    ...                csvsource=dict(fieldnames='monty spam eggs'))
+    {'eggs': 'baz', 'monty': 'foo', 'spam': 'bar'}
+    {'eggs': 'first-baz', 'monty': 'first-foo', 'spam': 'first-bar'}
+    {'eggs': 'second-baz', 'monty': 'second-foo', 'spam': 'second-bar'}
+
+Here is the same example, loading a file from a package instead:
+
+    >>> csvsource = """
+    ... [transmogrifier]
+    ... pipeline =
+    ...     csvsource
+    ...     printer
+    ...     
+    ... [csvsource]
+    ... blueprint = collective.transmogrifier.sections.csvsource
+    ... filename = collective.transmogrifier.tests:sample.csv
+    ... 
+    ... [printer]
+    ... blueprint = collective.transmogrifier.sections.tests.pprinter
+    ... """
+    >>> registerConfig(u'collective.transmogrifier.sections.tests.csvsource.package',
+    ...                csvsource)
+    >>> transmogrifier(u'collective.transmogrifier.sections.tests.csvsource.package')
+    {'baz': 'first-baz', 'foo': 'first-foo', 'bar': 'first-bar'}
+    {'baz': 'second-baz', 'foo': 'second-foo', 'bar': 'second-bar'}
+
+    >>> transmogrifier(u'collective.transmogrifier.sections.tests.csvsource.package',
     ...                csvsource=dict(fieldnames='monty spam eggs'))
     {'eggs': 'baz', 'monty': 'foo', 'spam': 'bar'}
     {'eggs': 'first-baz', 'monty': 'first-foo', 'spam': 'first-bar'}
