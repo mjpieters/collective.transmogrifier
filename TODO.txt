@@ -7,8 +7,6 @@ TODO
 
 - Create default utility sections:
 
-  - 'path' creation (insert Folders into the pipeline wherever required)
-
   - alternative path strategy: delay items until parents have been seen.
 
   - A logging section (log selected or all keys to a logging target (Z2, file,
