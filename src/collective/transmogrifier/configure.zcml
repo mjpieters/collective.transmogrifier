@@ -6,7 +6,10 @@
 
 <include package=".sections"/>
 
-<adapter factory=".transmogrifier.Transmogrifier"/>
+<adapter
+    factory=".transmogrifier.Transmogrifier"
+    provides=".interfaces.ITransmogrifier"
+    />
 
 <configure 
     zcml:condition="installed Products.GenericSetup"

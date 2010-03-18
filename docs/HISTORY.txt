@@ -14,6 +14,11 @@ Change History
 - Add CMF 2.2/Plone 4 compatibility for the content constructor
   [optilude]
 
+- Use an explicit provides attribute to register the transmogrifier adapter.
+  Fixes the "Missing 'provides' attribute" errors when loading with
+  zope.annotation installed.
+  [mj]
+
 1.0 (2009-08-07)
 ================
 
