@@ -19,6 +19,10 @@ Change History
   zope.annotation installed.
   [mj]
 
+- Add a required flag to the content constructor, which causes it to raise
+  a KeyError if the container where to construct the new item doesn't exist.
+  [regebro]
+
 1.0 (2009-08-07)
 ================
 
