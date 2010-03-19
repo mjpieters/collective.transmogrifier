@@ -23,6 +23,9 @@ Change History
   a KeyError if the container where to construct the new item doesn't exist.
   [regebro]
 
+- Add an optional condition to the manipulator section.
+  [regebro]
+
 1.0 (2009-08-07)
 ================
 
