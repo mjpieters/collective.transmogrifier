@@ -3,7 +3,10 @@ Change History
 
 (name of developer listed in brackets)
 
-1.1 (unreleased)
+1.2 (unreleased)
+================
+
+1.1 (2010-03-17)
 ================
 
 - Allow the CSV source to load its file from a package as well as from an
