@@ -20,6 +20,10 @@ like the ``keys`` option. These keys will be deleted from the item; if used
 together with the ``keys`` and ``destination`` options, keys will be renamed
 instead of copied.
 
+Also optional is the ``condition`` option, which lets you specify a TALES
+expression that when evaluating to False will prevent any manipulation from
+happening. The condition is evaluated for every matched key.
+
     >>> manipulator = """
     ... [transmogrifier]
     ... pipeline =
@@ -68,8 +72,6 @@ instead of copied.
      ('title', u"Monty Python's Flying Circus \xa9"),
      ('title-duplicate', u"Monty Python's Flying Circus \xa9")]
 
- XXX: Test the condition
- 
 The ``destination`` expression has access to the following:
 
 =================== ==========================================================
