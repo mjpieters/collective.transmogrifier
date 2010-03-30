@@ -281,6 +281,7 @@ def constructorSetUp(test):
             self.sample = (
                 dict(_type='FooType', _path='/spam/eggs/foo'),
                 dict(_type='FooType', _path='/foo'),
+                dict(_type='FooType', _path=u'/unicode/encoded/to/ascii'),
                 dict(_type='BarType', _path='not/existing/bar',
                      title='Should not be constructed, not an existing path'),
                 dict(_type='FooType', _path='/spam/eggs/existing',

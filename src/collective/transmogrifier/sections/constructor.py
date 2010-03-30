@@ -38,6 +38,7 @@ class ConstructorSection(object):
             if fti is None:                           # not an existing type
                 yield item; continue
             
+            path = path.encode('ASCII')
             elems = path.strip('/').rsplit('/', 1)
             container, id = (len(elems) == 1 and ('', elems[0]) or elems)
             context = self.context.unrestrictedTraverse(container, None)

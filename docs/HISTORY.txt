@@ -6,6 +6,10 @@ Change History
 1.2 (unreleased)
 ================
 
+- Bug fix: the constructor promises to encode paths to ASCII, but failed to
+  do so. Thanks to gyst for finding the discrepancy.
+  [mj]
+
 1.1 (2010-03-17)
 ================
 
