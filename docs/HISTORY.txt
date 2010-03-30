@@ -3,7 +3,7 @@ Change History
 
 (name of developer listed in brackets)
 
-1.2 (unreleased)
+1.2 (2010-03-30)
 ================
 
 - Bug fix: the constructor promises to encode paths to ASCII, but failed to
