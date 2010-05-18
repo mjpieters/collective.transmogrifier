@@ -21,7 +21,10 @@ class JSONSourceSection(object):
         for item in self.previous:
             yield item
 
-        for item in sorted([int(i) for i in os.listdir(self.path)]):
+        for item in sorted([int(i)
+                                for i in os.listdir(self.path)
+                                    if not i.startswith('.')]):
+
             for item2 in sorted([int(j[:-5])
                                     for j in os.listdir(os.path.join(self.path, str(item)))
                                         if j.endswith('.json')]):
