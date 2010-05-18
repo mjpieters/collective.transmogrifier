@@ -52,4 +52,9 @@
     name="collective.transmogrifier.sections.csvsource"
     />
 
+<utility
+    component=".jsonsource.JSONSourceSection"
+    name="collective.transmogrifier.sections.jsonsource"
+    />
+
 </configure>
