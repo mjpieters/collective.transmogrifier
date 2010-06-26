@@ -36,9 +36,7 @@ class ConstructorSection(object):
             
             fti = self.ttool.getTypeInfo(type_)
             if fti is None:                           # not an existing type
-                if not self.required:
-                    yield item; continue
-                raise Exception, 'Type "'+type_+'" ('+path+') does not exists.'
+                yield item; continue
             
             path = path.encode('ASCII')
             elems = path.strip('/').rsplit('/', 1)
