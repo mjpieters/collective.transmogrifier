@@ -52,4 +52,9 @@
     name="collective.transmogrifier.sections.csvsource"
     />
 
+<utility
+    component=".logger.LoggerSection"
+    name="collective.transmogrifier.sections.logger"
+    />
+
 </configure>

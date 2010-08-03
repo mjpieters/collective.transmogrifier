@@ -1,0 +1,65 @@
+Logger section
+================
+
+First we need to set up a logger for testing:
+
+    >>> import logging, sys
+    >>> logger = logging.getLogger()
+    >>> handler = logging.StreamHandler(sys.stdout)
+    >>> handler.setFormatter(logging.Formatter('%(name)s: %(message)s'))
+    >>> logger.addHandler(handler)
+
+A logger section lets you log a piece of data from the item together with a
+name. You can set any logging level in the logger. The logger blueprint name
+is ``collective.transmogrifier.sections.logger``.
+
+    >>> infologger = """
+    ... [transmogrifier]
+    ... pipeline =
+    ...     source
+    ...     logger
+    ...     
+    ... [source]
+    ... blueprint = collective.transmogrifier.sections.tests.rangesource
+    ... size = 3
+    ... 
+    ... [logger]
+    ... blueprint = collective.transmogrifier.sections.logger
+    ... level = INFO
+    ... name = Infologger test
+    ... key = id
+    ... """
+    >>> registerConfig(u'collective.transmogrifier.sections.tests.infologger',
+    ...                infologger)
+    >>> transmogrifier(u'collective.transmogrifier.sections.tests.infologger')
+    Infologger test: item-00
+    Infologger test: item-01
+    Infologger test: item-02
+
+    
+We can also have numerical levels, and if the key is missing, it will print out
+a message to that effect.
+
+    >>> debuglogger = """
+    ... [transmogrifier]
+    ... pipeline =
+    ...     source
+    ...     logger
+    ...     
+    ... [source]
+    ... blueprint = collective.transmogrifier.sections.tests.rangesource
+    ... size = 3
+    ... 
+    ... [logger]
+    ... blueprint = collective.transmogrifier.sections.logger
+    ... level = 10
+    ... name = Infologger test
+    ... key = foo
+    ... """
+    >>> registerConfig(u'collective.transmogrifier.sections.tests.debuglogger',
+    ...                debuglogger)
+    >>> transmogrifier(u'collective.transmogrifier.sections.tests.debuglogger')
+    Infologger test: -- Missing key --
+    Infologger test: -- Missing key --
+    Infologger test: -- Missing key --
+    

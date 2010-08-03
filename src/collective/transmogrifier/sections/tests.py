@@ -339,7 +339,7 @@ def test_suite():
         unittest.makeSuite(SplitterSectionTests),
         doctest.DocFileSuite(
             'codec.txt', 'inserter.txt', 'manipulator.txt', 'condition.txt',
-            'splitter.txt', 'savepoint.txt', 'csvsource.txt',
+            'splitter.txt', 'savepoint.txt', 'csvsource.txt', 'logger.txt',
             setUp=sectionsSetUp, tearDown=tearDown,
             optionflags = doctest.NORMALIZE_WHITESPACE),
         doctest.DocFileSuite(
