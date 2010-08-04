@@ -10,6 +10,10 @@ Change History
   to show progress in a long import.
   [regebro]
 
+- Added a breakpoint section to break on a particular expression, which is
+  handy for debugging.
+  [regebro]
+
 1.2 (2010-03-30)
 ================
 

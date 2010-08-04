@@ -56,5 +56,10 @@
     component=".logger.LoggerSection"
     name="collective.transmogrifier.sections.logger"
     />
+    
+<utility
+    component=".breakpoint.BreakpointSection"
+    name="collective.transmogrifier.sections.breakpoint"
+    />
 
 </configure>

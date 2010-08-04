@@ -1,3 +1,4 @@
+import sys
 import itertools
 import pprint
 import unittest
@@ -333,6 +334,29 @@ def foldersSetUp(test):
     provideUtility(FoldersSource,
         name=u'collective.transmogrifier.sections.tests.folderssource')
 
+def pdbSetUp(test):
+    sectionsSetUp(test)
+    
+    class Input:
+        """A helper to push data onto stdin"""
+        def __init__(self, src):
+            self.lines = src.split('\n')
+        def readline(self):
+            line = self.lines.pop(0)
+            print line
+            return line+'\n'
+    
+    def make_stdin(data):
+        oldstdin = sys.stdin
+        sys.stdin = Input(data)
+        
+    def reset_stdin(old):
+        sys.stdin = old
+        
+    test.globs['make_stdin'] = make_stdin
+    test.globs['reset_stdin'] = reset_stdin
+
+
 def test_suite():
     return unittest.TestSuite((
         unittest.makeSuite(SplitterConditionSectionTests),
@@ -349,5 +373,9 @@ def test_suite():
         doctest.DocFileSuite(
             'folders.txt',
             setUp=foldersSetUp, tearDown=tearDown,
+            optionflags = doctest.NORMALIZE_WHITESPACE),
+        doctest.DocFileSuite(
+            'breakpoint.txt',
+            setUp=pdbSetUp, tearDown=tearDown,
             optionflags = doctest.NORMALIZE_WHITESPACE),
     ))

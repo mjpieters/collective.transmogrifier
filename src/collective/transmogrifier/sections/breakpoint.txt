@@ -1,0 +1,49 @@
+Breakpoint section
+==================
+
+A breakpoint section will stop and enter pdb when a specific condition is
+met. This is useful for debugging, as you can add a brekpoint section just
+before a section that gets an error on a specific item.
+
+The alternative is to add a conditional breakpoint in the section that fails,
+but that can require findning the code in some egg somewhere, adding the
+breakpoint and restarting the server. This speeds up the process.
+
+    >>> breaker = """
+    ... [transmogrifier]
+    ... pipeline =
+    ...     source
+    ...     breaker
+    ...     printer
+    ...     
+    ... [source]
+    ... blueprint = collective.transmogrifier.sections.tests.rangesource
+    ... size = 3
+    ... 
+    ... [breaker]
+    ... blueprint = collective.transmogrifier.sections.breakpoint
+    ... condition = python: item['id'] == 'item-01'
+    ... 
+    ... [printer]
+    ... blueprint = collective.transmogrifier.sections.tests.pprinter
+    ... """
+    >>> registerConfig(u'collective.transmogrifier.sections.tests.breaker',
+    ...                breaker)
+    
+Since pdb requires input, for this test we replace stdin with something
+giving some input (just a continue cammand).
+
+    >>> oldstdin = make_stdin('c\n')
+    >>> transmogrifier(u'collective.transmogrifier.sections.tests.breaker')
+    [('id', 'item-00')]
+    > /home/projects/eceee-web/dev/src/collective.transmogrifier/src/collective/transmogrifier/sections/breakpoint.py(25)__iter__()
+    -> yield item
+    (Pdb) c
+    [('id', 'item-01')]
+    [('id', 'item-02')]
+
+
+And finally we reset the stdin:
+
+    >>> reset_stdin(oldstdin)
+    
