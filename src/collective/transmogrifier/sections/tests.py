@@ -377,5 +377,5 @@ def test_suite():
         doctest.DocFileSuite(
             'breakpoint.txt',
             setUp=pdbSetUp, tearDown=tearDown,
-            optionflags = doctest.NORMALIZE_WHITESPACE),
+            optionflags = doctest.NORMALIZE_WHITESPACE | doctest.ELLIPSIS),
     ))
