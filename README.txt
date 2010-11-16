@@ -24,7 +24,19 @@ intent is to provide a pluggable way to import legacy content.
 Installation
 ************
 
-See docs/INSTALL.txt for installation instructions.
+Installing collective.transmogrifier is easy, just add the package name to your
+instance section's eggs parameter, e.g.::
+
+    [buildout]
+    parts = plone 
+
+    [plone]
+    recipe = plone.recipe.zope2instance
+    eggs =
+        Plone
+        ...
+        collective.transmogrifier
+
 
 Credits
 *******

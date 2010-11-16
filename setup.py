@@ -57,4 +57,8 @@ setup(
         'setuptools',
         'Products.CMFCore',
     ],
+    entry_points={
+        'z3c.autoinclude.plugin': 'target = plone',
+        'console_scripts': 'transmogrifier = collective.transmogrifier.script:main',
+    }
 )
