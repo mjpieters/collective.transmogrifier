@@ -3,8 +3,8 @@ import shutil
 import tempfile
 import unittest
 import operator
-from zope.interface import classImplements, implements
-from zope.component import provideUtility
+from zope.interface import classImplements, implements, directlyProvides
+from zope.component import provideUtility, provideAdapter
 from zope.testing import doctest, cleanup
 from Products.Five import zcml
 
@@ -267,12 +267,24 @@ class MockImportContext(object):
 
     run = ()
     def __call__(self, config):
+        from zope.annotation.interfaces import IAnnotations
+        from collective.transmogrifier.genericsetup import IMPORT_CONTEXT
+        assert IAnnotations(self)[IMPORT_CONTEXT] is self
         self.run += (config,)
 
 class GenericSetupImporterTest(unittest.TestCase):
+    def setUp(self):
+        from zope.annotation.attribute import AttributeAnnotations
+        provideAdapter(AttributeAnnotations)
+
+    def tearDown(self):
+        cleanup.cleanUp()
+
     def runOne(self, configfile=None):
         from collective.transmogrifier.genericsetup import importTransmogrifier
+        from zope.annotation.interfaces import IAttributeAnnotatable
         context = MockImportContext(configfile)
+        directlyProvides(context, IAttributeAnnotatable)
         importTransmogrifier(context)
         return context
 

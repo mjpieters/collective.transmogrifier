@@ -1,5 +1,8 @@
 """Generic setup integration"""
+from zope.annotation.interfaces import IAnnotations
 from interfaces import ITransmogrifier
+
+IMPORT_CONTEXT = 'collective.transmogrifier.genericsetup.import_context'
 
 def importTransmogrifier(context):
     """Run named transmogrifier pipelines read from transmogrifier.txt
@@ -13,6 +16,8 @@ def importTransmogrifier(context):
         return
 
     transmogrifier = ITransmogrifier(context.getSite())
+    anno = IAnnotations(transmogrifier)
+    anno[IMPORT_CONTEXT] = context
     logger = context.getLogger('collective.transmogrifier.genericsetup')
 
     for pipeline in data.splitlines():
@@ -22,3 +27,5 @@ def importTransmogrifier(context):
         logger.info('Running transmogrifier pipeline %s' % pipeline)
         transmogrifier(pipeline)
         logger.info('Transmogrifier pipeline %s complete' % pipeline)
+
+    del anno[IMPORT_CONTEXT]
