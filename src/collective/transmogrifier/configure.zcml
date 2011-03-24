@@ -35,6 +35,4 @@
   </class>
 </configure>
 
-<includePlugins package="transmogrify" />
-
 </configure>
