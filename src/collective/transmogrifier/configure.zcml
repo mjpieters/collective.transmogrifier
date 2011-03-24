@@ -16,7 +16,8 @@
     xmlns:gs="http://namespaces.zope.org/genericsetup"
     >
 
-  <include package="Products.GenericSetup" file="meta.zcml" />
+  <include package="Products.GenericSetup" file="meta.zcml" /> 
+
   <gs:importStep
       name="transmogrifier"
       title="Run transmogrifier pipeline"
@@ -33,5 +34,7 @@
     <implements interface="zope.annotation.interfaces.IAttributeAnnotatable" />
   </class>
 </configure>
+
+<includePlugin "." />
 
 </configure>
