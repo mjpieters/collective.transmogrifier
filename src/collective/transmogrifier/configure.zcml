@@ -15,6 +15,9 @@
     zcml:condition="installed Products.GenericSetup"
     xmlns:gs="http://namespaces.zope.org/genericsetup"
     >
+
+  <include package="Products.GenericSetup" file="meta.zcml" /> 
+
   <gs:importStep
       name="transmogrifier"
       title="Run transmogrifier pipeline"
@@ -23,6 +26,7 @@
       >
     <gs:depends name="toolset" />
   </gs:importStep>
+
 </configure>
 
 <configure zcml:condition="installed zope.annotation">
