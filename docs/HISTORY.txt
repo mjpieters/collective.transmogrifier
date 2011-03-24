@@ -9,11 +9,6 @@ Change History
 - Bug fix to load ZCML for GS when Products.GenericSetup is installed.
   [aclark]
 
-- Add includePlugins directive to allow blueprint authors to target the
-  "transmogrify" virtual package, for auto-loading ZCML for their package.
-  [aclark]
-
-
 1.3 (2011-03-17)
 ================
 
