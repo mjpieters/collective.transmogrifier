@@ -35,6 +35,4 @@
   </class>
 </configure>
 
-<includePlugins zcml:condition="installed mr.migrator" package="transmogrify" />
-
 </configure>
