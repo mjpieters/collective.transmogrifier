@@ -55,6 +55,8 @@ setup(
     zip_safe=False,
     install_requires=[
         'setuptools',
+        'zope.component',
+        'zope.app.pagetemplate',
         #'Products.CMFCore',
     ],
 )
