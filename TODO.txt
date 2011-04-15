@@ -27,3 +27,6 @@ TODO
 - Provide a UI for selecting and running pipelines
 
 - Perhaps utils.Expressions should grow an TAL iterator-like interface? YAGNI?
+
+- Refactor tests to be based on plone.testing which has a layer that tears down
+  the configuration registry
