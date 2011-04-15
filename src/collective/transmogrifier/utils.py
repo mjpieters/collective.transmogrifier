@@ -49,10 +49,10 @@ def constructPipeline(transmogrifier, sections, pipeline=None):
         
     from pkg_resources import iter_entry_points
 
-    for object in iter_entry_points(group='collective.transmogrifier', name=None):
-        load_config('configure.zcml', object.load())
-
     
+    for object in iter_entry_points(group='collective.transmogrifier', name=None):
+        load_config('configure.zcml', object.load())()
+
     for section_id in sections:
         section_id = section_id.strip()
         if not section_id:
