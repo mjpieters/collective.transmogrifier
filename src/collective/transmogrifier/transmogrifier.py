@@ -38,9 +38,9 @@ class ConfigurationRegistry(object):
 configuration_registry = ConfigurationRegistry()
 
 # Test cleanup support
-from zope.testing.cleanup import addCleanUp
-addCleanUp(configuration_registry.clear)
-del addCleanUp
+#from zope.testing.cleanup import addCleanUp
+#addCleanUp(configuration_registry.clear)
+#del addCleanUp
 
 
 class Transmogrifier(UserDict.DictMixin):
