@@ -2,7 +2,7 @@ import re
 import ConfigParser
 import UserDict
 
-#from zope.component import adapts
+from zope.component import adapts
 from zope.interface import implements
 
 #from Products.CMFCore.interfaces import IFolderish
@@ -45,6 +45,7 @@ del addCleanUp
 
 class Transmogrifier(UserDict.DictMixin):
     implements(ITransmogrifier)
+    adapts(ITransmogrifier)
     #adapts(IFolderish)
     
     def __init__(self, context):
