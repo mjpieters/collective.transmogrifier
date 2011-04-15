@@ -44,10 +44,12 @@
     name="collective.transmogrifier.sections.splitter"
     />
 
+<!--
 <utility
     component=".savepoint.SavepointSection"
     name="collective.transmogrifier.sections.savepoint"
     />
+-->
 
 <utility
     component=".csvsource.CSVSourceSection"
