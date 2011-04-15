@@ -42,11 +42,15 @@ def constructPipeline(transmogrifier, sections, pipeline=None):
         pipeline = iter(()) # empty starter section
 
 
-    from Products.Five import zcml
+    try:
+        from Products.Five.zcml import load_config 
+    except:
+        from zope.configuration.xmlconfig import XMLConfig as load_config
+        
     from pkg_resources import iter_entry_points
 
     for object in iter_entry_points(group='collective.transmogrifier', name=None):
-        zcml.load_config('configure.zcml', object.load())
+        load_config('configure.zcml', object.load())
 
     
     for section_id in sections:
