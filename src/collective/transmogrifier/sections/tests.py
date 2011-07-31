@@ -211,7 +211,7 @@ class PrettyPrinter(object):
             
     def __iter__(self):
         def undict(source):
-            """ Recurse trough the structure and convert dictionaries 
+            """ Recurse through the structure and convert dictionaries 
                 into sorted lists
             """
             res = list()
