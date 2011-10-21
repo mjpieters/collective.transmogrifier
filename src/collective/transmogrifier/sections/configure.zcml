@@ -3,6 +3,11 @@
     i18n_domain="collective.transmogrifier">
 
 <utility
+    component=".base.BaseSection"
+    name="collective.transmogrifier.sections.base"
+    />
+
+<utility
     component=".constructor.ConstructorSection"
     name="collective.transmogrifier.sections.constructor"
     />
@@ -56,7 +61,7 @@
     component=".logger.LoggerSection"
     name="collective.transmogrifier.sections.logger"
     />
-    
+
 <utility
     component=".breakpoint.BreakpointSection"
     name="collective.transmogrifier.sections.breakpoint"
