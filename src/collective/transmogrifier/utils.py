@@ -3,7 +3,11 @@ import re
 import sys
 
 from zope.component import getUtility
-from zope.app.pagetemplate import engine
+try:
+    from zope.pagetemplate import engine
+except ImportError:
+    # BBB: Zope 2.10
+    from zope.app.pagetemplate import engine
 
 from interfaces import ISection
 from interfaces import ISectionBlueprint
