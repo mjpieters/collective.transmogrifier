@@ -6,6 +6,9 @@ Change History
 1.4 (unreleased)
 ================
 
+- Added .gitignore ignoring some of the usual stuff.
+  [lgraf]
+
 - Bug fix to load ZCML for GS when Products.GenericSetup is installed.
   [aclark]
 
