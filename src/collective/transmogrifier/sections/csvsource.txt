@@ -17,6 +17,11 @@ By default the CSV file is assumed to use the Excel CSV dialect, but you can
 specify any dialect supported by the python csv module if you specify it with
 the ``dialect`` option.
 
+If you need to support escaping of special characters in your CSV file, you'll
+need to define the escape character by setting the `escapechar` option (for the
+Excel dialect, which is the default, the escape character defaults to None,
+disabling support for escaping).
+
     >>> import tempfile
     >>> tmp = tempfile.NamedTemporaryFile('w+', suffix='.csv')
     >>> tmp.write('\r\n'.join("""\

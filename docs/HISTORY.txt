@@ -6,6 +6,12 @@ Change History
 1.4 (unreleased)
 ================
 
+- Added ``escapechar`` option to CSVSourceSection blueprint.
+  This allows to support escaped characters in CSV files (the Excel dialect,
+  which is the default, uses None as default for escapechar, therefore
+  disabling support for escaping entirely.
+  [lgraf]
+
 - Added .gitignore ignoring some of the usual stuff.
   [lgraf]
 

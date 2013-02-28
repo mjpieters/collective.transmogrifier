@@ -15,12 +15,13 @@ class CSVSourceSection(object):
         filename = resolvePackageReferenceOrFile(options['filename'])
         file_ = open(filename, 'r')
         dialect = options.get('dialect', 'excel')
+        escapechar = options.get('escapechar')
         fieldnames = options.get('fieldnames')
         if fieldnames:
             fieldnames = fieldnames.split()
         
         self.reader = csv.DictReader(file_, 
-            dialect=dialect, fieldnames=fieldnames)
+            dialect=dialect, fieldnames=fieldnames, escapechar=escapechar)
     
     def __iter__(self):
         for item in self.previous:
