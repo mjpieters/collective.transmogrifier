@@ -83,6 +83,7 @@ text fields which may be too large and make the output too noisy.
     ... delete =
     ...     title-duplicate
     ...     id-duplicate
+    ...     nonexistent
     ... """
     >>> registerConfig(u'collective.transmogrifier.sections.tests.logger',
     ...                logger)
