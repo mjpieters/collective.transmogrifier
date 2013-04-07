@@ -24,6 +24,8 @@ long_description = ('\n'.join((
     read('src', 'collective', 'transmogrifier', 'sections', 'splitter.txt'), '',
     read('src', 'collective', 'transmogrifier', 'sections', 'savepoint.txt'), '',
     read('src', 'collective', 'transmogrifier', 'sections', 'csvsource.txt'), '',
+    read('src', 'collective', 'transmogrifier', 'sections', 'logger.txt'), '',
+    read('src', 'collective', 'transmogrifier', 'sections', 'breakpoint.txt'), '',
 
     read('docs', 'HISTORY.txt'), '',
 
