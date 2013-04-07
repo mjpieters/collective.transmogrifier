@@ -31,7 +31,7 @@ happening. The condition is evaluated for every matched key.
     ...     copy
     ...     rename
     ...     delete
-    ...     printer
+    ...     logger
     ...     
     ... [source]
     ... blueprint = collective.transmogrifier.sections.tests.samplesource
@@ -53,24 +53,29 @@ happening. The condition is evaluated for every matched key.
     ... blueprint = collective.transmogrifier.sections.manipulator
     ... delete = status
     ... 
-    ... [printer]
-    ... blueprint = collective.transmogrifier.sections.tests.pprinter
+    ... [logger]
+    ... blueprint = collective.transmogrifier.sections.logger
     ... """
     >>> registerConfig(u'collective.transmogrifier.sections.tests.manipulator',
     ...                manipulator)
     >>> transmogrifier(u'collective.transmogrifier.sections.tests.manipulator')
-    [('id', 'foo'),
-     ('id-duplicate', 'foo'),
-     ('title', u'The Foo Fighters \u2117'),
-     ('title-duplicate', u'The Foo Fighters \u2117')]
-    [('id', 'bar'),
-     ('id-duplicate', 'bar'),
-     ('title', u'Brand Chocolate Bar \u2122'),
-     ('title-duplicate', u'Brand Chocolate Bar \u2122')]
-    [('id', 'monty-python'),
-     ('id-duplicate', 'monty-python'),
-     ('title', u"Monty Python's Flying Circus \xa9"),
-     ('title-duplicate', u"Monty Python's Flying Circus \xa9")]
+    >>> print handler
+    logger DEBUG
+        {'id': 'foo',
+        'id-duplicate': 'foo',
+        'title': u'The Foo Fighters \u2117',
+        'title-duplicate': u'The Foo Fighters \u2117'}
+    logger DEBUG
+        {'id': 'bar',
+        'id-duplicate': 'bar',
+        'title': u'Brand Chocolate Bar \u2122',
+        'title-duplicate': u'Brand Chocolate Bar \u2122'}
+    logger DEBUG
+        {'id': 'monty-python',
+        'id-duplicate': 'monty-python',
+        'title': u"Monty Python's Flying Circus \xa9",
+        'title-duplicate': u"Monty Python's Flying Circus \xa9"}
+    >>> handler.clear()
 
 The ``destination`` expression has access to the following:
 

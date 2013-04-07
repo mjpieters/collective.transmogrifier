@@ -6,6 +6,11 @@ Change History
 1.5 (unreleased)
 ================
 
+- Add pprint support to the logger section, moved from the pprint
+  section used in tests to make it more useful and available in actual
+  pipelines.
+  [rpatterson]
+
 1.4 (2013-04-07)
 ================
 

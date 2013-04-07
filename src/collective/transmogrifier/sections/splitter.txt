@@ -14,7 +14,7 @@ own copy [*]_ of the items:
     ... pipeline =
     ...     source
     ...     splitter
-    ...     printer
+    ...     logger
     ...     
     ... [source]
     ... blueprint = collective.transmogrifier.sections.tests.rangesource
@@ -25,18 +25,25 @@ own copy [*]_ of the items:
     ... pipeline-1 =
     ... pipeline-2 =
     ... 
-    ... [printer]
-    ... blueprint = collective.transmogrifier.sections.tests.pprinter
+    ... [logger]
+    ... blueprint = collective.transmogrifier.sections.logger
     ... """
     >>> registerConfig(u'collective.transmogrifier.sections.tests.emptysplitter',
     ...                emptysplitter)
     >>> transmogrifier(u'collective.transmogrifier.sections.tests.emptysplitter')
-    [('id', 'item-00')]
-    [('id', 'item-00')]
-    [('id', 'item-01')]
-    [('id', 'item-01')]
-    [('id', 'item-02')]
-    [('id', 'item-02')]
+    >>> print handler
+    logger DEBUG
+        {'id': 'item-00'}
+    logger DEBUG
+        {'id': 'item-00'}
+    logger DEBUG
+        {'id': 'item-01'}
+    logger DEBUG
+        {'id': 'item-01'}
+    logger DEBUG
+        {'id': 'item-02'}
+    logger DEBUG
+        {'id': 'item-02'}
 
 Although the pipeline definitions in the splitter are empty, we end up with 2
 copies of every item in the pipeline as both splitter pipelines get to process
@@ -51,7 +58,7 @@ optional and use the pipeline option name plus ``-condition``:
     ... pipeline =
     ...     source
     ...     splitter
-    ...     printer
+    ...     logger
     ...     
     ... [source]
     ... blueprint = collective.transmogrifier.sections.tests.rangesource
@@ -74,15 +81,20 @@ optional and use the pipeline option name plus ``-condition``:
     ... key = string:odd
     ... value = string:The odd pipe
     ... 
-    ... [printer]
-    ... blueprint = collective.transmogrifier.sections.tests.pprinter
+    ... [logger]
+    ... blueprint = collective.transmogrifier.sections.logger
     ... """
     >>> registerConfig(u'collective.transmogrifier.sections.tests.evenodd',
     ...                evenoddsplitter)
+    >>> handler.clear()
     >>> transmogrifier(u'collective.transmogrifier.sections.tests.evenodd')
-    [('even', 'The even pipe'), ('id', 'item-00')]
-    [('id', 'item-01'), ('odd', 'The odd pipe')]
-    [('even', 'The even pipe'), ('id', 'item-02')]
+    >>> print handler
+    logger DEBUG
+        {'even': 'The even pipe', 'id': 'item-00'}
+    logger DEBUG
+        {'id': 'item-01', 'odd': 'The odd pipe'}
+    logger DEBUG
+        {'even': 'The even pipe', 'id': 'item-02'}
 
 Conditions are expressed as TALES statements, and have access to:
 

@@ -51,7 +51,7 @@ Here is how it might look by default:
     ... pipeline =
     ...     contentsource
     ...     folders
-    ...     printer
+    ...     logger
     ...     
     ... [contentsource]
     ... blueprint = collective.transmogrifier.sections.tests.folderssource
@@ -59,22 +59,33 @@ Here is how it might look by default:
     ... [folders]
     ... blueprint = collective.transmogrifier.sections.folders
     ... 
-    ... [printer]
-    ... blueprint = collective.transmogrifier.sections.tests.pprinter
+    ... [logger]
+    ... blueprint = collective.transmogrifier.sections.logger
     ... """
     >>> registerConfig(u'collective.transmogrifier.sections.tests.folders',
     ...                constructor)
     >>> transmogrifier(u'collective.transmogrifier.sections.tests.folders')
-    [('_path', '/foo'), ('_type', 'Document')]
-    [('_path', '/existing/foo'), ('_type', 'Document')]
-    [('_path', '/nonexisting'), ('_type', 'Folder')]
-    [('_path', '/nonexisting/alpha'), ('_type', 'Folder')]
-    [('_path', '/nonexisting/alpha/foo'), ('_type', 'Document')]
-    [('_path', '/nonexisting/beta'), ('_type', 'Folder')]
-    [('_path', '/nonexisting/beta/foo'), ('_type', 'Document')]
-    [('_type', 'Document')]
-    [('_folders_path', '/delta'), ('_type', 'Folder')]
-    [('_folders_path', '/delta/foo'), ('_type', 'Document')]
+    >>> print handler
+    logger DEBUG
+        {'_path': '/foo', '_type': 'Document'}
+    logger DEBUG
+        {'_path': '/existing/foo', '_type': 'Document'}
+    logger DEBUG
+        {'_path': '/nonexisting', '_type': 'Folder'}
+    logger DEBUG
+        {'_path': '/nonexisting/alpha', '_type': 'Folder'}
+    logger DEBUG
+        {'_path': '/nonexisting/alpha/foo', '_type': 'Document'}
+    logger DEBUG
+        {'_path': '/nonexisting/beta', '_type': 'Folder'}
+    logger DEBUG
+        {'_path': '/nonexisting/beta/foo', '_type': 'Document'}
+    logger DEBUG
+        {'_type': 'Document'}
+    logger DEBUG
+        {'_folders_path': '/delta', '_type': 'Folder'}
+    logger DEBUG
+        {'_folders_path': '/delta/foo', '_type': 'Document'}
     
 To specify alternate types and keys, we can do something like this:
 
@@ -84,7 +95,7 @@ To specify alternate types and keys, we can do something like this:
     ... pipeline =
     ...     contentsource
     ...     folders
-    ...     printer
+    ...     logger
     ...     
     ... [contentsource]
     ... blueprint = collective.transmogrifier.sections.tests.folderssource
@@ -95,23 +106,35 @@ To specify alternate types and keys, we can do something like this:
     ... new-type-key = '_folderconstructor_type
     ... new-path-key = '_folderconstructor_path
     ... 
-    ... [printer]
-    ... blueprint = collective.transmogrifier.sections.tests.pprinter
+    ... [logger]
+    ... blueprint = collective.transmogrifier.sections.logger
     ... """
     >>> registerConfig(u'collective.transmogrifier.sections.tests.folders2',
     ...                constructor)
+    >>> handler.clear()
     >>> transmogrifier(u'collective.transmogrifier.sections.tests.folders2')
-    [('_path', '/foo'), ('_type', 'Document')]
-    [('_path', '/existing/foo'), ('_type', 'Document')]
-    [("'_folderconstructor_path", '/nonexisting'),
-     ("'_folderconstructor_type", 'My Folder')]
-    [("'_folderconstructor_path", '/nonexisting/alpha'),
-     ("'_folderconstructor_type", 'My Folder')]
-    [('_path', '/nonexisting/alpha/foo'), ('_type', 'Document')]
-    [("'_folderconstructor_path", '/nonexisting/beta'),
-     ("'_folderconstructor_type", 'My Folder')]
-    [('_path', '/nonexisting/beta/foo'), ('_type', 'Document')]
-    [('_type', 'Document')]
-    [("'_folderconstructor_path", '/delta'),
-     ("'_folderconstructor_type", 'My Folder')]
-    [('_folders_path', '/delta/foo'), ('_type', 'Document')]
+    >>> print handler
+    logger DEBUG
+        {'_path': '/foo', '_type': 'Document'}
+    logger DEBUG
+        {'_path': '/existing/foo', '_type': 'Document'}
+    logger DEBUG
+        {"'_folderconstructor_path": '/nonexisting',
+       "'_folderconstructor_type": 'My Folder'}
+    logger DEBUG
+        {"'_folderconstructor_path": '/nonexisting/alpha',
+       "'_folderconstructor_type": 'My Folder'}
+    logger DEBUG
+        {'_path': '/nonexisting/alpha/foo', '_type': 'Document'}
+    logger DEBUG
+        {"'_folderconstructor_path": '/nonexisting/beta',
+       "'_folderconstructor_type": 'My Folder'}
+    logger DEBUG
+        {'_path': '/nonexisting/beta/foo', '_type': 'Document'}
+    logger DEBUG
+        {'_type': 'Document'}
+    logger DEBUG
+        {"'_folderconstructor_path": '/delta',
+        "'_folderconstructor_type": 'My Folder'}
+    logger DEBUG
+        {'_folders_path': '/delta/foo', '_type': 'Document'}

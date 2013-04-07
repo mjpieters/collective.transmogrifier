@@ -1,6 +1,5 @@
 import sys
 import itertools
-import pprint
 import unittest
 from zope.component import provideUtility
 from zope.interface import classProvides, implements
@@ -181,6 +180,7 @@ class SampleSource(object):
             yield item
         
         for item in self.sample:
+            item = item.copy()
             if self.encoding:
                 item['title'] = item['title'].encode(self.encoding)
                 item['status'] = item['status'].encode(self.encoding)
@@ -201,35 +201,6 @@ class RangeSource(object):
         for i in range(self.size):
             yield dict(id='item-%02d' % i)
 
-class PrettyPrinter(object):
-    classProvides(ISectionBlueprint)
-    implements(ISection)
-    
-    def __init__(self, transmogrifier, name, options, previous):
-        self.previous = previous
-        self.pprint = pprint.PrettyPrinter().pprint
-            
-    def __iter__(self):
-        def undict(source):
-            """ Recurse through the structure and convert dictionaries 
-                into sorted lists
-            """
-            res = list()
-            if type(source) is dict:
-                source = sorted(source.items())
-            if type(source) in (list, tuple):
-                for item in source:
-                    res.append(undict(item))
-            else:
-                res = source
-            # convert a tuple into tuple back
-            if type(source) is tuple:
-                res = tuple(res)
-            return res
-
-        for item in self.previous:
-            self.pprint(undict(item))
-            yield item
 
 def sectionsSetUp(test):
     setUp(test)
@@ -246,8 +217,11 @@ def sectionsSetUp(test):
         name=u'collective.transmogrifier.sections.tests.samplesource')
     provideUtility(RangeSource,
         name=u'collective.transmogrifier.sections.tests.rangesource')
-    provideUtility(PrettyPrinter,
-        name=u'collective.transmogrifier.sections.tests.pprinter')
+
+    import logging
+    from zope.testing import loggingsupport
+    test.globs['handler'] = loggingsupport.InstalledHandler(
+        'logger', level=logging.DEBUG)
 
 
 def constructorSetUp(test):

@@ -38,7 +38,8 @@ is ``collective.transmogrifier.sections.logger``.
 
     
 We can also have numerical levels, and if the key is missing, it will print out
-a message to that effect.
+a message to that effect.  A condition may also be used to restrict
+the items logged.
 
     >>> debuglogger = """
     ... [transmogrifier]
@@ -55,11 +56,43 @@ a message to that effect.
     ... level = 10
     ... name = Infologger test
     ... key = foo
+    ... condition = python:item['id'] != 'item-01'
     ... """
     >>> registerConfig(u'collective.transmogrifier.sections.tests.debuglogger',
     ...                debuglogger)
     >>> transmogrifier(u'collective.transmogrifier.sections.tests.debuglogger')
     Infologger test: -- Missing key --
     Infologger test: -- Missing key --
-    Infologger test: -- Missing key --
+
+If no ``key`` option is given, the logger will render the whole item
+in a readable format using Python's ``pprint`` module.  The ``delete``
+option can be used to omit certain keys from the output, such as body
+text fields which may be too large and make the output too noisy.
+
+    >>> logger = """
+    ... [transmogrifier]
+    ... pipeline =
+    ...     source
+    ...     logger
+    ...     
+    ... [source]
+    ... blueprint = collective.transmogrifier.sections.tests.samplesource
+    ... 
+    ... [logger]
+    ... blueprint = collective.transmogrifier.sections.logger
+    ... delete =
+    ...     title-duplicate
+    ...     id-duplicate
+    ... """
+    >>> registerConfig(u'collective.transmogrifier.sections.tests.logger',
+    ...                logger)
+    >>> transmogrifier(u'collective.transmogrifier.sections.tests.logger')
+    logger:
+      {'id': 'foo', 'status': u'\u2117', 'title': u'The Foo Fighters \u2117'}
+    logger:
+      {'id': 'bar', 'status': u'\u2122', 'title': u'Brand Chocolate Bar \u2122'}
+    logger:
+      {'id': 'monty-python',
+       'status': u'\xa9',
+       'title': u"Monty Python's Flying Circus \xa9"}
     

@@ -29,26 +29,34 @@ the ``dialect`` option.
     ... [transmogrifier]
     ... pipeline =
     ...     csvsource
-    ...     printer
+    ...     logger
     ...     
     ... [csvsource]
     ... blueprint = collective.transmogrifier.sections.csvsource
     ... filename = %s
     ... 
-    ... [printer]
-    ... blueprint = collective.transmogrifier.sections.tests.pprinter
+    ... [logger]
+    ... blueprint = collective.transmogrifier.sections.logger
     ... """ % tmp.name
     >>> registerConfig(u'collective.transmogrifier.sections.tests.csvsource.file',
     ...                csvsource)
     >>> transmogrifier(u'collective.transmogrifier.sections.tests.csvsource.file')
-    [('bar', 'first-bar'), ('baz', 'first-baz'), ('foo', 'first-foo')]
-    [('bar', 'second-bar'), ('baz', 'second-baz'), ('foo', 'second-foo')]
+    >>> print handler
+    logger DEBUG
+        {'bar': 'first-bar', 'baz': 'first-baz', 'foo': 'first-foo'}
+    logger DEBUG
+        {'bar': 'second-bar', 'baz': 'second-baz', 'foo': 'second-foo'}
 
+    >>> handler.clear()
     >>> transmogrifier(u'collective.transmogrifier.sections.tests.csvsource.file',
     ...                csvsource=dict(fieldnames='monty spam eggs'))
-    [('eggs', 'baz'), ('monty', 'foo'), ('spam', 'bar')]
-    [('eggs', 'first-baz'), ('monty', 'first-foo'), ('spam', 'first-bar')]
-    [('eggs', 'second-baz'), ('monty', 'second-foo'), ('spam', 'second-bar')]
+    >>> print handler
+    logger DEBUG
+        {'eggs': 'baz', 'monty': 'foo', 'spam': 'bar'}
+    logger DEBUG
+        {'eggs': 'first-baz', 'monty': 'first-foo', 'spam': 'first-bar'}
+    logger DEBUG
+        {'eggs': 'second-baz', 'monty': 'second-foo', 'spam': 'second-bar'}
 
 Here is the same example, loading a file from a package instead:
 
@@ -56,23 +64,32 @@ Here is the same example, loading a file from a package instead:
     ... [transmogrifier]
     ... pipeline =
     ...     csvsource
-    ...     printer
+    ...     logger
     ...     
     ... [csvsource]
     ... blueprint = collective.transmogrifier.sections.csvsource
     ... filename = collective.transmogrifier.tests:sample.csv
     ... 
-    ... [printer]
-    ... blueprint = collective.transmogrifier.sections.tests.pprinter
+    ... [logger]
+    ... blueprint = collective.transmogrifier.sections.logger
     ... """
     >>> registerConfig(u'collective.transmogrifier.sections.tests.csvsource.package',
     ...                csvsource)
+    >>> handler.clear()
     >>> transmogrifier(u'collective.transmogrifier.sections.tests.csvsource.package')
-    [('bar', 'first-bar'), ('baz', 'first-baz'), ('foo', 'first-foo')]
-    [('bar', 'second-bar'), ('baz', 'second-baz'), ('foo', 'second-foo')]
+    >>> print handler
+    logger DEBUG
+        {'bar': 'first-bar', 'baz': 'first-baz', 'foo': 'first-foo'}
+    logger DEBUG
+        {'bar': 'second-bar', 'baz': 'second-baz', 'foo': 'second-foo'}
 
+    >>> handler.clear()
     >>> transmogrifier(u'collective.transmogrifier.sections.tests.csvsource.package',
     ...                csvsource=dict(fieldnames='monty spam eggs'))
-    [('eggs', 'baz'), ('monty', 'foo'), ('spam', 'bar')]
-    [('eggs', 'first-baz'), ('monty', 'first-foo'), ('spam', 'first-bar')]
-    [('eggs', 'second-baz'), ('monty', 'second-foo'), ('spam', 'second-bar')]
+    >>> print handler
+    logger DEBUG
+        {'eggs': 'baz', 'monty': 'foo', 'spam': 'bar'}
+    logger DEBUG
+        {'eggs': 'first-baz', 'monty': 'first-foo', 'spam': 'first-bar'}
+    logger DEBUG
+        {'eggs': 'second-baz', 'monty': 'second-foo', 'spam': 'second-bar'}
