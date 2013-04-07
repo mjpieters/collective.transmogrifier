@@ -3,6 +3,9 @@ Change History
 
 (name of developer listed in brackets)
 
+1.5 (unreleased)
+================
+
 1.4 (2013-04-07)
 ================
 
