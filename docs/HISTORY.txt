@@ -6,6 +6,9 @@ Change History
 1.4 (unreleased)
 ================
 
+- Fix the import location of the pagetemplate engine for newer Zope versions.
+  [leorochael]
+
 - Bug fix to load ZCML for GS when Products.GenericSetup is installed.
   [aclark]
 
