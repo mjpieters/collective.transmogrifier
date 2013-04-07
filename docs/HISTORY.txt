@@ -3,7 +3,7 @@ Change History
 
 (name of developer listed in brackets)
 
-1.4 (unreleased)
+1.4 (2013-04-07)
 ================
 
 - Fix the import location of the pagetemplate engine for newer Zope versions.
