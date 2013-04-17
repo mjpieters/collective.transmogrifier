@@ -71,5 +71,10 @@
     component=".listsource.ListAppender"
     name="collective.transmogrifier.sections.listappender"
     />
+    
+<utility
+    component=".xmlwalker.XMLWalkerSection"
+    name="collective.transmogrifier.sections.xmlwalker"
+    />
 
 </configure>

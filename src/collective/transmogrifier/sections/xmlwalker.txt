@@ -1,0 +1,121 @@
+XML Walker section
+================
+
+An XML walker source section yields a hierarchy of items by iterating
+over an `lxml.etree`_ tree of XML elements that match an `XPath`_.
+This can be used to build content structure based on the sitemap or
+navigation of a HTML web site.
+
+Start with an HTML file containing a heirarchical navbar.
+
+    >>> import os
+    >>> html_file = os.path.join(
+    ...     os.path.dirname(__file__), 'xmlwalker.html')
+
+    >>> infologger = """
+    ... [transmogrifier]
+    ... pipeline =
+    ...     source
+    ...     parse
+    ...     walk
+    ...     path
+    ...     title
+    ...     clean
+    ...     logger
+    ... 
+    ... [source]
+    ... blueprint = collective.transmogrifier.sections.tests.rangesource
+    ... size = 1
+    ... 
+    ... [parse]
+    ... blueprint = collective.transmogrifier.sections.inserter
+    ... key = string:_trees
+    ... value = python:modules['lxml.html'].parse('{}').xpath(\
+    ...     "//*[contains(@class, 'navbar')]//ul[contains(@class, 'nav')]")
+    ... 
+    ... [walk]
+    ... blueprint = collective.transmogrifier.sections.xmlwalker
+    ... 
+    ... [path]
+    ... blueprint = collective.transmogrifier.sections.inserter
+    ... key = string:_path
+    ... condition = python:'_element' in item\
+    ...     and (item['_parent'].pop('_trees', None) or True)
+    ... value = python:item['_element'].attrib['href'].strip()
+    ... 
+    ... [title]
+    ... blueprint = collective.transmogrifier.sections.inserter
+    ... key = string:title
+    ... condition = python:'_element' in item
+    ... value = python:item['_element'].text_content().strip()
+    ... 
+    ... [clean]
+    ... blueprint = collective.transmogrifier.sections.manipulator
+    ... delete =
+    ...     _element
+    ...     id
+    ... 
+    ... [logger]
+    ... blueprint = collective.transmogrifier.sections.logger
+    ... delete = _trees
+    ... """.format(html_file)
+    >>> registerConfig(u'collective.transmogrifier.sections.tests.xmlwalker',
+    ...                infologger)
+    >>> transmogrifier(u'collective.transmogrifier.sections.tests.xmlwalker')
+    >>> print handler
+    logger DEBUG
+        {}
+    logger DEBUG
+        {'_parent': {}, '_path': '#', 'title': 'Company'}
+    logger DEBUG
+        {'_parent': {'_parent': {}, '_path': '#', 'title': 'Company'},
+       '_path': '../company/news.html',
+       'title': 'News'}
+    logger DEBUG
+        {'_parent': {'_parent': {'_parent': {}, '_path': '#', 'title': 'Company'},
+                   '_path': '../company/news.html',
+                   'title': 'News'},
+       '_path': '../company/news.html',
+       'title': 'News'}
+    logger DEBUG
+        {'_parent': {'_parent': {'_parent': {}, '_path': '#', 'title': 'Company'},
+                   '_path': '../company/news.html',
+                   'title': 'News'},
+       '_path': '../company/press_releases.html',
+       'title': 'Press Releases'}
+    logger DEBUG
+        {'_parent': {'_parent': {}, '_path': '#', 'title': 'Company'},
+       '_path': '../company/events.html',
+       'title': 'Events'}
+    logger DEBUG
+        {'_parent': {'_parent': {}, '_path': '#', 'title': 'Company'},
+       '_path': '../company/index.html',
+       'title': 'About Company'}
+    logger DEBUG
+        {'_parent': {'_parent': {'_parent': {}, '_path': '#', 'title': 'Company'},
+                   '_path': '../company/index.html',
+                   'title': 'About Company'},
+       '_path': '../company/management.html',
+       'title': 'Management'}
+    logger DEBUG
+        {'_parent': {'_parent': {'_parent': {}, '_path': '#', 'title': 'Company'},
+                   '_path': '../company/index.html',
+                   'title': 'About Company'},
+       '_path': '../company/investors.html',
+       'title': 'Investors'}
+    logger DEBUG
+        {'_parent': {'_parent': {'_parent': {}, '_path': '#', 'title': 'Company'},
+                   '_path': '../company/index.html',
+                   'title': 'About Company'},
+       '_path': '../company/careers.html',
+       'title': 'Careers'}
+    logger DEBUG
+        {'_parent': {'_parent': {'_parent': {}, '_path': '#', 'title': 'Company'},
+                   '_path': '../company/index.html',
+                   'title': 'About Company'},
+       '_path': '../company/company.html',
+       'title': 'About Us'}
+    logger DEBUG
+        {'_parent': {'_parent': {}, '_path': '#', 'title': 'Company'},
+       '_path': '../contact_us/contact.html',
+       'title': 'Contact Us'}

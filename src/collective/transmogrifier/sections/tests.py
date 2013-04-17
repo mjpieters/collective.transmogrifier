@@ -353,7 +353,7 @@ def test_suite():
         doctest.DocFileSuite(
             'codec.txt', 'inserter.txt', 'manipulator.txt', 'condition.txt',
             'splitter.txt', 'savepoint.txt', 'csvsource.txt',
-            'logger.txt', 'listsource.txt',
+            'logger.txt', 'listsource.txt', 'xmlwalker.txt',
             setUp=sectionsSetUp, tearDown=tearDown,
             optionflags = doctest.NORMALIZE_WHITESPACE),
         doctest.DocFileSuite(
