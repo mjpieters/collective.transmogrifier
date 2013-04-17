@@ -1,0 +1,72 @@
+===============================
+collective.blueprint.listsource
+===============================
+
+The collective.blueprint.listsource transmogrifier blueprint can be used
+to add recursion to a pipeline.  Specifically, sections down stream
+from the list source section can access the list source section and
+inject items.
+
+Assemble and register a transmogrifier with a list source section.
+
+    >>> lister = """
+    ... [transmogrifier]
+    ... pipeline =
+    ...     source
+    ...     list
+    ...     logger
+    ...     insert
+    ...     append
+    ...     
+    ... [source]
+    ... blueprint = collective.transmogrifier.sections.tests.rangesource
+    ... size = 1
+    ... 
+    ... [list]
+    ... blueprint = collective.transmogrifier.sections.listsource
+    ... 
+    ... [logger]
+    ... blueprint = collective.transmogrifier.sections.logger
+    ...       
+    ... [insert]
+    ... blueprint = collective.transmogrifier.sections.inserter
+    ... key = string:id
+    ... value = python:'item-%02d' % (int(item['id'].rsplit('-', 1)[-1]) + 1)
+    ... 
+    ... [append]
+    ... blueprint = collective.transmogrifier.sections.listappender
+    ... condition = python:item['id'] < 'item-03'
+    ... section = list
+    ... """
+    >>> registerConfig(
+    ...     u'collective.transmogrifier.sections.tests.listsource',
+    ...     lister)
+
+Run the transmogrifier.  An item with contents corresponding the
+section config is injected.  All values are stripped of whitespace.  A
+variable whose name is listed in the listsource-lists variable will
+be broken up on newlines into a list.
+
+    >>> transmogrifier(
+    ...     u'collective.transmogrifier.sections.tests.listsource')
+    >>> print handler
+    logger DEBUG
+        {'id': 'item-00'}
+    logger DEBUG
+        {'id': 'item-01'}
+    logger DEBUG
+        {'id': 'item-02'}
+
+The ``condition`` expression has access to the following:
+
+=================== ==========================================================
+ ``item``            the current pipeline item
+ ``transmogrifier``  the transmogrifier
+ ``name``            the name of the splitter section
+ ``options``         the splitter options
+ ``modules``         sys.modules
+=================== ==========================================================
+
+
+
+

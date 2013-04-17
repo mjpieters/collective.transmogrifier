@@ -6,6 +6,9 @@ Change History
 1.5 (unreleased)
 ================
 
+- Add a list source section for adding recursion to pipelines.
+  [rpatterson]
+
 - Add pprint support to the logger section, moved from the pprint
   section used in tests to make it more useful and available in actual
   pipelines.

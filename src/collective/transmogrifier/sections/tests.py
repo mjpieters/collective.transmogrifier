@@ -208,10 +208,8 @@ def sectionsSetUp(test):
     from collective.transmogrifier.transmogrifier import Transmogrifier
     test.globs['transmogrifier'] = Transmogrifier(test.globs['plone'])
     
-    import zope.component
     import collective.transmogrifier.sections
-    zcml.load_config('meta.zcml', zope.component)
-    zcml.load_config('configure.zcml', collective.transmogrifier.sections)
+    zcml.load_config('testing.zcml', collective.transmogrifier.sections)
     
     provideUtility(SampleSource,
         name=u'collective.transmogrifier.sections.tests.samplesource')
@@ -354,7 +352,8 @@ def test_suite():
         unittest.makeSuite(SplitterSectionTests),
         doctest.DocFileSuite(
             'codec.txt', 'inserter.txt', 'manipulator.txt', 'condition.txt',
-            'splitter.txt', 'savepoint.txt', 'csvsource.txt', 'logger.txt',
+            'splitter.txt', 'savepoint.txt', 'csvsource.txt',
+            'logger.txt', 'listsource.txt',
             setUp=sectionsSetUp, tearDown=tearDown,
             optionflags = doctest.NORMALIZE_WHITESPACE),
         doctest.DocFileSuite(

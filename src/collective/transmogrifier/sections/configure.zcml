@@ -62,4 +62,14 @@
     name="collective.transmogrifier.sections.breakpoint"
     />
 
+<utility
+    component=".listsource.ListSource"
+    name="collective.transmogrifier.sections.listsource"
+    />
+
+<utility
+    component=".listsource.ListAppender"
+    name="collective.transmogrifier.sections.listappender"
+    />
+
 </configure>
