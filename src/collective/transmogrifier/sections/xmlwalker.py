@@ -60,6 +60,21 @@ class XMLWalkerSection(object):
         for event, element in etree.iterwalk(tree, events=("start", "end")):
             if event == 'end':
                 if element.xpath(self.xpath):
+                    previous_depth, previous = parents[-1]
+                    if previous is item:
+                        pass
+                    elif depth > previous_depth:
+                        # Previous item has children
+                        defaultpage = previous.copy()
+                        if childrenkey:
+                            previous[childrenkey] = [defaultpage]
+                        defaultpage[parentkey] = previous
+                        yield previous
+                        yield defaultpage
+                    else:
+                        # Previous item had no children
+                        yield previous
+
                     while depth <= parents[-1][0]:
                         # We have stepped out/up a level
                         parents.pop()
@@ -71,11 +86,12 @@ class XMLWalkerSection(object):
                     if childrenkey:
                         parent.setdefault(childrenkey, []).append(child)
 
-                    # Let it go down the pipeline
-                    yield child
-
                     parents.append((depth, child))
 
                 depth -= 1
             else:
                 depth += 1
+
+        previous_depth, previous = parents[-1]
+        if previous is not item:
+            yield previous

@@ -69,6 +69,16 @@ Start with an HTML file containing a heirarchical navbar.
         {'_parent': {}, '_path': '#', 'title': 'Company'}
     logger DEBUG
         {'_parent': {'_parent': {}, '_path': '#', 'title': 'Company'},
+       '_path': '#',
+       'title': 'Company'}
+    logger DEBUG
+        {'_parent': {'_parent': {}, '_path': '#', 'title': 'Company'},
+       '_path': '../company/news.html',
+       'title': 'News'}
+    logger DEBUG
+        {'_parent': {'_parent': {'_parent': {}, '_path': '#', 'title': 'Company'},
+                   '_path': '../company/news.html',
+                   'title': 'News'},
        '_path': '../company/news.html',
        'title': 'News'}
     logger DEBUG
@@ -89,6 +99,16 @@ Start with an HTML file containing a heirarchical navbar.
        'title': 'Events'}
     logger DEBUG
         {'_parent': {'_parent': {}, '_path': '#', 'title': 'Company'},
+       '_path': '../contact_us/contact.html',
+       'title': 'Contact Us'}
+    logger DEBUG
+        {'_parent': {'_parent': {}, '_path': '#', 'title': 'Company'},
+       '_path': '../company/index.html',
+       'title': 'About Company'}
+    logger DEBUG
+        {'_parent': {'_parent': {'_parent': {}, '_path': '#', 'title': 'Company'},
+                   '_path': '../company/index.html',
+                   'title': 'About Company'},
        '_path': '../company/index.html',
        'title': 'About Company'}
     logger DEBUG
@@ -115,7 +135,3 @@ Start with an HTML file containing a heirarchical navbar.
                    'title': 'About Company'},
        '_path': '../company/company.html',
        'title': 'About Us'}
-    logger DEBUG
-        {'_parent': {'_parent': {}, '_path': '#', 'title': 'Company'},
-       '_path': '../contact_us/contact.html',
-       'title': 'Contact Us'}
