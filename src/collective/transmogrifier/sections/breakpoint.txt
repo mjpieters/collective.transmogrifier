@@ -35,8 +35,6 @@ giving some input (just a continue cammand).
 
     >>> oldstdin = make_stdin('c\n')
     >>> transmogrifier(u'collective.transmogrifier.sections.tests.breaker')
-    >.../collective.transmogrifier/src/collective/transmogrifier/sections/breakpoint.py(25)__iter__()
-    -> yield item
     (Pdb) c
     >>> print handler
     logger DEBUG
