@@ -44,9 +44,6 @@ class XMLWalkerSection(object):
                 elementkey = self.elementkey(item)
                 childrenkey = self.childrenkey(item)
 
-                # let the item though the pipeline
-                yield item
-
                 if not isinstance(trees, list):
                     trees = [trees]
                 for tree in trees:
@@ -69,9 +66,7 @@ class XMLWalkerSection(object):
             if event == 'end':
                 if element.xpath(self.xpath):
                     previous_depth, previous = parents[-1]
-                    if previous is item:
-                        pass
-                    elif depth > previous_depth:
+                    if depth > previous_depth:
                         # Previous item has children
                         defaultpage = previous.copy()
                         if childrenkey:

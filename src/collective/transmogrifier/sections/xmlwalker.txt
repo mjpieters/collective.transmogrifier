@@ -62,22 +62,25 @@ Start with an HTML file containing a heirarchical navbar.
     ... [clean]
     ... blueprint = collective.transmogrifier.sections.manipulator
     ... delete =
+    ...     _trees
     ...     _element
     ...     _children
     ...     id
     ... 
     ... [logger]
     ... blueprint = collective.transmogrifier.sections.logger
-    ... delete = _trees
     ... """.format(html_file)
     >>> registerConfig(u'collective.transmogrifier.sections.tests.xmlwalker',
     ...                infologger)
     >>> transmogrifier(u'collective.transmogrifier.sections.tests.xmlwalker')
     >>> print handler
     logger DEBUG
-        {}
+        {'children': True}
     logger DEBUG
-        {'_parent': {}, '_path': '#', 'children': True, 'title': 'Foo Tab'}
+        {'_parent': {'children': True}}
+    logger DEBUG
+        {'_parent': {'children': True},
+       '_path': '#', 'children': True, 'title': 'Foo Tab'}
     logger DEBUG
         {'_parent': {'_path': '#', 'children': True, 'title': 'Foo Tab'},
        '_path': '#',
@@ -95,7 +98,8 @@ Start with an HTML file containing a heirarchical navbar.
        '_path': '../foo-tab/qux-page.html',
        'title': 'Qux Page'}
     logger DEBUG
-        {'_parent': {}, '_path': '#', 'children': True, 'title': 'Company'}
+        {'_parent': {'children': True},
+       '_path': '#', 'children': True, 'title': 'Company'}
     logger DEBUG
         {'_parent': {'_path': '#', 'children': True, 'title': 'Company'},
        '_path': '#',
