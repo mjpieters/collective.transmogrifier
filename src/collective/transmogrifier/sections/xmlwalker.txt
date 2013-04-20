@@ -18,6 +18,7 @@ Start with an HTML file containing a heirarchical navbar.
     ...     source
     ...     parse
     ...     walk
+    ...     children
     ...     path
     ...     title
     ...     clean
@@ -35,6 +36,15 @@ Start with an HTML file containing a heirarchical navbar.
     ... 
     ... [walk]
     ... blueprint = collective.transmogrifier.sections.xmlwalker
+    ... children-key = string:_children
+    ... 
+    ... [children]
+    ... blueprint = collective.transmogrifier.sections.inserter
+    ... key = string:children
+    ... condition = python:item.get('_parent', dict()).pop('_children', True)\
+    ...     and item.get('_parent', dict()).pop('_parent', True)\
+    ...     and '_children' in item
+    ... value = python:bool(item.pop('_children', True))
     ... 
     ... [path]
     ... blueprint = collective.transmogrifier.sections.inserter
@@ -53,6 +63,7 @@ Start with an HTML file containing a heirarchical navbar.
     ... blueprint = collective.transmogrifier.sections.manipulator
     ... delete =
     ...     _element
+    ...     _children
     ...     id
     ... 
     ... [logger]
@@ -66,72 +77,92 @@ Start with an HTML file containing a heirarchical navbar.
     logger DEBUG
         {}
     logger DEBUG
-        {'_parent': {}, '_path': '#', 'title': 'Company'}
+        {'_parent': {}, '_path': '#', 'children': True, 'title': 'Foo Tab'}
     logger DEBUG
-        {'_parent': {'_parent': {}, '_path': '#', 'title': 'Company'},
+        {'_parent': {'_path': '#', 'children': True, 'title': 'Foo Tab'},
+       '_path': '#',
+       'title': 'Foo Tab'}
+    logger DEBUG
+        {'_parent': {'_path': '#', 'children': True, 'title': 'Foo Tab'},
+       '_path': '../foo-tab/index.html',
+       'title': 'Foo Tab Default Page'}
+    logger DEBUG
+        {'_parent': {'_path': '#', 'children': True, 'title': 'Foo Tab'},
+       '_path': '../foo-tab/bar-page.html',
+       'title': 'Bar Page'}
+    logger DEBUG
+        {'_parent': {'_path': '#', 'children': True, 'title': 'Foo Tab'},
+       '_path': '../foo-tab/qux-page.html',
+       'title': 'Qux Page'}
+    logger DEBUG
+        {'_parent': {}, '_path': '#', 'children': True, 'title': 'Company'}
+    logger DEBUG
+        {'_parent': {'_path': '#', 'children': True, 'title': 'Company'},
        '_path': '#',
        'title': 'Company'}
     logger DEBUG
-        {'_parent': {'_parent': {}, '_path': '#', 'title': 'Company'},
+        {'_parent': {'_path': '#', 'children': True, 'title': 'Company'},
        '_path': '../company/news.html',
+       'children': True,
        'title': 'News'}
     logger DEBUG
-        {'_parent': {'_parent': {'_parent': {}, '_path': '#', 'title': 'Company'},
-                   '_path': '../company/news.html',
+        {'_parent': {'_path': '../company/news.html',
+                   'children': True,
                    'title': 'News'},
        '_path': '../company/news.html',
        'title': 'News'}
     logger DEBUG
-        {'_parent': {'_parent': {'_parent': {}, '_path': '#', 'title': 'Company'},
-                   '_path': '../company/news.html',
+        {'_parent': {'_path': '../company/news.html',
+                   'children': True,
                    'title': 'News'},
        '_path': '../company/news.html',
        'title': 'News'}
     logger DEBUG
-        {'_parent': {'_parent': {'_parent': {}, '_path': '#', 'title': 'Company'},
-                   '_path': '../company/news.html',
+        {'_parent': {'_path': '../company/news.html',
+                   'children': True,
                    'title': 'News'},
        '_path': '../company/press_releases.html',
        'title': 'Press Releases'}
     logger DEBUG
-        {'_parent': {'_parent': {}, '_path': '#', 'title': 'Company'},
+        {'_parent': {'_path': '#', 'children': True, 'title': 'Company'},
        '_path': '../company/events.html',
        'title': 'Events'}
     logger DEBUG
-        {'_parent': {'_parent': {}, '_path': '#', 'title': 'Company'},
+        {'_parent': {'_path': '#', 'children': True, 'title': 'Company'},
        '_path': '../contact_us/contact.html',
        'title': 'Contact Us'}
     logger DEBUG
-        {'_parent': {'_parent': {}, '_path': '#', 'title': 'Company'},
+        {'_parent': {'_path': '#', 'children': True, 'title': 'Company'},
        '_path': '../company/index.html',
+       'children': True,
        'title': 'About Company'}
     logger DEBUG
-        {'_parent': {'_parent': {'_parent': {}, '_path': '#', 'title': 'Company'},
-                   '_path': '../company/index.html',
+        {'_parent': {'_path': '../company/index.html',
+                   'children': True,
                    'title': 'About Company'},
        '_path': '../company/index.html',
        'title': 'About Company'}
     logger DEBUG
-        {'_parent': {'_parent': {'_parent': {}, '_path': '#', 'title': 'Company'},
-                   '_path': '../company/index.html',
+        {'_parent': {'_path': '../company/index.html',
+                   'children': True,
                    'title': 'About Company'},
        '_path': '../company/management.html',
        'title': 'Management'}
     logger DEBUG
-        {'_parent': {'_parent': {'_parent': {}, '_path': '#', 'title': 'Company'},
-                   '_path': '../company/index.html',
+        {'_parent': {'_path': '../company/index.html',
+                   'children': True,
                    'title': 'About Company'},
        '_path': '../company/investors.html',
        'title': 'Investors'}
     logger DEBUG
-        {'_parent': {'_parent': {'_parent': {}, '_path': '#', 'title': 'Company'},
-                   '_path': '../company/index.html',
+        {'_parent': {'_path': '../company/index.html',
+                   'children': True,
                    'title': 'About Company'},
        '_path': '../company/careers.html',
        'title': 'Careers'}
     logger DEBUG
-        {'_parent': {'_parent': {'_parent': {}, '_path': '#', 'title': 'Company'},
-                   '_path': '../company/index.html',
+        {'_parent': {'_path': '../company/index.html',
+                   'children': True,
                    'title': 'About Company'},
        '_path': '../company/company.html',
        'title': 'About Us'}
