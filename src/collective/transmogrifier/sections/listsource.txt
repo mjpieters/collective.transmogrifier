@@ -2,10 +2,22 @@
 collective.blueprint.listsource
 ===============================
 
-The collective.blueprint.listsource transmogrifier blueprint can be used
-to add recursion to a pipeline.  Specifically, sections down stream
-from the list source section can access the list source section and
-inject items.
+The collective.blueprint.listsource transmogrifier blueprint can be
+used to add recursion or looping to a pipeline.  Specifically,
+sections down stream from the list source section can access the list
+source section and inject items.
+
+If items from sources before the listsource section are appended, then
+a loop is formed.  If items from sources after the listsource section
+are appended, then a form of recursion is added to the pipeline.
+
+Items from previous sections are yielded first until items are
+appended to the listsource.  Then the listsource items are yielded
+until the listsource is empty at which point it continues yielding
+from previous sections.  This is to avoid keeping item references in
+the listsource as much as possible, but care should still be taken not
+to fill the list with too many items and that those items do not
+contain memory or other resource intensive references.
 
 Assemble and register a transmogrifier with a list source section.
 
