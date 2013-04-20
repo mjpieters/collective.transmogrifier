@@ -1,4 +1,3 @@
-import logging
 import sys
 
 from zope.interface import classProvides, implements
@@ -9,6 +8,7 @@ from collective.transmogrifier.utils import Condition
 from pdb import Pdb
 
 # Breaks on a condition.
+
 
 class BreakpointSection(object):
     classProvides(ISectionBlueprint)
