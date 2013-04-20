@@ -325,6 +325,9 @@ def foldersSetUp(test):
 
 def pdbSetUp(test):
     sectionsSetUp(test)
+
+    import pdb
+    from collective.transmogrifier.sections import breakpoint
     
     class Input:
         """A helper to push data onto stdin"""
@@ -338,6 +341,7 @@ def pdbSetUp(test):
     def make_stdin(data):
         oldstdin = sys.stdin
         sys.stdin = Input(data)
+        breakpoint.BreakpointSection.pdb = pdb.Pdb()
         
     def reset_stdin(old):
         sys.stdin = old
