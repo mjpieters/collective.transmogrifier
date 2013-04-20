@@ -36,11 +36,17 @@ class XMLWalkerSection(object):
 
     def __iter__(self):
         for item in self.previous:
-            yield item
-
             treeskey = self.treeskey(*item)[0]
             if treeskey:
+                # get everything we need from the item before yielding
                 trees = item[treeskey]
+                parentkey = self.parentkey(item)
+                elementkey = self.elementkey(item)
+                childrenkey = self.childrenkey(item)
+
+                # let the item though the pipeline
+                yield item
+
                 if not isinstance(trees, list):
                     trees = [trees]
                 for tree in trees:
@@ -48,13 +54,15 @@ class XMLWalkerSection(object):
                         callable(getattr(tree, 'read', None))
                         or isinstance(tree, etree.ElementBase)):
                         tree = html.fromstring(tree)
-                    for child_item in self.walk(item, tree):
+                    for child_item in self.walk(
+                        item, tree, parentkey, elementkey, childrenkey):
                         yield child_item
 
-    def walk(self, item, tree):
-        parentkey = self.parentkey(item)
-        elementkey = self.elementkey(item)
-        childrenkey = self.childrenkey(item)
+            else:
+                # no tree to walk
+                yield item
+
+    def walk(self, item, tree, parentkey, elementkey, childrenkey):
         depth = 0
         parents = [(depth, item)]
         for event, element in etree.iterwalk(tree, events=("start", "end")):
