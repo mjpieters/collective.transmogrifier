@@ -47,8 +47,8 @@ class XMLWalkerSection(object):
             if treeskey:
                 # get everything we need from the item before yielding
                 trees = item[treeskey]
-                parentkey = self.parentkey(item)
                 elementkey = self.elementkey(item)
+                parentkey = self.parentkey(item)
                 childrenkey = self.childrenkey(item)
 
                 if not isinstance(trees, list):
@@ -67,14 +67,14 @@ class XMLWalkerSection(object):
                         continue
                     self.trees.add(tree_string)
                     for child_item in self.walk(
-                        item, tree, parentkey, elementkey, childrenkey):
+                        item, tree, elementkey, parentkey, childrenkey):
                         yield child_item
 
             if yield_item:
                 # no tree to walk
                 yield item
 
-    def walk(self, item, tree, parentkey, elementkey, childrenkey):
+    def walk(self, item, tree, elementkey, parentkey, childrenkey):
         depth = 0
         parents = [(depth, item)]
         for event, element in etree.iterwalk(tree, events=("start", "end")):
