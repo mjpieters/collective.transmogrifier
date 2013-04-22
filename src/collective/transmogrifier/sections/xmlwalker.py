@@ -26,7 +26,6 @@ class XMLWalkerSection(object):
         self.treeskey = defaultMatcher(options, 'trees-key', name, 'trees')
         self.trees = set()
 
-        self.xpathkey = defaultMatcher(options, 'xpath-key', name, 'xpath')
         self.xpath = options.get('xpath', self.xpath)
         self.elementkey = Expression(
             options.get('key', 'string:_element'),
