@@ -1,5 +1,7 @@
 <configure
     xmlns="http://namespaces.zope.org/zope"
+    xmlns:zcml="http://namespaces.zope.org/zcml"
+    xmlns:transmogrifier="http://namespaces.plone.org/transmogrifier"
     i18n_domain="collective.transmogrifier">
 
 <utility
@@ -71,10 +73,20 @@
     component=".listsource.ListAppender"
     name="collective.transmogrifier.sections.listappender"
     />
-    
-<utility
-    component=".xmlwalker.XMLWalkerSection"
-    name="collective.transmogrifier.sections.xmlwalker"
-    />
+
+<configure zcml:condition="installed lxml">
+  <utility
+      component=".xmlwalker.XMLWalkerSection"
+      name="collective.transmogrifier.sections.xmlwalker"
+      />
+
+  <transmogrifier:registerConfig
+      name="collective.transmogrifier.xmlwalker"
+      title="Web Site Importer"
+      description="Import a web site by crawling it's links and
+                   extracting field and other values."
+      configuration="xmlwalker.cfg"
+      />
+</configure>
 
 </configure>
