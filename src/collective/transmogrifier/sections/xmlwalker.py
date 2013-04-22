@@ -1,3 +1,5 @@
+import logging
+
 from lxml import etree
 from lxml import html
 
@@ -19,7 +21,10 @@ class XMLWalkerSection(object):
     def __init__(self, transmogrifier, name, options, previous):
         self.previous = previous
 
+        self.logger = logging.getLogger(name)
+
         self.treeskey = defaultMatcher(options, 'trees-key', name, 'trees')
+        self.trees = set()
 
         self.xpathkey = defaultMatcher(options, 'xpath-key', name, 'xpath')
         self.xpath = options.get('xpath', self.xpath)
@@ -51,6 +56,12 @@ class XMLWalkerSection(object):
                         callable(getattr(tree, 'read', None))
                         or isinstance(tree, etree.ElementBase)):
                         tree = html.fromstring(tree)
+                    tree_string = etree.tostring(tree)
+                    if tree_string in self.trees:
+                        self.logger.info(
+                            'Skipping already seen tree in %r', treeskey)
+                        continue
+                    self.trees.add(tree_string)
                     for child_item in self.walk(
                         item, tree, parentkey, elementkey, childrenkey):
                         yield child_item
