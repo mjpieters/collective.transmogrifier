@@ -26,11 +26,13 @@ class XMLWalkerSection(object):
         self.treeskey = defaultMatcher(options, 'trees-key', name, 'trees')
         self.trees = set()
 
+        # By default, insert matching elements
         self.xpath = options.get('xpath', self.xpath)
         self.elementkey = Expression(
             options.get('key', 'string:_element'),
             transmogrifier, name, options)
 
+        # By default, insert references to parent items
         self.parentkey = Expression(
             options.get('parent-key', 'string:_parent'),
             transmogrifier, name, options)
