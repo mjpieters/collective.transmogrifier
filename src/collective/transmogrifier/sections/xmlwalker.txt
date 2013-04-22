@@ -18,7 +18,7 @@ Start with an HTML file containing a heirarchical navbar.
     ...     source
     ...     parse
     ...     walk
-    ...     children
+    ...     defaultpage
     ...     path
     ...     title
     ...     clean
@@ -36,15 +36,13 @@ Start with an HTML file containing a heirarchical navbar.
     ... 
     ... [walk]
     ... blueprint = collective.transmogrifier.sections.xmlwalker
-    ... children-key = string:_children
     ... 
-    ... [children]
+    ... [defaultpage]
     ... blueprint = collective.transmogrifier.sections.inserter
-    ... key = string:children
-    ... condition = python:item.get('_parent', dict()).pop('_children', True)\
-    ...     and item.get('_parent', dict()).pop('_parent', True)\
-    ...     and '_children' in item
-    ... value = python:bool(item.pop('_children', True))
+    ... key = string:_defaultpage
+    ... condition = python:item.get('_parent', dict()).pop('_parent', True)\
+    ...     and item.get('_defaultpage')
+    ... value = exists:item/_defaultpage
     ... 
     ... [path]
     ... blueprint = collective.transmogrifier.sections.inserter
@@ -64,7 +62,6 @@ Start with an HTML file containing a heirarchical navbar.
     ... delete =
     ...     _trees
     ...     _element
-    ...     _children
     ...     id
     ... 
     ... [logger]
@@ -75,102 +72,141 @@ Start with an HTML file containing a heirarchical navbar.
     >>> transmogrifier(u'collective.transmogrifier.sections.tests.xmlwalker')
     >>> print handler
     logger DEBUG
-        {'children': True}
+        {'_defaultpage': 1, '_type': 'Folder'}
     logger DEBUG
-        {'_parent': {'children': True}}
+        {'_parent': {'_defaultpage': 1, '_type': 'Folder'}}
     logger DEBUG
-        {'_parent': {'children': True},
+        {'_defaultpage': 1,
+       '_parent': {'_defaultpage': 1, '_type': 'Folder'},
        '_path': '#',
-       'children': True,
+       '_type': 'Folder',
        'title': 'Foo Tab'}
     logger DEBUG
-        {'_parent': {'_path': '#', 'children': True, 'title': 'Foo Tab'},
+        {'_parent': {'_defaultpage': 1,
+                   '_path': '#',
+                   '_type': 'Folder',
+                   'title': 'Foo Tab'},
        '_path': '#',
        'title': 'Foo Tab'}
     logger DEBUG
-        {'_parent': {'_path': '#', 'children': True, 'title': 'Foo Tab'},
+        {'_parent': {'_defaultpage': 1,
+                   '_path': '#',
+                   '_type': 'Folder',
+                   'title': 'Foo Tab'},
        '_path': '../foo-tab/index.html',
        'title': 'Foo Tab Default Page'}
     logger DEBUG
-        {'_parent': {'_path': '#', 'children': True, 'title': 'Foo Tab'},
+        {'_parent': {'_defaultpage': 1,
+                   '_path': '#',
+                   '_type': 'Folder',
+                   'title': 'Foo Tab'},
        '_path': '../foo-tab/bar-page.html',
        'title': 'Bar Page'}
     logger DEBUG
-        {'_parent': {'_path': '#', 'children': True, 'title': 'Foo Tab'},
+        {'_parent': {'_defaultpage': 1,
+                   '_path': '#',
+                   '_type': 'Folder',
+                   'title': 'Foo Tab'},
        '_path': '../foo-tab/qux-page.html',
        'title': 'Qux Page'}
     logger DEBUG
-        {'_parent': {'children': True},
+        {'_defaultpage': 1,
+       '_parent': {'_defaultpage': 1, '_type': 'Folder'},
        '_path': '#',
-       'children': True,
+       '_type': 'Folder',
        'title': 'Company'}
     logger DEBUG
-        {'_parent': {'_path': '#', 'children': True, 'title': 'Company'},
+        {'_parent': {'_defaultpage': 1,
+                   '_path': '#',
+                   '_type': 'Folder',
+                   'title': 'Company'},
        '_path': '#',
        'title': 'Company'}
     logger DEBUG
-        {'_parent': {'_path': '#', 'children': True, 'title': 'Company'},
+        {'_defaultpage': 1,
+       '_parent': {'_defaultpage': 1,
+                   '_path': '#',
+                   '_type': 'Folder',
+                   'title': 'Company'},
        '_path': '../company/news.html',
-       'children': True,
+       '_type': 'Folder',
        'title': 'News'}
     logger DEBUG
-        {'_parent': {'_path': '../company/news.html',
-                   'children': True,
+        {'_parent': {'_defaultpage': 1,
+                   '_path': '../company/news.html',
+                   '_type': 'Folder',
                    'title': 'News'},
        '_path': '../company/news.html',
        'title': 'News'}
     logger DEBUG
-        {'_parent': {'_path': '../company/news.html',
-                   'children': True,
+        {'_parent': {'_defaultpage': 1,
+                   '_path': '../company/news.html',
+                   '_type': 'Folder',
                    'title': 'News'},
        '_path': '../company/news.html',
        'title': 'News'}
     logger DEBUG
-        {'_parent': {'_path': '../company/news.html',
-                   'children': True,
+        {'_parent': {'_defaultpage': 1,
+                   '_path': '../company/news.html',
+                   '_type': 'Folder',
                    'title': 'News'},
        '_path': '../company/press_releases.html',
        'title': 'Press Releases'}
     logger DEBUG
-        {'_parent': {'_path': '#', 'children': True, 'title': 'Company'},
+        {'_parent': {'_defaultpage': 1,
+                   '_path': '#',
+                   '_type': 'Folder',
+                   'title': 'Company'},
        '_path': '../company/events.html',
        'title': 'Events'}
     logger DEBUG
-        {'_parent': {'_path': '#', 'children': True, 'title': 'Company'},
+        {'_parent': {'_defaultpage': 1,
+                   '_path': '#',
+                   '_type': 'Folder',
+                   'title': 'Company'},
        '_path': '../contact_us/contact.html',
        'title': 'Contact Us'}
     logger DEBUG
-        {'_parent': {'_path': '#', 'children': True, 'title': 'Company'},
+        {'_defaultpage': 1,
+       '_parent': {'_defaultpage': 1,
+                   '_path': '#',
+                   '_type': 'Folder',
+                   'title': 'Company'},
        '_path': '../company/index.html',
-       'children': True,
+       '_type': 'Folder',
        'title': 'About Company'}
     logger DEBUG
-        {'_parent': {'_path': '../company/index.html',
-                   'children': True,
+        {'_parent': {'_defaultpage': 1,
+                   '_path': '../company/index.html',
+                   '_type': 'Folder',
                    'title': 'About Company'},
        '_path': '../company/index.html',
        'title': 'About Company'}
     logger DEBUG
-        {'_parent': {'_path': '../company/index.html',
-                   'children': True,
+        {'_parent': {'_defaultpage': 1,
+                   '_path': '../company/index.html',
+                   '_type': 'Folder',
                    'title': 'About Company'},
        '_path': '../company/management.html',
        'title': 'Management'}
     logger DEBUG
-        {'_parent': {'_path': '../company/index.html',
-                   'children': True,
+        {'_parent': {'_defaultpage': 1,
+                   '_path': '../company/index.html',
+                   '_type': 'Folder',
                    'title': 'About Company'},
        '_path': '../company/investors.html',
        'title': 'Investors'}
     logger DEBUG
-        {'_parent': {'_path': '../company/index.html',
-                   'children': True,
+        {'_parent': {'_defaultpage': 1,
+                   '_path': '../company/index.html',
+                   '_type': 'Folder',
                    'title': 'About Company'},
        '_path': '../company/careers.html',
        'title': 'Careers'}
     logger DEBUG
-        {'_parent': {'_path': '../company/index.html',
-                   'children': True,
+        {'_parent': {'_defaultpage': 1,
+                   '_path': '../company/index.html',
+                   '_type': 'Folder',
                    'title': 'About Company'},
        '_path': '../company/company.html',
        'title': 'About Us'}

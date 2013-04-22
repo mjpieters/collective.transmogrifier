@@ -36,6 +36,21 @@ class XMLWalkerSection(object):
         self.parentkey = Expression(
             options.get('parent-key', 'string:_parent'),
             transmogrifier, name, options)
+
+        # By default, only insert a type for folders
+        self.typekey = Expression(
+            options.get('type-key',
+                        "python:'_defaultpage' in item and '_type'"),
+            transmogrifier, name, options)
+        self.typevalue = Expression(
+            options.get('type-value', "string:Folder"),
+            transmogrifier, name, options)
+
+        # By default yield default pages for folders
+        #   but do not keep references to child items
+        self.defaultpagekey = Expression(
+            options.get('default-page-key', 'string:_defaultpage'),
+            transmogrifier, name, options)
         self.childrenkey = Expression(
             options.get('children-key', 'nothing'),
             transmogrifier, name, options)
@@ -82,11 +97,28 @@ class XMLWalkerSection(object):
                 if element.xpath(self.xpath):
                     previous_depth, previous = parents[-1]
                     if depth > previous_depth:
-                        # Previous item has children
-                        defaultpage = previous.copy()
-                        if childrenkey:
-                            previous[childrenkey] = [defaultpage]
-                        defaultpage[parentkey] = previous
+                        # Previous item has children, item is a folder
+
+                        # Maybe insert a default page item
+                        defaultpagekey = self.defaultpagekey(
+                            previous, tree_item=item)
+                        if defaultpagekey:
+                            defaultpage = previous.copy()
+                            defaultpage[parentkey] = previous
+
+                            previous[defaultpagekey] = defaultpage
+                            if childrenkey:
+                                previous.setdefault(
+                                    childrenkey, []).append(defaultpage)
+
+                        # Maybe insert a type for the folder
+                        typekey = self.typekey(previous, tree_item=item)
+                        if typekey:
+                            typevalue = self.typevalue(
+                                previous, tree_item=item)
+                            if typevalue:
+                                previous[typekey] = typevalue
+
                         yield previous
                         yield defaultpage
                     else:
@@ -103,6 +135,14 @@ class XMLWalkerSection(object):
                              elementkey: element}
                     if childrenkey:
                         parent.setdefault(childrenkey, []).append(child)
+
+                    # Maybe insert a type
+                    typekey = self.typekey(previous, tree_item=item)
+                    if typekey:
+                        typevalue = self.typevalue(
+                            previous, tree_item=item)
+                        if typevalue:
+                            previous[typekey] = typevalue
 
                     parents.append((depth, child))
 
