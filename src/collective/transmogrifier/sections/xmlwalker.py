@@ -130,9 +130,10 @@ class XMLWalkerSection(object):
                         parents.pop()
 
                     # Assemble child item
+                    child = {elementkey: element}
                     parent = parents[-1][1]
-                    child = {parentkey: parent,
-                             elementkey: element}
+                    if parentkey:
+                        child[parentkey] = parent
                     if childrenkey:
                         parent.setdefault(childrenkey, []).append(child)
 
