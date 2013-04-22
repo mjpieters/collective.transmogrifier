@@ -359,7 +359,7 @@ def test_suite():
             'splitter.txt', 'savepoint.txt', 'csvsource.txt',
             'logger.txt', 'listsource.txt', 'xmlwalker.txt',
             setUp=sectionsSetUp, tearDown=tearDown,
-            optionflags = doctest.NORMALIZE_WHITESPACE),
+            optionflags=doctest.NORMALIZE_WHITESPACE | doctest.REPORT_NDIFF),
         doctest.DocFileSuite(
             'constructor.txt',
             setUp=constructorSetUp, tearDown=tearDown,
