@@ -42,6 +42,7 @@ class XMLWalkerSection(object):
     def __iter__(self):
         for item in self.previous:
             treeskey = self.treeskey(*item)[0]
+            yield_item = True
             if treeskey:
                 # get everything we need from the item before yielding
                 trees = item[treeskey]
@@ -51,6 +52,7 @@ class XMLWalkerSection(object):
 
                 if not isinstance(trees, list):
                     trees = [trees]
+                yield_item = False
                 for tree in trees:
                     if not (
                         callable(getattr(tree, 'read', None))
@@ -58,6 +60,7 @@ class XMLWalkerSection(object):
                         tree = html.fromstring(tree)
                     tree_string = etree.tostring(tree)
                     if tree_string in self.trees:
+                        yield_item = True
                         self.logger.info(
                             'Skipping already seen tree in %r', treeskey)
                         continue
@@ -66,7 +69,7 @@ class XMLWalkerSection(object):
                         item, tree, parentkey, elementkey, childrenkey):
                         yield child_item
 
-            else:
+            if yield_item:
                 # no tree to walk
                 yield item
 
