@@ -74,7 +74,7 @@ Start with an HTML file containing a heirarchical navbar.
     logger DEBUG
         {'_defaultpage': 1, '_type': 'Folder'}
     logger DEBUG
-        {'_parent': {'_defaultpage': 1, '_type': 'Folder'}}
+        {'_is_defaultpage': True, '_parent': {'_defaultpage': 1, '_type': 'Folder'}}
     logger DEBUG
         {'_defaultpage': 1,
        '_parent': {'_defaultpage': 1, '_type': 'Folder'},
@@ -82,7 +82,8 @@ Start with an HTML file containing a heirarchical navbar.
        '_type': 'Folder',
        'title': 'Foo Tab'}
     logger DEBUG
-        {'_parent': {'_defaultpage': 1,
+        {'_is_defaultpage': True,
+       '_parent': {'_defaultpage': 1,
                    '_path': '#',
                    '_type': 'Folder',
                    'title': 'Foo Tab'},
@@ -116,7 +117,8 @@ Start with an HTML file containing a heirarchical navbar.
        '_type': 'Folder',
        'title': 'Company'}
     logger DEBUG
-        {'_parent': {'_defaultpage': 1,
+        {'_is_defaultpage': True,
+       '_parent': {'_defaultpage': 1,
                    '_path': '#',
                    '_type': 'Folder',
                    'title': 'Company'},
@@ -132,7 +134,8 @@ Start with an HTML file containing a heirarchical navbar.
        '_type': 'Folder',
        'title': 'News'}
     logger DEBUG
-        {'_parent': {'_defaultpage': 1,
+        {'_is_defaultpage': True,
+       '_parent': {'_defaultpage': 1,
                    '_path': '../company/news.html',
                    '_type': 'Folder',
                    'title': 'News'},
@@ -176,7 +179,8 @@ Start with an HTML file containing a heirarchical navbar.
        '_type': 'Folder',
        'title': 'About Company'}
     logger DEBUG
-        {'_parent': {'_defaultpage': 1,
+        {'_is_defaultpage': True,
+       '_parent': {'_defaultpage': 1,
                    '_path': '../company/index.html',
                    '_type': 'Folder',
                    'title': 'About Company'},

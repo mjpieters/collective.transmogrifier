@@ -107,6 +107,7 @@ class XMLWalkerSection(object):
                             previous, tree_item=item)
                         if defaultpagekey:
                             defaultpage = previous.copy()
+                            defaultpage['_is' + defaultpagekey] = True
                             if parentkey:
                                 defaultpage[parentkey] = previous
 
