@@ -23,7 +23,8 @@ class ListSource(object):
             yield item
 
             while self.items:
-                yield self.items.pop(0)
+                appended = self.items.pop(0)
+                yield appended
 
 
 class ListAppender(object):
