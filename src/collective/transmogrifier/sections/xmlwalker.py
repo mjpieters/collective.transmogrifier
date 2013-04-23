@@ -125,7 +125,8 @@ class XMLWalkerSection(object):
                                 previous[typekey] = typevalue
 
                         yield previous
-                        yield defaultpage
+                        if defaultpagekey:
+                            yield defaultpage
                     else:
                         # Previous item had no children
                         yield previous
