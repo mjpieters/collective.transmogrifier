@@ -37,7 +37,7 @@ class LoggerSection(object):
 
     def __iter__(self):
         for item in self.previous:
-            if self.condition(item):
+            if self.logger.isEnabledFor(self.level) and self.condition(item):
                 if self.key is None:
                     copy = {}
                     for key in item.keys():
