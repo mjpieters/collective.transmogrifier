@@ -73,7 +73,8 @@ class XMLWalkerSection(object):
                     if not (
                         callable(getattr(tree, 'read', None))
                         or isinstance(tree, etree.ElementBase)):
-                        tree = html.fromstring(tree)
+                        tree = html.fragment_fromstring(
+                            tree, create_parent=True)
                     tree_string = etree.tostring(tree)
                     if tree_string in self.trees:
                         self.logger.info(
