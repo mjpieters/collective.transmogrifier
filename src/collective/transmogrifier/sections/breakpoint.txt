@@ -26,6 +26,7 @@ breakpoint and restarting the server. This speeds up the process.
     ... 
     ... [logger]
     ... blueprint = collective.transmogrifier.sections.logger
+    ... name = logger
     ... """
     >>> registerConfig(u'collective.transmogrifier.sections.tests.breaker',
     ...                breaker)

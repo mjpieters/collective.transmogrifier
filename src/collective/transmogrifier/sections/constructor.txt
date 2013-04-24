@@ -60,6 +60,7 @@ required = True key to the constructor section it will instead raise a KeyError.
     ... 
     ... [logger]
     ... blueprint = collective.transmogrifier.sections.logger
+    ... name = logger
     ... """
     >>> registerConfig(u'collective.transmogrifier.sections.tests.constructor',
     ...                constructor)
@@ -112,6 +113,7 @@ required = True key to the constructor section it will instead raise a KeyError.
     ... 
     ... [logger]
     ... blueprint = collective.transmogrifier.sections.logger
+    ... name = logger
     ... """
     >>> registerConfig(u'collective.transmogrifier.sections.tests.constructor2',
     ...                constructor)

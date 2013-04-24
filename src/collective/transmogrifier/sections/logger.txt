@@ -88,11 +88,11 @@ text fields which may be too large and make the output too noisy.
     >>> registerConfig(u'collective.transmogrifier.sections.tests.logger',
     ...                logger)
     >>> transmogrifier(u'collective.transmogrifier.sections.tests.logger')
-    logger:
+    collective.transmogrifier.sections.tests.logger.logger:
       {'id': 'foo', 'status': u'\u2117', 'title': u'The Foo Fighters \u2117'}
-    logger:
+    collective.transmogrifier.sections.tests.logger.logger:
       {'id': 'bar', 'status': u'\u2122', 'title': u'Brand Chocolate Bar \u2122'}
-    logger:
+    collective.transmogrifier.sections.tests.logger.logger:
       {'id': 'monty-python',
        'status': u'\xa9',
        'title': u"Monty Python's Flying Circus \xa9"}

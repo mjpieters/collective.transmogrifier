@@ -61,6 +61,7 @@ Here is how it might look by default:
     ... 
     ... [logger]
     ... blueprint = collective.transmogrifier.sections.logger
+    ... name = logger
     ... """
     >>> registerConfig(u'collective.transmogrifier.sections.tests.folders',
     ...                constructor)
@@ -108,6 +109,7 @@ To specify alternate types and keys, we can do something like this:
     ... 
     ... [logger]
     ... blueprint = collective.transmogrifier.sections.logger
+    ... name = logger
     ... """
     >>> registerConfig(u'collective.transmogrifier.sections.tests.folders2',
     ...                constructor)

@@ -57,6 +57,7 @@ happening. The condition is evaluated for every matched key.
     ... 
     ... [logger]
     ... blueprint = collective.transmogrifier.sections.logger
+    ... name = logger
     ... """
     >>> registerConfig(u'collective.transmogrifier.sections.tests.codecs',
     ...                codecs)

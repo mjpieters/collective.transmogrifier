@@ -26,6 +26,7 @@ to the next pipe section, otherwise it is not:
     ... 
     ... [logger]
     ... blueprint = collective.transmogrifier.sections.logger
+    ... name = logger
     ... """
     >>> registerConfig(u'collective.transmogrifier.sections.tests.condition',
     ...                condition)

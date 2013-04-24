@@ -39,6 +39,7 @@ Assemble and register a transmogrifier with a list source section.
     ... 
     ... [logger]
     ... blueprint = collective.transmogrifier.sections.logger
+    ... name = logger
     ...       
     ... [insert]
     ... blueprint = collective.transmogrifier.sections.inserter

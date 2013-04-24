@@ -37,6 +37,7 @@ the ``dialect`` option.
     ... 
     ... [logger]
     ... blueprint = collective.transmogrifier.sections.logger
+    ... name = logger
     ... """ % tmp.name
     >>> registerConfig(u'collective.transmogrifier.sections.tests.csvsource.file',
     ...                csvsource)
@@ -72,6 +73,7 @@ Here is the same example, loading a file from a package instead:
     ... 
     ... [logger]
     ... blueprint = collective.transmogrifier.sections.logger
+    ... name = logger
     ... """
     >>> registerConfig(u'collective.transmogrifier.sections.tests.csvsource.package',
     ...                csvsource)

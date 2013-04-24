@@ -21,7 +21,8 @@ class LoggerSection(object):
         self.condition = Condition(options.get('condition', 'python:True'),
                                    transmogrifier, name, options)
 
-        self.logger = logging.getLogger(options.get('name', name))
+        self.logger = logging.getLogger(options.get(
+            'name', transmogrifier.configuration_id + '.' + name))
         # First check if the level is a named level:
         level = options.get('level', logging.getLevelName(self.logger.level))
         self.level = getattr(logging, level, None)

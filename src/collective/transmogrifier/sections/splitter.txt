@@ -27,6 +27,7 @@ own copy [*]_ of the items:
     ... 
     ... [logger]
     ... blueprint = collective.transmogrifier.sections.logger
+    ... name = logger
     ... """
     >>> registerConfig(u'collective.transmogrifier.sections.tests.emptysplitter',
     ...                emptysplitter)
@@ -83,6 +84,7 @@ optional and use the pipeline option name plus ``-condition``:
     ... 
     ... [logger]
     ... blueprint = collective.transmogrifier.sections.logger
+    ... name = logger
     ... """
     >>> registerConfig(u'collective.transmogrifier.sections.tests.evenodd',
     ...                evenoddsplitter)

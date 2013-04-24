@@ -51,6 +51,7 @@ class Transmogrifier(UserDict.DictMixin):
         self.context = context
         
     def __call__(self, configuration_id, **overrides):
+        self.configuration_id = configuration_id
         self._raw = _load_config(configuration_id, **overrides)
         self._data = {}
             

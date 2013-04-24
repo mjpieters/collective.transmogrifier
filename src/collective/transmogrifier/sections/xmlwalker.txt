@@ -66,6 +66,7 @@ Start with an HTML file containing a heirarchical navbar.
     ... 
     ... [logger]
     ... blueprint = collective.transmogrifier.sections.logger
+    ... name = logger
     ... """.format(html_file)
     >>> registerConfig(u'collective.transmogrifier.sections.tests.xmlwalker',
     ...                infologger)
