@@ -38,25 +38,26 @@ the ``dialect`` option.
     ... [logger]
     ... blueprint = collective.transmogrifier.sections.logger
     ... name = logger
+    ... level = INFO
     ... """ % tmp.name
     >>> registerConfig(u'collective.transmogrifier.sections.tests.csvsource.file',
     ...                csvsource)
     >>> transmogrifier(u'collective.transmogrifier.sections.tests.csvsource.file')
     >>> print handler
-    logger DEBUG
+    logger INFO
         {'bar': 'first-bar', 'baz': 'first-baz', 'foo': 'first-foo'}
-    logger DEBUG
+    logger INFO
         {'bar': 'second-bar', 'baz': 'second-baz', 'foo': 'second-foo'}
 
     >>> handler.clear()
     >>> transmogrifier(u'collective.transmogrifier.sections.tests.csvsource.file',
     ...                csvsource=dict(fieldnames='monty spam eggs'))
     >>> print handler
-    logger DEBUG
+    logger INFO
         {'eggs': 'baz', 'monty': 'foo', 'spam': 'bar'}
-    logger DEBUG
+    logger INFO
         {'eggs': 'first-baz', 'monty': 'first-foo', 'spam': 'first-bar'}
-    logger DEBUG
+    logger INFO
         {'eggs': 'second-baz', 'monty': 'second-foo', 'spam': 'second-bar'}
 
 Here is the same example, loading a file from a package instead:
@@ -74,24 +75,25 @@ Here is the same example, loading a file from a package instead:
     ... [logger]
     ... blueprint = collective.transmogrifier.sections.logger
     ... name = logger
+    ... level = INFO
     ... """
     >>> registerConfig(u'collective.transmogrifier.sections.tests.csvsource.package',
     ...                csvsource)
     >>> handler.clear()
     >>> transmogrifier(u'collective.transmogrifier.sections.tests.csvsource.package')
     >>> print handler
-    logger DEBUG
+    logger INFO
         {'bar': 'first-bar', 'baz': 'first-baz', 'foo': 'first-foo'}
-    logger DEBUG
+    logger INFO
         {'bar': 'second-bar', 'baz': 'second-baz', 'foo': 'second-foo'}
 
     >>> handler.clear()
     >>> transmogrifier(u'collective.transmogrifier.sections.tests.csvsource.package',
     ...                csvsource=dict(fieldnames='monty spam eggs'))
     >>> print handler
-    logger DEBUG
+    logger INFO
         {'eggs': 'baz', 'monty': 'foo', 'spam': 'bar'}
-    logger DEBUG
+    logger INFO
         {'eggs': 'first-baz', 'monty': 'first-foo', 'spam': 'first-bar'}
-    logger DEBUG
+    logger INFO
         {'eggs': 'second-baz', 'monty': 'second-foo', 'spam': 'second-bar'}

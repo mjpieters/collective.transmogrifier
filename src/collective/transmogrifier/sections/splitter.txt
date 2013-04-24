@@ -28,22 +28,23 @@ own copy [*]_ of the items:
     ... [logger]
     ... blueprint = collective.transmogrifier.sections.logger
     ... name = logger
+    ... level = INFO
     ... """
     >>> registerConfig(u'collective.transmogrifier.sections.tests.emptysplitter',
     ...                emptysplitter)
     >>> transmogrifier(u'collective.transmogrifier.sections.tests.emptysplitter')
     >>> print handler
-    logger DEBUG
+    logger INFO
         {'id': 'item-00'}
-    logger DEBUG
+    logger INFO
         {'id': 'item-00'}
-    logger DEBUG
+    logger INFO
         {'id': 'item-01'}
-    logger DEBUG
+    logger INFO
         {'id': 'item-01'}
-    logger DEBUG
+    logger INFO
         {'id': 'item-02'}
-    logger DEBUG
+    logger INFO
         {'id': 'item-02'}
 
 Although the pipeline definitions in the splitter are empty, we end up with 2
@@ -85,17 +86,18 @@ optional and use the pipeline option name plus ``-condition``:
     ... [logger]
     ... blueprint = collective.transmogrifier.sections.logger
     ... name = logger
+    ... level = INFO
     ... """
     >>> registerConfig(u'collective.transmogrifier.sections.tests.evenodd',
     ...                evenoddsplitter)
     >>> handler.clear()
     >>> transmogrifier(u'collective.transmogrifier.sections.tests.evenodd')
     >>> print handler
-    logger DEBUG
+    logger INFO
         {'even': 'The even pipe', 'id': 'item-00'}
-    logger DEBUG
+    logger INFO
         {'id': 'item-01', 'odd': 'The odd pipe'}
-    logger DEBUG
+    logger INFO
         {'even': 'The even pipe', 'id': 'item-02'}
 
 Conditions are expressed as TALES statements, and have access to:

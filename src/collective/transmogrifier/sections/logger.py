@@ -4,7 +4,7 @@ from zope.interface import classProvides, implements
 
 from collective.transmogrifier.interfaces import ISectionBlueprint
 from collective.transmogrifier.interfaces import ISection
-from collective.transmogrifier.utils import Matcher, Condition
+from collective.transmogrifier.utils import Matcher, Condition, pformat_msg
 
 
 class LoggerSection(object):
@@ -43,8 +43,7 @@ class LoggerSection(object):
                     for key in item.keys():
                         if not self.delete(key)[1]:
                             copy[key] = item[key]
-                    msg = '\n' + '\n'.join('  ' + line for line in
-                                           self.pformat(copy).splitlines())
+                    msg = pformat_msg(copy)
                 else:
                     msg = item.get(self.key, '-- Missing key --')
                 self.logger.log(self.level, msg)

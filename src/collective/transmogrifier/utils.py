@@ -1,6 +1,8 @@
 import os.path
 import re
 import sys
+import pprint
+from logging import getLogger, DEBUG
 
 from zope.component import getUtility
 try:
@@ -139,6 +141,15 @@ class Matcher(object):
                     return value, match
         return None, False
 
+
+def pformat_msg(obj):
+    msg = pprint.pformat(obj)
+    if '\n' in msg:
+        msg = '\n' + '\n'.join(
+            '  ' + line for line in msg.splitlines())
+    return msg
+
+
 class Expression(object):
     """A transmogrifier expression
     
@@ -151,10 +162,11 @@ class Expression(object):
         self.name = name
         self.options = options
         self.extras = extras
+        self.logger = getLogger(transmogrifier.configuration_id + '.' + name)
 
     def __call__(self, item, **extras):
         extras.update(self.extras)
-        return self.expression(engine.TrustedEngine.getContext(
+        result = self.expression(engine.TrustedEngine.getContext(
             item = item,
             transmogrifier = self.transmogrifier,
             name = self.name,
@@ -163,6 +175,10 @@ class Expression(object):
             modules = sys.modules,
             **extras
         ))
+        if self.logger.isEnabledFor(DEBUG):
+            formatted = pformat_msg(result)
+            self.logger.debug('Expression returned: %s', formatted)
+        return result
 
 class Condition(Expression):
     """A transmogrifier condition expression

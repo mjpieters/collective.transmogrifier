@@ -56,22 +56,23 @@ happening. The condition is evaluated for every matched key.
     ... [logger]
     ... blueprint = collective.transmogrifier.sections.logger
     ... name = logger
+    ... level = INFO
     ... """
     >>> registerConfig(u'collective.transmogrifier.sections.tests.manipulator',
     ...                manipulator)
     >>> transmogrifier(u'collective.transmogrifier.sections.tests.manipulator')
     >>> print handler
-    logger DEBUG
+    logger INFO
         {'id': 'foo',
         'id-duplicate': 'foo',
         'title': u'The Foo Fighters \u2117',
         'title-duplicate': u'The Foo Fighters \u2117'}
-    logger DEBUG
+    logger INFO
         {'id': 'bar',
         'id-duplicate': 'bar',
         'title': u'Brand Chocolate Bar \u2122',
         'title-duplicate': u'Brand Chocolate Bar \u2122'}
-    logger DEBUG
+    logger INFO
         {'id': 'monty-python',
         'id-duplicate': 'monty-python',
         'title': u"Monty Python's Flying Circus \xa9",

@@ -40,6 +40,7 @@ Assemble and register a transmogrifier with a list source section.
     ... [logger]
     ... blueprint = collective.transmogrifier.sections.logger
     ... name = logger
+    ... level = INFO
     ...       
     ... [insert]
     ... blueprint = collective.transmogrifier.sections.inserter
@@ -63,11 +64,11 @@ be broken up on newlines into a list.
     >>> transmogrifier(
     ...     u'collective.transmogrifier.sections.tests.listsource')
     >>> print handler
-    logger DEBUG
+    logger INFO
         {'id': 'item-00'}
-    logger DEBUG
+    logger INFO
         {'id': 'item-01'}
-    logger DEBUG
+    logger INFO
         {'id': 'item-02'}
 
 The ``condition`` expression has access to the following:

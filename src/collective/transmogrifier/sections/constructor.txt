@@ -61,33 +61,34 @@ required = True key to the constructor section it will instead raise a KeyError.
     ... [logger]
     ... blueprint = collective.transmogrifier.sections.logger
     ... name = logger
+    ... level = INFO
     ... """
     >>> registerConfig(u'collective.transmogrifier.sections.tests.constructor',
     ...                constructor)
     >>> transmogrifier(u'collective.transmogrifier.sections.tests.constructor')
     >>> print handler
-    logger DEBUG
+    logger INFO
         {'_path': '/spam/eggs/foo', '_type': 'FooType'}
-    logger DEBUG
+    logger INFO
         {'_path': '/foo', '_type': 'FooType'}
-    logger DEBUG
+    logger INFO
         {'_path': u'/unicode/encoded/to/ascii', '_type': 'FooType'}
-    logger DEBUG
+    logger INFO
         {'_path': 'not/existing/bar',
         '_type': 'BarType',
         'title': 'Should not be constructed, not an existing path'}
-    logger DEBUG
+    logger INFO
         {'_path': '/spam/eggs/existing',
         '_type': 'FooType',
         'title': 'Should not be constructed, an existing object'}
-    logger DEBUG
+    logger INFO
         {'_path': '/spam/eggs/incomplete',
         'title': 'Should not be constructed, no type'}
-    logger DEBUG
+    logger INFO
         {'_path': '/spam/eggs/nosuchtype',
         '_type': 'NonExisting',
         'title': 'Should not be constructed, not an existing type'}
-    logger DEBUG
+    logger INFO
         {'_path': 'spam/eggs/changedByFactory',
         '_type': 'FooType',
         'title': 'Factories are allowed to change the id'}
@@ -114,6 +115,7 @@ required = True key to the constructor section it will instead raise a KeyError.
     ... [logger]
     ... blueprint = collective.transmogrifier.sections.logger
     ... name = logger
+    ... level = INFO
     ... """
     >>> registerConfig(u'collective.transmogrifier.sections.tests.constructor2',
     ...                constructor)
@@ -124,9 +126,9 @@ required = True key to the constructor section it will instead raise a KeyError.
     ... except KeyError:
     ...     pass
     >>> print handler
-    logger DEBUG
+    logger INFO
         {'_path': '/spam/eggs/foo', '_type': 'FooType'}
-    logger DEBUG
+    logger INFO
         {'_path': '/foo', '_type': 'FooType'}
-    logger DEBUG
+    logger INFO
         {'_path': u'/unicode/encoded/to/ascii', '_type': 'FooType'}

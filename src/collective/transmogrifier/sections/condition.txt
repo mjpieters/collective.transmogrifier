@@ -27,14 +27,15 @@ to the next pipe section, otherwise it is not:
     ... [logger]
     ... blueprint = collective.transmogrifier.sections.logger
     ... name = logger
+    ... level = INFO
     ... """
     >>> registerConfig(u'collective.transmogrifier.sections.tests.condition',
     ...                condition)
     >>> transmogrifier(u'collective.transmogrifier.sections.tests.condition')
     >>> print handler
-    logger DEBUG
+    logger INFO
         {'id': 'item-03'}
-    logger DEBUG
+    logger INFO
         {'id': 'item-04'}
 
 The ``condition`` expression has access to the following:

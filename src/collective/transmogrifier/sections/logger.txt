@@ -80,6 +80,7 @@ text fields which may be too large and make the output too noisy.
     ... 
     ... [logger]
     ... blueprint = collective.transmogrifier.sections.logger
+    ... level = INFO
     ... delete =
     ...     title-duplicate
     ...     id-duplicate

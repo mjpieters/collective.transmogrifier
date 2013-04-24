@@ -58,16 +58,17 @@ happening. The condition is evaluated for every matched key.
     ... [logger]
     ... blueprint = collective.transmogrifier.sections.logger
     ... name = logger
+    ... level = INFO
     ... """
     >>> registerConfig(u'collective.transmogrifier.sections.tests.codecs',
     ...                codecs)
     >>> transmogrifier(u'collective.transmogrifier.sections.tests.codecs')
     >>> print handler
-    logger DEBUG
+    logger INFO
         {'id': 'foo', 'status': u'\u2117', 'title': 'The Foo Fighters \\u2117'}
-    logger DEBUG
+    logger INFO
         {'id': 'bar', 'status': u'\u2122', 'title': u'Brand Chocolate Bar \u2122'}
-    logger DEBUG
+    logger INFO
         {'id': 'monty-python', 'status': u'\xa9', 'title': "Monty Python's Flying Circus \\xa9"}
 
 The ``condition`` expression has access to the following:

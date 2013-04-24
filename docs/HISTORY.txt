@@ -6,6 +6,10 @@ Change History
 1.5 (unreleased)
 ================
 
+- Add DEBUG logging for expressions, useful for tracking changes to
+  items as they move through the pipeline.
+  [rpatterson]
+
 - Add an XML walker source section for walking a tree of elements.
   [rpatterson]
 

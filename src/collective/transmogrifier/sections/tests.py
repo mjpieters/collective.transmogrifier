@@ -219,7 +219,7 @@ def sectionsSetUp(test):
     import logging
     from zope.testing import loggingsupport
     test.globs['handler'] = loggingsupport.InstalledHandler(
-        'logger', level=logging.DEBUG)
+        'logger', level=logging.INFO)
 
 
 def constructorSetUp(test):
