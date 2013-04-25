@@ -38,8 +38,6 @@ class FoldersSection(object):
             elems = path.strip('/').rsplit('/', 1)
             container, id = (len(elems) == 1 and ('', elems[0]) or elems)
             
-            traverse = self.context.unrestrictedTraverse
-            
             # This may be a new container
             if container not in self.seen:
                 
@@ -49,18 +47,21 @@ class FoldersSection(object):
                     checkedElements = []
                 
                     # Check each possible parent folder
+                    obj = self.context
                     for element in containerPathItems:
                         checkedElements.append(element)
                         currentPath = '/'.join(checkedElements)
                     
                         if currentPath and currentPath not in self.seen:
-                        
-                            if traverse(currentPath, None) is None:
+
+                            if element and not obj.hasObject(element):
                                 # We don't have this path - yield to create a
                                 # skeleton folder
                                 yield {newPathKey: '/' + currentPath,
                                        newTypeKey: self.folderType}
-                        
+                            else:
+                                obj = obj._getOb(element)
+
                             if self.cache:
                                 self.seen.add(currentPath)
             

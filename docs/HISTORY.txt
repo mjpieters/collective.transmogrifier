@@ -6,6 +6,9 @@ Change History
 1.5 (unreleased)
 ================
 
+- Fix folders source when a view of the same name is registered.
+  [rpatterson]
+
 - Add DEBUG logging for expressions, useful for tracking changes to
   items as they move through the pipeline.
   [rpatterson]

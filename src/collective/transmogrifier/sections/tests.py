@@ -290,19 +290,26 @@ def foldersSetUp(test):
     sectionsSetUp(test)
     
     class MockPortal(object):
-        existing = True # Existing object
-        
-        _last_path = None
-        def unrestrictedTraverse(self, path, default):
-            if path[0:1] == '/':
-                return default # path is absolute
-            if isinstance(path, unicode):
-                return default
-            if not path.startswith('existing'):
-                return default
-            self._last_path = path
-            return self
-    
+
+        def __init__(self, id_='', container=None):
+            if container is None:
+                self._path = ''
+            else:
+                self._path = container._path + '/' + id_
+
+        def hasObject(self, id_):
+            if isinstance(id_, unicode):
+                return False
+            if not (self._path + '/' + id_).startswith('/existing'):
+                return False
+            return True
+
+        def _getOb(self, id_):
+            if not self.hasObject(id_):
+                raise AttributeError(id_)
+            else:
+                return MockPortal(id_, container=self)
+
     test.globs['plone'] = MockPortal()
     test.globs['transmogrifier'].context = test.globs['plone']
     
