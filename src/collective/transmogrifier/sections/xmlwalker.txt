@@ -74,9 +74,9 @@ Start with an HTML file containing a heirarchical navbar.
     >>> transmogrifier(u'collective.transmogrifier.sections.tests.xmlwalker')
     >>> print handler
     logger INFO
-        {'_defaultpage': 1, '_type': 'Folder'}
+      {'_defaultpage': 1, '_type': 'Folder'}
     logger INFO
-        {'_is_defaultpage': True, '_parent': {'_defaultpage': 1, '_type': 'Folder'}}
+      {'_is_defaultpage': True, '_parent': {'_defaultpage': 1, '_type': 'Folder'}}
     logger INFO
         {'_defaultpage': 1,
        '_parent': {'_defaultpage': 1, '_type': 'Folder'},
