@@ -16,7 +16,7 @@ class XMLWalkerSection(object):
     classProvides(ISectionBlueprint)
     implements(ISection)
 
-    xpath = "@href"
+    xpath = "@href | @src"
 
     def __init__(self, transmogrifier, name, options, previous):
         self.previous = previous

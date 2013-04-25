@@ -49,13 +49,15 @@ Start with an HTML file containing a heirarchical navbar.
     ... key = string:_path
     ... condition = python:'_element' in item\
     ...     and (item['_parent'].pop('_trees', None) or True)
-    ... value = python:item['_element'].attrib['href'].strip()
+    ... value = python:item['_element'].attrib.get(\
+    ...     'href', item['_element'].attrib.get('src', '')).strip()
     ... 
     ... [title]
     ... blueprint = collective.transmogrifier.sections.inserter
     ... key = string:title
     ... condition = python:'_element' in item
-    ... value = python:item['_element'].text_content().strip()
+    ... value = python:item['_element'].text_content().strip()\
+    ...     or item['_element'].attrib.get('alt', '')
     ... 
     ... [clean]
     ... blueprint = collective.transmogrifier.sections.manipulator
@@ -103,8 +105,8 @@ Start with an HTML file containing a heirarchical navbar.
                    '_path': '#',
                    '_type': 'Folder',
                    'title': 'Foo Tab'},
-       '_path': '../foo-tab/bar-page.html',
-       'title': 'Bar Page'}
+       '_path': '../foo-tab/bar-image.png',
+       'title': 'Bar Image'}
     logger INFO
         {'_parent': {'_defaultpage': 1,
                    '_path': '#',
