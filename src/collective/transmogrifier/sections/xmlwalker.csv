@@ -1,2 +1,2 @@
-_type,_path
-Folder,/
+_type,_path,_transitions
+Folder,/,publish
