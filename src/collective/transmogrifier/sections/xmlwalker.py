@@ -41,8 +41,7 @@ class XMLWalkerSection(object):
 
         # By default, only insert a type for folders
         self.typekey = Expression(
-            options.get('type-key',
-                        "python:'_defaultpage' in item and '_type'"),
+            options.get('type-key', "string:_type"),
             transmogrifier, name, options)
         self.typevalue = Expression(
             options.get('type-value', "string:Folder"),
@@ -146,14 +145,6 @@ class XMLWalkerSection(object):
                         child[parentkey] = parent
                     if childrenkey:
                         parent.setdefault(childrenkey, []).append(child)
-
-                    # Maybe insert a type
-                    typekey = self.typekey(previous, tree_item=item)
-                    if typekey:
-                        typevalue = self.typevalue(
-                            previous, tree_item=item)
-                        if typevalue:
-                            previous[typekey] = typevalue
 
                     parents.append((depth, child))
 
