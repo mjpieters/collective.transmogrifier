@@ -50,7 +50,10 @@ class XMLWalkerSection(object):
         # By default yield default pages for folders
         #   but do not keep references to child items
         self.defaultpagekey = Expression(
-            options.get('default-page-key', 'string:_defaultpage'),
+            options.get('default-page-key', 'nothing'),
+            transmogrifier, name, options)
+        self.isdefaultpagekey = Expression(
+            options.get('is-default-page-key', 'string:_is_defaultpage'),
             transmogrifier, name, options)
         self.childrenkey = Expression(
             options.get('children-key', 'nothing'),
@@ -58,9 +61,8 @@ class XMLWalkerSection(object):
 
     def __iter__(self):
         for item in self.previous:
-            yielded_item = False
-
             treeskey = self.treeskey(*item)[0]
+            trees = []
             if treeskey:
                 # get everything we need from the item before yielding
                 trees = item[treeskey]
@@ -68,68 +70,65 @@ class XMLWalkerSection(object):
                 parentkey = self.parentkey(item)
                 childrenkey = self.childrenkey(item)
 
-                if not isinstance(trees, list):
-                    trees = [trees]
-                for tree in trees:
-                    if not (
-                        callable(getattr(tree, 'read', None))
-                        or isinstance(tree, etree.ElementBase)):
-                        tree = html.fragment_fromstring(
-                            tree, create_parent=True)
-                    if self.cache:
-                        tree_string = etree.tostring(tree)
-                        if tree_string in self.seen:
-                            self.logger.info(
-                                'Skipping already seen tree in %r', treeskey)
-                            continue
-                        self.seen.add(tree_string)
-                    for child_item in self.walk(
-                        item, tree, elementkey, parentkey, childrenkey):
-                        if child_item is item:
-                            if not yielded_item:
-                                yield item
-                            yielded_item = True
-                        else:
-                            yield child_item
+            yield item
 
-            if not yielded_item:
-                # no tree to walk
-                yield item
+            if not isinstance(trees, list):
+                trees = [trees]
+            for tree in trees:
+                if not (
+                    callable(getattr(tree, 'read', None))
+                    or isinstance(tree, etree.ElementBase)):
+                    tree = html.fragment_fromstring(
+                        tree, create_parent=True)
+                if self.cache:
+                    tree_string = etree.tostring(tree)
+                    if tree_string in self.seen:
+                        self.logger.info(
+                            'Skipping already seen tree in %r', treeskey)
+                        continue
+                    self.seen.add(tree_string)
+                for child_item in self.walk(
+                    item, tree, elementkey, parentkey, childrenkey):
+                    yield child_item
 
     def walk(self, item, tree, elementkey, parentkey, childrenkey):
         depth = 0
         parents = [(depth, item)]
+        del item
         for event, element in etree.iterwalk(tree, events=("start", "end")):
             if event == 'end':
                 if element.xpath(self.xpath):
                     previous_depth, previous = parents[-1]
-                    if depth > previous_depth:
+                    if previous_depth == 0:
+                        pass
+                    elif depth > previous_depth:
                         # Previous item has children, item is a folder
 
                         # Maybe insert a default page item
-                        defaultpagekey = self.defaultpagekey(
-                            previous, tree_item=item)
-                        if defaultpagekey:
+                        isdefaultpagekey = self.isdefaultpagekey(previous)
+                        if isdefaultpagekey:
                             defaultpage = previous.copy()
-                            defaultpage['_is' + defaultpagekey] = True
+                            defaultpage[isdefaultpagekey] = True
                             if parentkey:
                                 defaultpage[parentkey] = previous
 
-                            previous[defaultpagekey] = defaultpage
+                            defaultpagekey = self.defaultpagekey(previous)
+                            if defaultpagekey:
+                                previous[defaultpagekey] = defaultpage
+
                             if childrenkey:
                                 previous.setdefault(
                                     childrenkey, []).append(defaultpage)
 
                         # Maybe insert a type for the folder
-                        typekey = self.typekey(previous, tree_item=item)
+                        typekey = self.typekey(previous)
                         if typekey:
-                            typevalue = self.typevalue(
-                                previous, tree_item=item)
+                            typevalue = self.typevalue(previous)
                             if typevalue:
                                 previous[typekey] = typevalue
 
                         yield previous
-                        if defaultpagekey:
+                        if isdefaultpagekey:
                             yield defaultpage
                     else:
                         # Previous item had no children
@@ -154,5 +153,5 @@ class XMLWalkerSection(object):
                 depth += 1
 
         previous_depth, previous = parents[-1]
-        if previous is not item:
+        if previous_depth != 0:
             yield previous

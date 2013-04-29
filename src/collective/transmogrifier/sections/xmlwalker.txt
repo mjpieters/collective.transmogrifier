@@ -76,144 +76,97 @@ Start with an HTML file containing a heirarchical navbar.
     >>> transmogrifier(u'collective.transmogrifier.sections.tests.xmlwalker')
     >>> print handler
     logger INFO
-      {'_defaultpage': 1, '_type': 'Folder'}
+      {}
     logger INFO
-      {'_is_defaultpage': True, '_parent': {'_defaultpage': 1, '_type': 'Folder'}}
-    logger INFO
-        {'_defaultpage': 1,
-       '_parent': {'_defaultpage': 1, '_type': 'Folder'},
-       '_path': '#',
-       '_type': 'Folder',
-       'title': 'Foo Tab'}
+      {'_parent': {}, '_path': '#', '_type': 'Folder', 'title': 'Foo Tab'}
     logger INFO
         {'_is_defaultpage': True,
-       '_parent': {'_defaultpage': 1,
-                   '_path': '#',
-                   '_type': 'Folder',
-                   'title': 'Foo Tab'},
+       '_parent': {'_path': '#', '_type': 'Folder', 'title': 'Foo Tab'},
        '_path': '#',
        'title': 'Foo Tab'}
     logger INFO
-        {'_parent': {'_defaultpage': 1,
-                   '_path': '#',
-                   '_type': 'Folder',
-                   'title': 'Foo Tab'},
+        {'_parent': {'_path': '#', '_type': 'Folder', 'title': 'Foo Tab'},
        '_path': '../foo-tab/index.html',
        'title': 'Foo Tab Default Page'}
     logger INFO
-        {'_parent': {'_defaultpage': 1,
-                   '_path': '#',
-                   '_type': 'Folder',
-                   'title': 'Foo Tab'},
+        {'_parent': {'_path': '#', '_type': 'Folder', 'title': 'Foo Tab'},
        '_path': '../foo-tab/bar-image.png',
        'title': 'Bar Image'}
     logger INFO
-        {'_parent': {'_defaultpage': 1,
-                   '_path': '#',
-                   '_type': 'Folder',
-                   'title': 'Foo Tab'},
+        {'_parent': {'_path': '#', '_type': 'Folder', 'title': 'Foo Tab'},
        '_path': '../foo-tab/qux-page.html',
        'title': 'Qux Page'}
     logger INFO
-        {'_defaultpage': 1,
-       '_parent': {'_defaultpage': 1, '_type': 'Folder'},
-       '_path': '#',
-       '_type': 'Folder',
-       'title': 'Company'}
+      {'_parent': {}, '_path': '#', '_type': 'Folder', 'title': 'Company'}
     logger INFO
         {'_is_defaultpage': True,
-       '_parent': {'_defaultpage': 1,
-                   '_path': '#',
-                   '_type': 'Folder',
-                   'title': 'Company'},
+       '_parent': {'_path': '#', '_type': 'Folder', 'title': 'Company'},
        '_path': '#',
        'title': 'Company'}
     logger INFO
-        {'_defaultpage': 1,
-       '_parent': {'_defaultpage': 1,
-                   '_path': '#',
-                   '_type': 'Folder',
-                   'title': 'Company'},
+        {'_parent': {'_path': '#', '_type': 'Folder', 'title': 'Company'},
        '_path': '../company/news.html',
        '_type': 'Folder',
        'title': 'News'}
     logger INFO
         {'_is_defaultpage': True,
-       '_parent': {'_defaultpage': 1,
-                   '_path': '../company/news.html',
+       '_parent': {'_path': '../company/news.html',
                    '_type': 'Folder',
                    'title': 'News'},
        '_path': '../company/news.html',
        'title': 'News'}
     logger INFO
-        {'_parent': {'_defaultpage': 1,
-                   '_path': '../company/news.html',
+        {'_parent': {'_path': '../company/news.html',
                    '_type': 'Folder',
                    'title': 'News'},
        '_path': '../company/news.html',
        'title': 'News'}
     logger INFO
-        {'_parent': {'_defaultpage': 1,
-                   '_path': '../company/news.html',
+        {'_parent': {'_path': '../company/news.html',
                    '_type': 'Folder',
                    'title': 'News'},
        '_path': '../company/press_releases.html',
        'title': 'Press Releases'}
     logger INFO
-        {'_parent': {'_defaultpage': 1,
-                   '_path': '#',
-                   '_type': 'Folder',
-                   'title': 'Company'},
+        {'_parent': {'_path': '#', '_type': 'Folder', 'title': 'Company'},
        '_path': '../company/events.html',
        'title': 'Events'}
     logger INFO
-        {'_parent': {'_defaultpage': 1,
-                   '_path': '#',
-                   '_type': 'Folder',
-                   'title': 'Company'},
+        {'_parent': {'_path': '#', '_type': 'Folder', 'title': 'Company'},
        '_path': '../contact_us/contact.html',
        'title': 'Contact Us'}
     logger INFO
-        {'_defaultpage': 1,
-       '_parent': {'_defaultpage': 1,
-                   '_path': '#',
-                   '_type': 'Folder',
-                   'title': 'Company'},
+        {'_parent': {'_path': '#', '_type': 'Folder', 'title': 'Company'},
        '_path': '../company/index.html',
        '_type': 'Folder',
        'title': 'About Company'}
     logger INFO
         {'_is_defaultpage': True,
-       '_parent': {'_defaultpage': 1,
-                   '_path': '../company/index.html',
+       '_parent': {'_path': '../company/index.html',
                    '_type': 'Folder',
                    'title': 'About Company'},
        '_path': '../company/index.html',
        'title': 'About Company'}
     logger INFO
-        {'_parent': {'_defaultpage': 1,
-                   '_path': '../company/index.html',
+        {'_parent': {'_path': '../company/index.html',
                    '_type': 'Folder',
                    'title': 'About Company'},
        '_path': '../company/management.html',
        'title': 'Management'}
     logger INFO
-        {'_parent': {'_defaultpage': 1,
-                   '_path': '../company/index.html',
+        {'_parent': {'_path': '../company/index.html',
                    '_type': 'Folder',
                    'title': 'About Company'},
        '_path': '../company/investors.html',
        'title': 'Investors'}
     logger INFO
-        {'_parent': {'_defaultpage': 1,
-                   '_path': '../company/index.html',
+        {'_parent': {'_path': '../company/index.html',
                    '_type': 'Folder',
                    'title': 'About Company'},
        '_path': '../company/careers.html',
        'title': 'Careers'}
     logger INFO
-        {'_parent': {'_defaultpage': 1,
-                   '_path': '../company/index.html',
+        {'_parent': {'_path': '../company/index.html',
                    '_type': 'Folder',
                    'title': 'About Company'},
        '_path': '../company/company.html',
