@@ -85,8 +85,9 @@ class XMLWalkerSection(object):
                         self.seen.add(tree_string)
                     for child_item in self.walk(
                         item, tree, elementkey, parentkey, childrenkey):
-                        if not yielded_item and child_item is item:
-                            yield item
+                        if child_item is item:
+                            if not yielded_item:
+                                yield item
                             yielded_item = True
                         else:
                             yield child_item
