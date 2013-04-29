@@ -1,2 +1,7 @@
-_type,_path,_transitions
-,/,publish
+_type,_path,_transitions,excludeFromNav,_parent_path
+Folder,/,,,
+,/,publish,,/
+,front-page,,True,
+,news,,True,
+,events,,True,
+,Members,,True,
