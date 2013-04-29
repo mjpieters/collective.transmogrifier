@@ -24,7 +24,9 @@ class XMLWalkerSection(object):
         self.logger = logging.getLogger(name)
 
         self.treeskey = defaultMatcher(options, 'trees-key', name, 'trees')
-        self.trees = set()
+
+        self.cache = options.get('cache', 'false').lower() == 'true'
+        self.seen = set()
 
         # By default, insert matching elements
         self.xpath = options.get('xpath', self.xpath)
@@ -75,12 +77,13 @@ class XMLWalkerSection(object):
                         or isinstance(tree, etree.ElementBase)):
                         tree = html.fragment_fromstring(
                             tree, create_parent=True)
-                    tree_string = etree.tostring(tree)
-                    if tree_string in self.trees:
-                        self.logger.info(
-                            'Skipping already seen tree in %r', treeskey)
-                        continue
-                    self.trees.add(tree_string)
+                    if self.cache:
+                        tree_string = etree.tostring(tree)
+                        if tree_string in self.seen:
+                            self.logger.info(
+                                'Skipping already seen tree in %r', treeskey)
+                            continue
+                        self.seen.add(tree_string)
                     for child_item in self.walk(
                         item, tree, elementkey, parentkey, childrenkey):
                         if not yielded_item and child_item is item:
