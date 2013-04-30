@@ -79,14 +79,6 @@
       component=".xmlwalker.XMLWalkerSection"
       name="collective.transmogrifier.sections.xmlwalker"
       />
-
-  <transmogrifier:registerConfig
-      name="collective.transmogrifier.xmlwalker"
-      title="Web Site Importer"
-      description="Import a web site by crawling it's links and
-                   extracting field and other values."
-      configuration="xmlwalker.cfg"
-      />
 </configure>
 
 </configure>
