@@ -29,13 +29,15 @@ class ConstructorSection(object):
             typekey = self.typekey(*keys)[0]
             pathkey = self.pathkey(*keys)[0]
             
-            if not (typekey and pathkey):             # not enough info
+            if not (typekey and pathkey):
+                logger.warn('Not enough info for item: %s' % item)
                 yield item; continue
-                        
+            
             type_, path = item[typekey], item[pathkey]
             
             fti = self.ttool.getTypeInfo(type_)
-            if fti is None:                           # not an existing type
+            if fti is None:
+                logger.warn('Not an existing type: %s' % type_)
                 yield item; continue
             
             path = path.encode('ASCII')
