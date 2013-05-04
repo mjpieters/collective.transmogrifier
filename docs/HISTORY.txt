@@ -16,7 +16,7 @@ Change History
 - Add an XML walker source section for walking a tree of elements.
   [rpatterson]
 
-- Add a list source section for adding recursion to pipelines.
+- Add a list source section for adding recursion and/or looping to pipelines.
   [rpatterson]
 
 - Add pprint support to the logger section, moved from the pprint

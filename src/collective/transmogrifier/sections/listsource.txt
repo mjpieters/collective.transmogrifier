@@ -9,7 +9,10 @@ source section and inject items.
 
 If items from sources before the listsource section are appended, then
 a loop is formed.  If items from sources after the listsource section
-are appended, then a form of recursion is added to the pipeline.
+are appended, then a form of recursion is added to the pipeline.  If
+the ``keys`` or ``copy-keys`` options are used, then certain item keys
+may be postponed while other items complete such as to defer
+processing keys until other items are constructed.
 
 Items from previous sections are yielded first until items are
 appended to the listsource.  Then the listsource items are yielded
@@ -70,6 +73,55 @@ be broken up on newlines into a list.
         {'id': 'item-01'}
     logger INFO
         {'id': 'item-02'}
+    >>> handler.clear()
+
+Instead of diverting the whole item, the appender section can move or
+copy keys from the original item into a new item which will be
+appended to the list source.
+
+    >>> lister = """
+    ... [transmogrifier]
+    ... include = collective.transmogrifier.sections.tests.listsource
+    ... pipeline -=
+    ...     logger
+    ...     append
+    ... pipeline +=
+    ...     copy
+    ...     append
+    ...     logger
+    ... 
+    ... [source]
+    ... size = 3
+    ... 
+    ... [copy]
+    ... blueprint = collective.transmogrifier.sections.manipulator
+    ... keys = id
+    ... destination = string:copy
+    ... 
+    ... [append]
+    ... keys = python:['id']
+    ... copy-keys = python:['copy']
+    ... """
+    >>> registerConfig(
+    ...     u'collective.transmogrifier.sections.tests.listsource-move',
+    ...     lister)
+    >>> transmogrifier(
+    ...     u'collective.transmogrifier.sections.tests.listsource-move')
+    >>> print handler
+    logger INFO
+      {'copy': 'item-01'}
+    logger INFO
+      {'copy': 'item-02'}
+    logger INFO
+      {'copy': 'item-03', 'id': 'item-03'}
+    logger INFO
+      {'copy': 'item-02'}
+    logger INFO
+      {'copy': 'item-03', 'id': 'item-03'}
+    logger INFO
+      {'copy': 'item-03', 'id': 'item-03'}
+
+
 
 The ``condition`` expression has access to the following:
 
