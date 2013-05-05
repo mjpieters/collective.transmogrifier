@@ -17,6 +17,7 @@ class XMLWalkerSection(object):
     implements(ISection)
 
     xpath = "@href | @src"
+    prefix = 'element-'
 
     def __init__(self, transmogrifier, name, options, previous):
         self.previous = previous
@@ -31,8 +32,7 @@ class XMLWalkerSection(object):
         # By default, insert matching elements
         self.xpath = options.get('xpath', self.xpath)
         self.elementkey = Expression(
-            options.get('key', 'string:_element'),
-            transmogrifier, name, options)
+            options.get('key', 'nothing'), transmogrifier, name, options)
 
         # By default, insert references to parent items
         self.parentkey = Expression(
@@ -58,6 +58,11 @@ class XMLWalkerSection(object):
         self.childrenkey = Expression(
             options.get('children-key', 'nothing'),
             transmogrifier, name, options)
+
+        self.keys = [
+            (key, Expression(options[self.prefix + key],
+                             transmogrifier, name, options))
+            for key in options.get('element-keys', '').splitlines() if key]
 
     def __iter__(self):
         for item in self.previous:
@@ -93,12 +98,11 @@ class XMLWalkerSection(object):
 
     def walk(self, item, tree, elementkey, parentkey, childrenkey):
         depth = 0
-        parents = [(depth, item)]
-        del item
+        parents = [(depth, item, tree)]
         for event, element in etree.iterwalk(tree, events=("start", "end")):
             if event == 'end':
                 if element.xpath(self.xpath):
-                    previous_depth, previous = parents[-1]
+                    previous_depth, previous, previous_element = parents[-1]
                     if previous_depth == 0:
                         pass
                     elif depth > previous_depth:
@@ -127,11 +131,33 @@ class XMLWalkerSection(object):
                             if typevalue:
                                 previous[typekey] = typevalue
 
+                        # Add option keys
+                        previous.update(
+                            (key, expression(
+                                previous, element=previous_element,
+                                tree_item=item, tree=tree))
+                            for key, expression in self.keys)
+
                         yield previous
                         if isdefaultpagekey:
+                            # Add option keys
+                            defaultpage.update(
+                                (key, expression(
+                                    defaultpage, element=previous_element,
+                                    tree_item=item, tree=tree))
+                                for key, expression in self.keys)
+
                             yield defaultpage
                     else:
                         # Previous item had no children
+
+                        # Add option keys
+                        previous.update(
+                            (key, expression(
+                                previous, element=previous_element,
+                                tree_item=item, tree=tree))
+                            for key, expression in self.keys)
+
                         yield previous
 
                     while depth <= parents[-1][0]:
@@ -139,19 +165,27 @@ class XMLWalkerSection(object):
                         parents.pop()
 
                     # Assemble child item
-                    child = {elementkey: element}
+                    child = {}
+                    if elementkey:
+                        child[elementkey] = element
                     parent = parents[-1][1]
                     if parentkey:
                         child[parentkey] = parent
                     if childrenkey:
                         parent.setdefault(childrenkey, []).append(child)
 
-                    parents.append((depth, child))
+                    parents.append((depth, child, element))
 
                 depth -= 1
             else:
                 depth += 1
 
-        previous_depth, previous = parents[-1]
+        previous_depth, previous, previous_element = parents[-1]
         if previous_depth != 0:
+            # Add option keys
+            previous.update(
+                (key, expression(previous, element=previous_element,
+                                 tree_item=item, tree=tree))
+                for key, expression in self.keys)
+
             yield previous

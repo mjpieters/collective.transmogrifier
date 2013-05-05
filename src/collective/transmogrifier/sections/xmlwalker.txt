@@ -6,6 +6,21 @@ over an `lxml.etree`_ tree of XML elements that match an `XPath`_.
 This can be used to build content structure based on the sitemap or
 navigation of a HTML web site.
 
+Options starting with ``element-`` may contain expressions whose value
+will be inserted into the element items.  The expressions have access
+to the following:
+
+=================== ==========================================================
+ ``element``         the current walked element
+ ``item``            the current walked element item to be yielded
+ ``tree_item``       the original item containing the walked tree
+ ``tree``            the original walked tree
+ ``transmogrifier``  the transmogrifier
+ ``name``            the name of the inserter section
+ ``options``         the inserter options
+ ``modules``         sys.modules
+=================== ==========================================================
+
 Start with an HTML file containing a heirarchical navbar.
 
     >>> import os
@@ -19,8 +34,6 @@ Start with an HTML file containing a heirarchical navbar.
     ...     parse
     ...     walk
     ...     defaultpage
-    ...     path
-    ...     title
     ...     clean
     ...     logger
     ... 
@@ -36,6 +49,13 @@ Start with an HTML file containing a heirarchical navbar.
     ... 
     ... [walk]
     ... blueprint = collective.transmogrifier.sections.xmlwalker
+    ... element-keys =
+    ...     _path
+    ...     title
+    ... element-_path = python:element.attrib.get(\
+    ...     'href', element.attrib.get('src', ''))
+    ... element-title = python:element.text_content().strip()\
+    ...     or element.attrib.get('alt', '')
     ... 
     ... [defaultpage]
     ... blueprint = collective.transmogrifier.sections.inserter
@@ -43,21 +63,6 @@ Start with an HTML file containing a heirarchical navbar.
     ... condition = python:item.get('_parent', dict()).pop('_parent', True)\
     ...     and item.get('_defaultpage')
     ... value = exists:item/_defaultpage
-    ... 
-    ... [path]
-    ... blueprint = collective.transmogrifier.sections.inserter
-    ... key = string:_path
-    ... condition = python:'_element' in item\
-    ...     and (item['_parent'].pop('_trees', None) or True)
-    ... value = python:item['_element'].attrib.get(\
-    ...     'href', item['_element'].attrib.get('src', '')).strip()
-    ... 
-    ... [title]
-    ... blueprint = collective.transmogrifier.sections.inserter
-    ... key = string:title
-    ... condition = python:'_element' in item
-    ... value = python:item['_element'].text_content().strip()\
-    ...     or item['_element'].attrib.get('alt', '')
     ... 
     ... [clean]
     ... blueprint = collective.transmogrifier.sections.manipulator
