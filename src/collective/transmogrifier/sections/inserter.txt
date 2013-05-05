@@ -71,8 +71,8 @@ following:
 =================== ==========================================================
  ``item``            the current pipeline item
  ``transmogrifier``  the transmogrifier
- ``name``            the name of the splitter section
- ``options``         the splitter options
+ ``name``            the name of the inserter section
+ ``options``         the inserter options
  ``modules``         sys.modules
  ``key``             (only for the value and condition expressions) the key
                      being inserted
