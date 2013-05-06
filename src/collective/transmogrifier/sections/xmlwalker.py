@@ -8,7 +8,6 @@ from zope.interface import implements
 
 from collective.transmogrifier.interfaces import ISectionBlueprint
 from collective.transmogrifier.interfaces import ISection
-from collective.transmogrifier.utils import defaultMatcher
 from collective.transmogrifier.utils import Expression
 
 
@@ -24,7 +23,9 @@ class XMLWalkerSection(object):
 
         self.logger = logging.getLogger(name)
 
-        self.treeskey = defaultMatcher(options, 'trees-key', name, 'trees')
+        self.trees = Expression(
+            options.get('trees', "python:item.get('_trees', ())"),
+            transmogrifier, name, options)
 
         self.cache = options.get('cache', 'false').lower() == 'true'
         self.seen = set()
@@ -66,18 +67,16 @@ class XMLWalkerSection(object):
 
     def __iter__(self):
         for item in self.previous:
-            treeskey = self.treeskey(*item)[0]
-            trees = []
-            if treeskey:
+            trees = self.trees(item) or ()
+            if trees:
                 # get everything we need from the item before yielding
-                trees = item[treeskey]
                 elementkey = self.elementkey(item)
                 parentkey = self.parentkey(item)
                 childrenkey = self.childrenkey(item)
 
             yield item
 
-            if not isinstance(trees, list):
+            if not isinstance(trees, (list, tuple)):
                 trees = [trees]
             for tree in trees:
                 if not (
@@ -88,8 +87,7 @@ class XMLWalkerSection(object):
                 if self.cache:
                     tree_string = etree.tostring(tree)
                     if tree_string in self.seen:
-                        self.logger.info(
-                            'Skipping already seen tree in %r', treeskey)
+                        self.logger.info('Skipping already seen tree')
                         continue
                     self.seen.add(tree_string)
                 for child_item in self.walk(
