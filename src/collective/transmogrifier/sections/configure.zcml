@@ -81,4 +81,9 @@
       />
 </configure>
 
+<utility
+    component=".dirwalker.DirWalkerSection"
+    name="collective.transmogrifier.sections.dirwalker"
+    />
+
 </configure>

@@ -368,6 +368,11 @@ def test_suite():
             setUp=sectionsSetUp, tearDown=tearDown,
             optionflags=doctest.NORMALIZE_WHITESPACE | doctest.REPORT_NDIFF),
         doctest.DocFileSuite(
+            'dirwalker.txt',
+            setUp=sectionsSetUp, tearDown=tearDown,
+            optionflags=doctest.NORMALIZE_WHITESPACE | doctest.REPORT_NDIFF
+            | doctest.ELLIPSIS),
+        doctest.DocFileSuite(
             'constructor.txt',
             setUp=constructorSetUp, tearDown=tearDown,
             optionflags = doctest.NORMALIZE_WHITESPACE),

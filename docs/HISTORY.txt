@@ -6,6 +6,9 @@ Change History
 1.5 (unreleased)
 ================
 
+- Add a source for walking a directory with `os.walk`_.
+  [rpatterson]
+
 - Add support for arbitrary csvsource fmtparam options.
   [rpatterson]
 
