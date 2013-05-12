@@ -49,7 +49,7 @@ class DirWalkerSection(object):
                     yield {
                         self.pathkey: posixpath.relpath(
                             posixpath.join(posixpath.sep, dirpath, basename),
-                            posixpath.sep),
+                            posixpath.sep) + posixpath.sep,
                         self.typekey: self.foldertype}
 
                 os.chdir(self.dirname)
