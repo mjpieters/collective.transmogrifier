@@ -1,6 +1,9 @@
 import sys
+import io
 import itertools
 import unittest
+import urllib2
+import shutil
 from zope.component import provideUtility
 from zope.interface import classProvides, implements
 from zope.testing import doctest
@@ -357,6 +360,20 @@ def pdbSetUp(test):
     test.globs['reset_stdin'] = reset_stdin
 
 
+class HTTPHandler(urllib2.HTTPHandler):
+
+    def http_open(self, req):
+        resp = urllib2.addinfourl(io.StringIO(), '', req.get_full_url())
+        resp.code = 404
+        resp.msg = 'Not Found'
+        return resp
+
+
+def urlopenTearDown(test):
+    shutil.rmtree('var/tests.urlopener.cache.d')
+    tearDown(test)
+
+
 def test_suite():
     return unittest.TestSuite((
         unittest.makeSuite(SplitterConditionSectionTests),
@@ -370,6 +387,11 @@ def test_suite():
         doctest.DocFileSuite(
             'dirwalker.txt',
             setUp=sectionsSetUp, tearDown=tearDown,
+            optionflags=doctest.NORMALIZE_WHITESPACE | doctest.REPORT_NDIFF
+            | doctest.ELLIPSIS),
+        doctest.DocFileSuite(
+            'urlopener.txt',
+            setUp=sectionsSetUp, tearDown=urlopenTearDown,
             optionflags=doctest.NORMALIZE_WHITESPACE | doctest.REPORT_NDIFF
             | doctest.ELLIPSIS),
         doctest.DocFileSuite(

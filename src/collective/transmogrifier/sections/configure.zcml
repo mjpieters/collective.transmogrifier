@@ -86,4 +86,9 @@
     name="collective.transmogrifier.sections.dirwalker"
     />
 
+<utility
+    component=".urlopener.URLOpenerSection"
+    name="collective.transmogrifier.sections.urlopener"
+    />
+
 </configure>

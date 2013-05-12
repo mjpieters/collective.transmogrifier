@@ -1,0 +1,57 @@
+URL Opener section
+==================
+
+An URL opener source section requests a URL and inserts keys for the
+response and header optionally also using a local cache.
+
+    >>> urlopener = """
+    ... [transmogrifier]
+    ... pipeline =
+    ...     source
+    ...     url
+    ...     urlopen
+    ...     logger
+    ... 
+    ... [source]
+    ... blueprint = collective.transmogrifier.sections.csvsource
+    ... filename = collective.transmogrifier.sections:urlopener.csv
+    ... 
+    ... [url]
+    ... blueprint = collective.transmogrifier.sections.inserter
+    ... key = string:_url
+    ... condition = python:not modules['urlparse'].urlsplit(
+    ...     item.get('_url', '')).netloc
+    ... value = python:'file://' + modules['posixpath'].join(
+    ...     modules['os.path'].dirname(
+    ...         modules['collective.transmogrifier'].__file__), item['_url'])
+    ... 
+    ... [urlopen]
+    ... blueprint = collective.transmogrifier.sections.urlopener
+    ... handlers = python:[modules[
+    ...     'collective.transmogrifier.sections.tests'].HTTPHandler]
+    ... ignore-error = python:error.code == 404
+    ... cache-directory = var/tests.urlopener.cache.d
+    ... 
+    ... [logger]
+    ... blueprint = collective.transmogrifier.sections.logger
+    ... name = logger
+    ... level = INFO
+    ... """
+    >>> registerConfig(
+    ...     u'collective.transmogrifier.sections.tests.urlopener', urlopener)
+
+    >>> transmogrifier(u'collective.transmogrifier.sections.tests.urlopener')
+    >>> print handler
+    logger INFO
+        {'_cache': 'var/tests.urlopener.cache.d/file/.../collective/transmogrifier/transmogrifier.txt',
+       '_headers': {'content-length': '...',
+                    'content-type': 'text/plain',
+                    'last-modified': '...',
+                    'url': 'file:///.../collective/transmogrifier/transmogrifier.txt'},
+       '_url': 'file:///.../collective/transmogrifier/transmogrifier.txt'}
+    logger INFO
+        {'_cache': 'var/tests.urlopener.cache.d/http/foo/bar/qux/non-existent.html',
+       '_headers': {'code': '404',
+                    'msg': 'Not Found',
+                    'url': 'http://foo/bar/qux/non-existent.html'},
+       '_url': 'http://foo/bar/qux/non-existent.html'}

@@ -6,6 +6,9 @@ Change History
 1.5 (unreleased)
 ================
 
+- Add a blueprint for opening and caching URLs with `urllib2`_.
+  [rpatterson]
+
 - Add a source for walking a directory with `os.walk`_.
   [rpatterson]
 
