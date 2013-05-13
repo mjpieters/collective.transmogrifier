@@ -27,7 +27,10 @@ def setUp(test):
     class PloneSite(object):
         def Title(self):
             return u'Plone Test Site'
-    
+
+        def getPhysicalPath(self):
+            return ('', 'plone')
+
     test.globs.update(dict(
         registerConfig=registerConfig,
         ISectionBlueprint=ISectionBlueprint,
