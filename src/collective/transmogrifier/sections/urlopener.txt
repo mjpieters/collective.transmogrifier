@@ -14,7 +14,7 @@ response and header optionally also using a local cache.
     ... 
     ... [source]
     ... blueprint = collective.transmogrifier.sections.csvsource
-    ... filename = collective.transmogrifier.sections:urlopener.csv
+    ... filename = collective.transmogrifier.tests:urlopener.csv
     ... 
     ... [url]
     ... blueprint = collective.transmogrifier.sections.inserter
