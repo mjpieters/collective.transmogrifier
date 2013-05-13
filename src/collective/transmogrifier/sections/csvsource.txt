@@ -43,6 +43,8 @@ the ``dialect`` option.
     logger INFO
         {'bar': 'second-bar', 'baz': 'second-baz', 'foo': 'second-foo'}
 
+The CSV file column field names can also be specified.
+
     >>> handler.clear()
     >>> transmogrifier(u'collective.transmogrifier.sections.tests.csvsource.file',
     ...                csvsource=dict(fieldnames='monty spam eggs'))
@@ -80,14 +82,3 @@ Here is the same example, loading a file from a package instead:
         {'bar': 'first-bar', 'baz': 'first-baz', 'foo': 'first-foo'}
     logger INFO
         {'bar': 'second-bar', 'baz': 'second-baz', 'foo': 'second-foo'}
-
-    >>> handler.clear()
-    >>> transmogrifier(u'collective.transmogrifier.sections.tests.csvsource.package',
-    ...                csvsource=dict(fieldnames='monty spam eggs'))
-    >>> print handler
-    logger INFO
-        {'eggs': 'baz', 'monty': 'foo', 'spam': 'bar'}
-    logger INFO
-        {'eggs': 'first-baz', 'monty': 'first-foo', 'spam': 'first-bar'}
-    logger INFO
-        {'eggs': 'second-baz', 'monty': 'second-foo', 'spam': 'second-bar'}
