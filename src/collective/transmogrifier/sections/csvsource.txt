@@ -17,14 +17,8 @@ By default the CSV file is assumed to use the Excel CSV dialect, but you can
 specify any dialect supported by the python csv module if you specify it with
 the ``dialect`` option.
 
-    >>> import tempfile
-    >>> tmp = tempfile.NamedTemporaryFile('w+', suffix='.csv')
-    >>> tmp.write('\r\n'.join("""\
-    ... foo,bar,baz
-    ... first-foo,first-bar,first-baz
-    ... second-foo,second-bar,second-baz
-    ... """.splitlines()))
-    >>> tmp.flush()
+    >>> import os
+    >>> import collective.transmogrifier
     >>> csvsource = """
     ... [transmogrifier]
     ... pipeline =
@@ -33,13 +27,13 @@ the ``dialect`` option.
     ...     
     ... [csvsource]
     ... blueprint = collective.transmogrifier.sections.csvsource
-    ... filename = %s
+    ... filename = {}/tests/csvsource.csv
     ... 
     ... [logger]
     ... blueprint = collective.transmogrifier.sections.logger
     ... name = logger
     ... level = INFO
-    ... """ % tmp.name
+    ... """.format(os.path.dirname(collective.transmogrifier.__file__))
     >>> registerConfig(u'collective.transmogrifier.sections.tests.csvsource.file',
     ...                csvsource)
     >>> transmogrifier(u'collective.transmogrifier.sections.tests.csvsource.file')
