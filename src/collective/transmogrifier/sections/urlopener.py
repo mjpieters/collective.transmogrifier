@@ -91,7 +91,10 @@ class URLOpenerSection(object):
                 with contextlib.closing(response) as response:
                     open(cache, 'w').writelines(response)
                     headers = response.info()
-                    headers['Url'] = response.geturl()
+                    headers.setdefault('Url', response.geturl())
+                    code = response.getcode()
+                    if code:
+                        headers.setdefault('Status', str(code))
                     open(headers_cache, 'w').write(str(headers))
 
             item[headerskey] = headers
@@ -102,6 +105,9 @@ class URLOpenerSection(object):
 class HTTPDefaultErrorHandler(urllib2.HTTPDefaultErrorHandler):
 
     def http_error_default(self, req, fp, code, msg, hdrs):
+        if not isinstance(hdrs, mimetools.Message):
+            hdrs = mimetools.Message(io.StringIO(hdrs.decode()))
+        hdrs.setdefault('Status', str(code) + ' ' + msg)
         try:
             return urllib2.HTTPDefaultErrorHandler.http_error_default(
                 self, req, fp, code, msg, hdrs)
@@ -110,9 +116,4 @@ class HTTPDefaultErrorHandler(urllib2.HTTPDefaultErrorHandler):
                 raise
             self.section.logger.warn(
                 'Ignoring error opening URL: %s', error)
-            if not isinstance(msg, mimetools.Message):
-                msg = mimetools.Message(io.StringIO())
-                for key, value in vars(error).iteritems():
-                    if key in ('code', 'msg', 'reason'):
-                        msg[key] = str(value)
-            return urllib2.addinfourl(fp, msg, req.get_full_url())
+            return error

@@ -58,8 +58,7 @@ response and header optionally also using a local cache.
        '_url': 'file:///.../collective/transmogrifier/transmogrifier.txt'}
     logger INFO
         {'_cache': 'var/tests.urlopener.cache.d/http/foo/bar/qux/non-existent.html',
-       '_headers': {'code': '404',
-                    'msg': 'Not Found',
+       '_headers': {'status': '404 Not Found',
                     'url': 'http://foo/bar/qux/non-existent.html'},
        '_url': 'http://foo/bar/qux/non-existent.html'}
 
