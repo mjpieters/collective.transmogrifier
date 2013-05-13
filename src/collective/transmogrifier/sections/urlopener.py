@@ -89,14 +89,14 @@ class URLOpenerSection(object):
             item[cachekey] = cache
 
             if os.path.isfile(cache):
-                self.logger.info('Using cache: %s', cache)
+                self.logger.debug('Using cache: %s', cache)
                 headers = ConfigParser.SafeConfigParser()
                 headers.read(cache + '.metadata')
             else:
                 if not os.path.isdir(os.path.dirname(cache)):
                     os.makedirs(os.path.dirname(cache))
 
-                self.logger.info('Requesting URL: %s', url.geturl())
+                self.logger.debug('Requesting URL: %s', url.geturl())
                 if hasattr(self, 'ignore_handler'):
                     self.ignore_handler.item = item
                 try:
