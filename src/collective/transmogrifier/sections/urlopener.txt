@@ -61,6 +61,12 @@ response and header optionally also using a local cache.
        '_headers': {'status': '404 Not Found',
                     'url': 'http://foo/bar/qux/non-existent.html'},
        '_url': 'http://foo/bar/qux/non-existent.html'}
+    logger INFO
+        {'_cache': 'var/tests.urlopener.cache.d/http/foo/bar/qux/redirect.html',
+       '_headers': {'redirect-status': '301 Permanent',
+                    'status': '200 Ok',
+                    'url': 'http://foo/bar/qux/location.html'},
+       '_url': 'http://foo/bar/qux/redirect.html'}
 
 The cache directory has had response bodies written as files and
 headers as RFC822 messages.
@@ -74,7 +80,10 @@ headers as RFC822 messages.
      ('var/tests.urlopener.cache.d/http/foo/bar', ['qux'], []),
      ('var/tests.urlopener.cache.d/http/foo/bar/qux',
       [],
-      ['non-existent.html.mht', 'non-existent.html']),
+      ['non-existent.html.mht',
+       'redirect.html.mht',
+       'redirect.html',
+       'non-existent.html']),
      ('var/tests.urlopener.cache.d/file', ...
      ('var/tests.urlopener.cache.d/file/...',
       ['collective'],

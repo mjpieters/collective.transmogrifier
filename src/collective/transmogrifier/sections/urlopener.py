@@ -49,6 +49,9 @@ class URLOpenerSection(object):
             self.ignore_handler = HTTPDefaultErrorHandler()
             self.ignore_handler.section = self
             handlers.append(self.ignore_handler)
+        if not [handler for handler in handlers
+                if isinstance(handler, urllib2.HTTPRedirectHandler)]:
+            handlers.append(HTTPRedirectHandler())
         self.opener = urllib2.build_opener(*handlers)
 
     def __iter__(self):
@@ -94,7 +97,10 @@ class URLOpenerSection(object):
                     headers.setdefault('Url', response.geturl())
                     code = response.getcode()
                     if code:
-                        headers.setdefault('Status', str(code))
+                        headers.setdefault(
+                            'Status', str(code) + (
+                                hasattr(response, 'msg') and
+                                (' ' + response.msg) or ''))
                     open(headers_cache, 'w').write(str(headers))
 
             item[headerskey] = headers
@@ -117,3 +123,17 @@ class HTTPDefaultErrorHandler(urllib2.HTTPDefaultErrorHandler):
             self.section.logger.warn(
                 'Ignoring error opening URL: %s', error)
             return error
+
+
+class HTTPRedirectHandler(urllib2.HTTPRedirectHandler):
+
+    def http_error_302(self, req, fp, code, msg, headers):
+        resp = urllib2.HTTPRedirectHandler.http_error_302(
+            self, req, fp, code, msg, headers)
+        resp.headers.setdefault(
+            'Redirect-Status',
+            headers.get('Redirect-Status', fp.headers.get(
+                'Redirect-Status', str(code) + ' ' + msg)))
+        return resp
+
+    http_error_301 = http_error_303 = http_error_307 = http_error_302

@@ -2,6 +2,7 @@ import sys
 import io
 import itertools
 import unittest
+import mimetools
 import urllib2
 import shutil
 from zope.component import provideUtility
@@ -363,9 +364,19 @@ def pdbSetUp(test):
 class HTTPHandler(urllib2.HTTPHandler):
 
     def http_open(self, req):
-        resp = urllib2.addinfourl(io.StringIO(), '', req.get_full_url())
-        resp.code = 404
-        resp.msg = 'Not Found'
+        url = req.get_full_url()
+        resp = urllib2.addinfourl(
+            io.StringIO(), mimetools.Message(io.StringIO()), url)
+        if 'redirect' in url:
+            resp.code = 301
+            resp.msg = 'Permanent'
+            resp.info()['Location'] = url.replace('redirect', 'location')
+        elif 'location' in url:
+            resp.code = 200
+            resp.msg = 'Ok'
+        else:
+            resp.code = 404
+            resp.msg = 'Not Found'
         return resp
 
 
