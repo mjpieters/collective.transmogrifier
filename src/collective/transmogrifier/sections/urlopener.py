@@ -4,7 +4,7 @@ import logging
 import urlparse
 import urllib2
 import mimetools
-import ConfigParser
+import mimetypes
 import contextlib
 
 from zope.interface import classProvides, implements
@@ -51,6 +51,8 @@ class URLOpenerSection(object):
         self.headerskey = Expression(
             options.get('headers-key', 'string:_headers'),
             transmogrifier, name, options)
+        self.headersext = options.get(
+            'headers-extension', mimetypes.guess_extension('message/rfc822'))
 
         self.cachedir = resolvePackageReferenceOrFile(
             options.get('cache-directory', 'var/urlopener.cache.d'))
@@ -83,15 +85,15 @@ class URLOpenerSection(object):
                 self.cachedir, url.scheme, url.netloc,
                 os.path.dirname(url.path.lstrip('/')),
                 os.path.basename(url.path.lstrip('/')) or 'index.html')
+            headers_cache = cache + self.headersext
 
             cachekey = self.cachekey(item, key=key)
             headerskey = self.headerskey(item, key=key)
             item[cachekey] = cache
 
-            if os.path.isfile(cache):
+            if os.path.isfile(cache) and os.path.isfile(headers_cache):
                 self.logger.debug('Using cache: %s', cache)
-                headers = ConfigParser.SafeConfigParser()
-                headers.read(cache + '.metadata')
+                headers = mimetools.Message(open(headers_cache))
             else:
                 if not os.path.isdir(os.path.dirname(cache)):
                     os.makedirs(os.path.dirname(cache))
@@ -107,12 +109,10 @@ class URLOpenerSection(object):
 
                 with contextlib.closing(response) as response:
                     open(cache, 'w').writelines(response)
-                    headers = ConfigParser.SafeConfigParser(dict(
-                        response.info(), url=response.geturl(), **dict(
-                            (name, response.headers.getparam(name)) for name in
-                            response.headers.getparamnames())))
-                headers.write(open(cache + '.metadata', 'w'))
+                    headers = response.info()
+                    headers['Url'] = response.geturl()
+                    open(headers_cache, 'w').write(str(headers))
 
-            item[headerskey] = dict(headers.defaults())
+            item[headerskey] = headers
 
             yield item

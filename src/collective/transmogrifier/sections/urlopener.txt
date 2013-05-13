@@ -10,6 +10,7 @@ response and header optionally also using a local cache.
     ...     source
     ...     url
     ...     urlopen
+    ...     headers
     ...     logger
     ... 
     ... [source]
@@ -31,6 +32,12 @@ response and header optionally also using a local cache.
     ...     'collective.transmogrifier.sections.tests'].HTTPHandler]
     ... ignore-error = python:error.code == 404
     ... cache-directory = var/tests.urlopener.cache.d
+    ... 
+    ... [headers]
+    ... blueprint = collective.transmogrifier.sections.inserter
+    ... key = string:_headers
+    ... condition = exists:item/_headers
+    ... value = python:dict(item['_headers'])
     ... 
     ... [logger]
     ... blueprint = collective.transmogrifier.sections.logger
@@ -55,3 +62,27 @@ response and header optionally also using a local cache.
                     'msg': 'Not Found',
                     'url': 'http://foo/bar/qux/non-existent.html'},
        '_url': 'http://foo/bar/qux/non-existent.html'}
+
+The cache directory has had response bodies written as files and
+headers as RFC822 messages.
+
+    >>> import os
+    >>> import pprint
+    >>> pprint.pprint(list(os.walk('var/tests.urlopener.cache.d')))
+    [('var/tests.urlopener.cache.d', ['http', 'file'], []),
+     ('var/tests.urlopener.cache.d/http', ['foo'], []),
+     ('var/tests.urlopener.cache.d/http/foo', ['bar'], []),
+     ('var/tests.urlopener.cache.d/http/foo/bar', ['qux'], []),
+     ('var/tests.urlopener.cache.d/http/foo/bar/qux',
+      [],
+      ['non-existent.html.mht', 'non-existent.html']),
+     ('var/tests.urlopener.cache.d/file', ...
+     ('var/tests.urlopener.cache.d/file/...',
+      ['collective'],
+      []),
+     ('var/tests.urlopener.cache.d/file/.../collective',
+      ['transmogrifier'],
+      []),
+     ('var/tests.urlopener.cache.d/file/.../collective/transmogrifier',
+      [],
+      ['transmogrifier.txt', 'transmogrifier.txt.mht'])]
