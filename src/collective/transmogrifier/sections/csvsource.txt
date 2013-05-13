@@ -18,7 +18,7 @@ specify any dialect supported by the python csv module if you specify it with
 the ``dialect`` option.
 
     >>> import os
-    >>> import collective.transmogrifier
+    >>> from collective.transmogrifier import tests
     >>> csvsource = """
     ... [transmogrifier]
     ... pipeline =
@@ -27,13 +27,13 @@ the ``dialect`` option.
     ...     
     ... [csvsource]
     ... blueprint = collective.transmogrifier.sections.csvsource
-    ... filename = {}/tests/csvsource.csv
+    ... filename = {}/csvsource.csv
     ... 
     ... [logger]
     ... blueprint = collective.transmogrifier.sections.logger
     ... name = logger
     ... level = INFO
-    ... """.format(os.path.dirname(collective.transmogrifier.__file__))
+    ... """.format(os.path.dirname(tests.__file__))
     >>> registerConfig(u'collective.transmogrifier.sections.tests.csvsource.file',
     ...                csvsource)
     >>> transmogrifier(u'collective.transmogrifier.sections.tests.csvsource.file')
@@ -78,6 +78,47 @@ Here is the same example, loading a file from a package instead:
     >>> handler.clear()
     >>> transmogrifier(u'collective.transmogrifier.sections.tests.csvsource.package')
     >>> print handler
+    logger INFO
+        {'bar': 'first-bar', 'baz': 'first-baz', 'foo': 'first-foo'}
+    logger INFO
+        {'bar': 'second-bar', 'baz': 'second-baz', 'foo': 'second-foo'}
+
+The file can also be taken from a source item's key.
+
+    >>> csvsource = """
+    ... [transmogrifier]
+    ... include = collective.transmogrifier.sections.tests.csvsource.package
+    ... pipeline =
+    ...     csvsource
+    ...     file
+    ...     item-csvsource
+    ...     logger
+    ...     
+    ... [csvsource]
+    ... blueprint = collective.transmogrifier.sections.csvsource
+    ... filename = collective.transmogrifier.tests:keysource.csv
+    ...     
+    ... [file]
+    ... blueprint = collective.transmogrifier.sections.inserter
+    ... key = string:_file
+    ... condition = exists:item/_file
+    ... value = python:modules['os.path'].join(modules['os.path'].dirname(
+    ...     modules['collective.transmogrifier.tests'].__file__),
+    ...     item['_file'])
+    ...     
+    ... [item-csvsource]
+    ... blueprint = collective.transmogrifier.sections.csvsource
+    ... key = item/_file|nothing
+    ... 
+    ... """
+    >>> registerConfig(u'collective.transmogrifier.sections.tests.csvsource.key',
+    ...                csvsource)
+
+    >>> handler.clear()
+    >>> transmogrifier(u'collective.transmogrifier.sections.tests.csvsource.key')
+    >>> print handler
+    logger INFO
+        {'_file': '.../collective/transmogrifier/tests/sample.csv'}
     logger INFO
         {'bar': 'first-bar', 'baz': 'first-baz', 'foo': 'first-foo'}
     logger INFO
