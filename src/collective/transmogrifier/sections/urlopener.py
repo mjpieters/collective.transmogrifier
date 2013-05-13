@@ -15,25 +15,6 @@ from collective.transmogrifier.utils import defaultMatcher
 from collective.transmogrifier.utils import resolvePackageReferenceOrFile
 
 
-class HTTPDefaultErrorHandler(urllib2.HTTPDefaultErrorHandler):
-
-    def http_error_default(self, req, fp, code, msg, hdrs):
-        try:
-            return urllib2.HTTPDefaultErrorHandler.http_error_default(
-                self, req, fp, code, msg, hdrs)
-        except urllib2.URLError as error:
-            if not self.section.ignore_error(self.item, error=error):
-                raise
-            self.section.logger.warn(
-                'Ignoring error opening URL: %s', error)
-            if not isinstance(msg, mimetools.Message):
-                msg = mimetools.Message(io.StringIO())
-                for key, value in vars(error).iteritems():
-                    if key in ('code', 'msg', 'reason'):
-                        msg[key] = str(value)
-            return urllib2.addinfourl(fp, msg, req.get_full_url())
-
-
 class URLOpenerSection(object):
     classProvides(ISectionBlueprint)
     implements(ISection)
@@ -116,3 +97,22 @@ class URLOpenerSection(object):
             item[headerskey] = headers
 
             yield item
+
+
+class HTTPDefaultErrorHandler(urllib2.HTTPDefaultErrorHandler):
+
+    def http_error_default(self, req, fp, code, msg, hdrs):
+        try:
+            return urllib2.HTTPDefaultErrorHandler.http_error_default(
+                self, req, fp, code, msg, hdrs)
+        except urllib2.URLError as error:
+            if not self.section.ignore_error(self.item, error=error):
+                raise
+            self.section.logger.warn(
+                'Ignoring error opening URL: %s', error)
+            if not isinstance(msg, mimetools.Message):
+                msg = mimetools.Message(io.StringIO())
+                for key, value in vars(error).iteritems():
+                    if key in ('code', 'msg', 'reason'):
+                        msg[key] = str(value)
+            return urllib2.addinfourl(fp, msg, req.get_full_url())
