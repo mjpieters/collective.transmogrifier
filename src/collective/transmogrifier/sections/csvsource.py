@@ -20,7 +20,9 @@ class CSVSourceSection(object):
         self.filename = options.get('filename')
         self.dialect = options.get('dialect', 'excel')
         self.fmtparam = dict(
-            (key[len('fmtparam-'):], value) for key, value
+            (key[len('fmtparam-'):],
+             Expression(value, transmogrifier, name, options)(
+                 options, key=key[len('fmtparam-'):])) for key, value
             in options.iteritems() if key.startswith('fmtparam-'))
         self.fieldnames = options.get('fieldnames')
         if self.fieldnames:
