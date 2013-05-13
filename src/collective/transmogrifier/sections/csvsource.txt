@@ -120,6 +120,12 @@ The file can also be taken from a source item's key.
     logger INFO
         {'_file': '.../collective/transmogrifier/tests/sample.csv'}
     logger INFO
-        {'bar': 'first-bar', 'baz': 'first-baz', 'foo': 'first-foo'}
+        {'_csvsource': '.../collective/transmogrifier/tests/sample.csv',
+       'bar': 'first-bar',
+       'baz': 'first-baz',
+       'foo': 'first-foo'}
     logger INFO
-        {'bar': 'second-bar', 'baz': 'second-baz', 'foo': 'second-foo'}
+        {'_csvsource': '.../collective/transmogrifier/tests/sample.csv',
+       'bar': 'second-bar',
+       'baz': 'second-baz',
+       'foo': 'second-foo'}

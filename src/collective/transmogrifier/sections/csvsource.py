@@ -18,6 +18,7 @@ class CSVSourceSection(object):
         if self.key:
             self.key = Expression(self.key, transmogrifier, name, options)
         self.filename = options.get('filename')
+        self.filenamekey = options.get('filename-key', '_csvsource')
         self.dialect = options.get('dialect', 'excel')
         self.fmtparam = dict(
             (key[len('fmtparam-'):],
@@ -35,8 +36,10 @@ class CSVSourceSection(object):
             if self.key:
                 filename = self.key(item)
                 if filename:
-                    for item in self.rows(filename):
-                        yield item
+                    for new_item in self.rows(filename):
+                        if self.filenamekey:
+                            new_item[self.filenamekey] = filename
+                        yield new_item
 
         if self.filename:
             for item in self.rows(self.filename):
