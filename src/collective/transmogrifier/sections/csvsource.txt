@@ -90,7 +90,7 @@ The file can also be taken from a source item's key.
     ... include = collective.transmogrifier.sections.tests.csvsource.package
     ... pipeline =
     ...     csvsource
-    ...     file
+    ...     filename
     ...     item-csvsource
     ...     logger
     ...     
@@ -98,17 +98,16 @@ The file can also be taken from a source item's key.
     ... blueprint = collective.transmogrifier.sections.csvsource
     ... filename = collective.transmogrifier.tests:keysource.csv
     ...     
-    ... [file]
+    ... [filename]
     ... blueprint = collective.transmogrifier.sections.inserter
-    ... key = string:_file
-    ... condition = exists:item/_file
+    ... key = string:_item-csvsource
+    ... condition = exists:item/_item-csvsource
     ... value = python:modules['os.path'].join(modules['os.path'].dirname(
     ...     modules['collective.transmogrifier.tests'].__file__),
-    ...     item['_file'])
+    ...     item['_item-csvsource'])
     ...     
     ... [item-csvsource]
     ... blueprint = collective.transmogrifier.sections.csvsource
-    ... key = item/_file|nothing
     ... 
     ... """
     >>> registerConfig(u'collective.transmogrifier.sections.tests.csvsource.key',
@@ -118,7 +117,7 @@ The file can also be taken from a source item's key.
     >>> transmogrifier(u'collective.transmogrifier.sections.tests.csvsource.key')
     >>> print handler
     logger INFO
-        {'_file': '.../collective/transmogrifier/tests/sample.csv'}
+        {'_item-csvsource': '.../collective/transmogrifier/tests/sample.csv'}
     logger INFO
         {'_csvsource': '.../collective/transmogrifier/tests/sample.csv',
        'bar': 'first-bar',

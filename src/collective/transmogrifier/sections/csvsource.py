@@ -1,9 +1,12 @@
+import os
 import csv
+
 from zope.interface import classProvides, implements
 from collective.transmogrifier.interfaces import ISectionBlueprint
 from collective.transmogrifier.interfaces import ISection
 
 from collective.transmogrifier.utils import resolvePackageReferenceOrFile
+from collective.transmogrifier.utils import defaultMatcher
 from collective.transmogrifier.utils import Expression
 
 
@@ -14,9 +17,7 @@ class CSVSourceSection(object):
     def __init__(self, transmogrifier, name, options, previous):
         self.previous = previous
 
-        self.key = options.get('key')
-        if self.key:
-            self.key = Expression(self.key, transmogrifier, name, options)
+        self.key = defaultMatcher(options, 'key', name)
         self.filename = options.get('filename')
         self.filenamekey = options.get('filename-key', '_csvsource')
         self.dialect = options.get('dialect', 'excel')
@@ -33,13 +34,15 @@ class CSVSourceSection(object):
         for item in self.previous:
             yield item
 
-            if self.key:
-                filename = self.key(item)
-                if filename:
-                    for new_item in self.rows(filename):
-                        if self.filenamekey:
-                            new_item[self.filenamekey] = filename
-                        yield new_item
+            key = self.key(*item)[0]
+            if not key:
+                continue
+
+            filename = item[key]
+            for new_item in self.rows(filename):
+                if self.filenamekey:
+                    new_item[self.filenamekey] = filename
+                yield new_item
 
         if self.filename:
             for item in self.rows(self.filename):
@@ -47,9 +50,10 @@ class CSVSourceSection(object):
 
     def rows(self, filename):
         filename = resolvePackageReferenceOrFile(filename)
-        file_ = open(filename, 'r')
-        reader = csv.DictReader(
-            file_, dialect=self.dialect, fieldnames=self.fieldnames,
-            **self.fmtparam)
-        for item in reader:
-            yield item
+        if os.path.isfile(filename):
+            file_ = open(filename, 'r')
+            reader = csv.DictReader(
+                file_, dialect=self.dialect, fieldnames=self.fieldnames,
+                **self.fmtparam)
+            for item in reader:
+                yield item
