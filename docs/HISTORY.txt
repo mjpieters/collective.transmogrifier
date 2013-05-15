@@ -6,6 +6,9 @@ Change History
 1.5 (unreleased)
 ================
 
+- Add csvsource support for taking the filename from an item key.
+  [rpatterson]
+
 - Add csvsource restkey handling for rows with more keys than fieldnames.
   [rpatterson]
 
