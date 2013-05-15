@@ -21,6 +21,7 @@ class CSVSourceSection(object):
         self.filename = options.get('filename')
         self.filenamekey = options.get('filename-key', '_csvsource')
         self.dialect = options.get('dialect', 'excel')
+        self.restkey = options.get('restkey', '_csvsource_rest')
         self.fmtparam = dict(
             (key[len('fmtparam-'):],
              Expression(value, transmogrifier, name, options)(
@@ -53,7 +54,8 @@ class CSVSourceSection(object):
         if os.path.isfile(filename):
             file_ = open(filename, 'r')
             reader = csv.DictReader(
-                file_, dialect=self.dialect, fieldnames=self.fieldnames,
+                file_, dialect=self.dialect,
+                fieldnames=self.fieldnames, restkey=self.restkey,
                 **self.fmtparam)
             for item in reader:
                 yield item

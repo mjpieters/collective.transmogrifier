@@ -81,9 +81,13 @@ Here is the same example, loading a file from a package instead:
     logger INFO
         {'bar': 'first-bar', 'baz': 'first-baz', 'foo': 'first-foo'}
     logger INFO
-        {'bar': 'second-bar', 'baz': 'second-baz', 'foo': 'second-foo'}
+        {'_csvsource_rest': ['corge', 'grault'],
+       'bar': 'second-bar',
+       'baz': 'second-baz',
+       'foo': 'second-foo'}
 
-The file can also be taken from a source item's key.
+The file can also be taken from a source item's key. A key can also be
+specified for rows that have more values than the fieldnames.
 
     >>> csvsource = """
     ... [transmogrifier]
@@ -108,6 +112,7 @@ The file can also be taken from a source item's key.
     ...     
     ... [item-csvsource]
     ... blueprint = collective.transmogrifier.sections.csvsource
+    ... restkey = _args
     ... 
     ... """
     >>> registerConfig(u'collective.transmogrifier.sections.tests.csvsource.key',
@@ -124,7 +129,8 @@ The file can also be taken from a source item's key.
        'baz': 'first-baz',
        'foo': 'first-foo'}
     logger INFO
-        {'_csvsource': '.../collective/transmogrifier/tests/sample.csv',
+        {'_args': ['corge', 'grault'],
+       '_csvsource': '.../collective/transmogrifier/tests/sample.csv',
        'bar': 'second-bar',
        'baz': 'second-baz',
        'foo': 'second-foo'}
