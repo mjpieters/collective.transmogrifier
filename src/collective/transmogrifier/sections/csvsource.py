@@ -40,10 +40,10 @@ class CSVSourceSection(object):
                 continue
 
             filename = item[key]
-            for new_item in self.rows(filename):
+            for row_item in self.rows(filename):
                 if self.filenamekey:
-                    new_item[self.filenamekey] = filename
-                yield new_item
+                    row_item[self.filenamekey] = filename
+                yield row_item
 
         if self.filename:
             for item in self.rows(self.filename):
