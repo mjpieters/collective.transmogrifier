@@ -39,6 +39,8 @@ class URLOpenerSection(object):
             options.get('cache-directory', 'var/urlopener.cache.d'))
         if not os.path.isdir(self.cachedir):
             os.makedirs(self.cachedir)
+        self.defaultpagename = options.get(
+            'default-page-name', '.{}.cache'.format(options['blueprint']))
 
         handlers = Expression(
             options.get('handlers', 'python:[]'),
@@ -68,7 +70,7 @@ class URLOpenerSection(object):
             cache = os.path.join(
                 self.cachedir, url.scheme, url.netloc,
                 os.path.dirname(url.path.lstrip('/')),
-                os.path.basename(url.path.lstrip('/')) or 'index.html')
+                os.path.basename(url.path.lstrip('/')) or self.defaultpagename)
             headers_cache = cache + self.headersext
 
             cachekey = self.cachekey(item, key=key)
