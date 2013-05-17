@@ -31,6 +31,9 @@ def setUp(test):
         def getPhysicalPath(self):
             return ('', 'plone')
 
+        def absolute_url(self):
+            return 'http://nohost/plone'
+
     test.globs.update(dict(
         registerConfig=registerConfig,
         ISectionBlueprint=ISectionBlueprint,
