@@ -2,6 +2,8 @@ from zope.interface import classProvides, implements
 from collective.transmogrifier.interfaces import ISectionBlueprint
 from collective.transmogrifier.interfaces import ISection
 from collective.transmogrifier.utils import Matcher
+from collective.transmogrifier.utils import traverse
+
 
 def boolean(val):
     return val.lower() in ('yes', 'true', 'on', '1')
@@ -46,7 +48,7 @@ class PathResolverSection(object):
             match = self.keys(key)[1]
             if match:
                 single, paths = assequence(item[key])
-                result = [context.unrestrictedTraverse(p.lstrip('/'), None)
+                result = [traverse(context, p.lstrip('/'), None)
                           for p in paths]
                 if defer and None in result:
                     return False

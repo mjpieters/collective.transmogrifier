@@ -6,6 +6,9 @@ Change History
 1.5 (unreleased)
 ================
 
+- Don't use traversal to avoid problems with acquisition or views.
+  [rpatterson]
+
 - Add csvsource support for taking the filename from an item key.
   [rpatterson]
 
@@ -19,9 +22,6 @@ Change History
   [rpatterson]
 
 - Add support for arbitrary csvsource fmtparam options.
-  [rpatterson]
-
-- Fix folders source when a view of the same name is registered.
   [rpatterson]
 
 - Add DEBUG logging for expressions, useful for tracking changes to

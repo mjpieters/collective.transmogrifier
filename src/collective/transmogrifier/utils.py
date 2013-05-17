@@ -1,4 +1,5 @@
 import os.path
+import posixpath
 import re
 import sys
 import pprint
@@ -36,6 +37,29 @@ def resolvePackageReference(reference):
     package, filename = reference.strip().split(':', 1)
     package = __import__(package, {}, {}, ('*',))
     return os.path.join(os.path.dirname(package.__file__), filename)
+
+
+def pathsplit(path):
+    if path:
+        dirname, basename = posixpath.split(path)
+        if dirname == posixpath.sep:
+            yield dirname
+        else:
+            for elem in pathsplit(dirname):
+                yield elem
+            yield basename
+
+
+def traverse(context, path, default=None):
+    """Resolve an object without acquisition or views."""
+    for element in pathsplit(path.strip(posixpath.sep)):
+        if not hasattr(context, '_getOb'):
+            break
+        context = context._getOb(element, default=default)
+        if context is default:
+            break
+    return context
+
 
 def constructPipeline(transmogrifier, sections, pipeline=None):
     """Construct a transmogrifier pipeline

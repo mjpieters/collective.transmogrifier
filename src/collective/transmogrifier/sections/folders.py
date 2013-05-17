@@ -2,6 +2,9 @@ from zope.interface import classProvides, implements
 from collective.transmogrifier.interfaces import ISectionBlueprint
 from collective.transmogrifier.interfaces import ISection
 from collective.transmogrifier.utils import defaultMatcher
+from collective.transmogrifier.utils import pathsplit
+from collective.transmogrifier.utils import traverse
+
 
 class FoldersSection(object):
     classProvides(ISectionBlueprint)
@@ -54,7 +57,7 @@ class FoldersSection(object):
                     
                         if currentPath and currentPath not in self.seen:
 
-                            if element and not obj.hasObject(element):
+                            if element and traverse(obj, element) is None:
                                 # We don't have this path - yield to create a
                                 # skeleton folder
                                 yield {newPathKey: '/' + currentPath,
@@ -64,7 +67,9 @@ class FoldersSection(object):
 
                             if self.cache:
                                 self.seen.add(currentPath)
-            
+
+                        obj = traverse(obj, element)
+
             if self.cache:
                 self.seen.add("%s/%s" % (container, id,))
             

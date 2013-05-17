@@ -1,7 +1,10 @@
+import posixpath
+
 from zope.interface import classProvides, implements
 from collective.transmogrifier.interfaces import ISectionBlueprint
 from collective.transmogrifier.interfaces import ISection
 from collective.transmogrifier.utils import defaultMatcher
+from collective.transmogrifier.utils import traverse
 
 from Acquisition import aq_base
 from Products.CMFCore.utils import getToolByName
@@ -39,16 +42,17 @@ class ConstructorSection(object):
                 yield item; continue
             
             path = path.encode('ASCII')
-            elems = path.strip('/').rsplit('/', 1)
-            container, id = (len(elems) == 1 and ('', elems[0]) or elems)
-            context = self.context.unrestrictedTraverse(container, None)
-            if context is None:                       # container doesn't exist
-                error = 'Container %s does not exist for item %s' % (container, path)
+            container, id = posixpath.split(path.strip('/'))
+            context = traverse(self.context, container, None)
+            if context is None:
+                error = 'Container %s does not exist for item %s' % (
+                    posixpath.join(*container), path)
                 if self.required:
                     raise KeyError(error)
                 logger.warn(error)
-                yield item; continue
-            
+                yield item
+                continue
+
             if getattr(aq_base(context), id, None) is not None: # item exists
                 yield item; continue
             
@@ -59,6 +63,6 @@ class ConstructorSection(object):
                 obj = fti._finishConstruction(obj)
             
             if obj.getId() != id:
-                item[pathkey] = '%s/%s' % (container, obj.getId())
+                item[pathkey] = posixpath.join(container, obj.getId())
             
             yield item

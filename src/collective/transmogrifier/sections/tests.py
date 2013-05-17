@@ -5,12 +5,16 @@ import unittest
 import mimetools
 import urllib2
 import shutil
+import posixpath
 from zope.component import provideUtility
 from zope.interface import classProvides, implements
 from zope.testing import doctest
 from collective.transmogrifier.interfaces import ISectionBlueprint, ISection
 from collective.transmogrifier.tests import setUp, tearDown
 from Products.Five import zcml
+
+_marker = object()
+
 
 class SplitterConditionSectionTests(unittest.TestCase):
     def _makeOne(self, previous, condition=None):
@@ -226,42 +230,61 @@ def sectionsSetUp(test):
         'logger', level=logging.INFO)
 
 
+class MockObjectManager(object):
+
+        _last_path = ['']
+
+        def __init__(self, id_='', container=None):
+            self.id = id_
+            if container is None:
+                self._path = ''
+            else:
+                self._path = posixpath.join(container._path, id_)
+            self._last_path[:] = [self._path]
+
+        def _getOb(self, id_, default=_marker):
+            if not self.hasObject(id_):
+                if default is _marker:
+                    raise AttributeError(id_)
+                else:
+                    return default
+            else:
+                return self.__class__(id_, container=self)
+
+
 def constructorSetUp(test):
     sectionsSetUp(test)
-    
-    class MockPortal(object):
+
+    class MockPortal(MockObjectManager):
         existing = True # Existing object
-        
+
         @property
         def portal_types(self): return self
         def getTypeInfo(self, type_name):
+            self._last_path[:] = ['']
             self._last_type = type_name
             if type_name in ('FooType', 'BarType'): return self
-        
-        _last_path = None
-        def unrestrictedTraverse(self, path, default):
-            if path[0:1] == '/':
-                return default # path is absolute
-            if isinstance(path, unicode):
-                return default
-            if path == 'not/existing':
-                return default
-            self._last_path = path
-            return self
-        
-        constructed = ()
-        def _constructInstance(self, context, id):
-            if id == 'changeme':
-                id = 'changedByFactory'
-            self._last_id = id
-            self.constructed += ((self._last_path, id, self._last_type),)
-            return self
+
+        def hasObject(self, id_):
+            if isinstance(id_, unicode):
+                return False
+            if (self._path + '/' + id_).startswith('not/existing'):
+                return False
+            return True
+
+        constructed = []
+
+        def _constructInstance(self, context, id_):
+            if id_ == 'changeme':
+                id_ = 'changedByFactory'
+            self.constructed.append((self._last_path[0], id_, self._last_type))
+            return MockPortal(id_, container=self)
         
         def _finishConstruction(self, obj):
             return obj
         
         def getId(self):
-            return self._last_id
+            return self.id
     
     test.globs['plone'] = MockPortal()
     test.globs['transmogrifier'].context = test.globs['plone']
@@ -273,6 +296,7 @@ def constructorSetUp(test):
         def __init__(self, *args, **kw):
             super(ContentSource, self).__init__(*args, **kw)
             self.sample = (
+                dict(_type='FooType', _path='/eggs/foo'),
                 dict(_type='FooType', _path='/spam/eggs/foo'),
                 dict(_type='FooType', _path='/foo'),
                 dict(_type='FooType', _path=u'/unicode/encoded/to/ascii'),
@@ -293,7 +317,7 @@ def constructorSetUp(test):
 def foldersSetUp(test):
     sectionsSetUp(test)
     
-    class MockPortal(object):
+    class MockPortal(MockObjectManager):
 
         def __init__(self, id_='', container=None):
             if container is None:
@@ -307,12 +331,6 @@ def foldersSetUp(test):
             if not (self._path + '/' + id_).startswith('/existing'):
                 return False
             return True
-
-        def _getOb(self, id_):
-            if not self.hasObject(id_):
-                raise AttributeError(id_)
-            else:
-                return MockPortal(id_, container=self)
 
     test.globs['plone'] = MockPortal()
     test.globs['transmogrifier'].context = test.globs['plone']
@@ -408,7 +426,7 @@ def test_suite():
         doctest.DocFileSuite(
             'constructor.txt',
             setUp=constructorSetUp, tearDown=tearDown,
-            optionflags = doctest.NORMALIZE_WHITESPACE),
+            optionflags=doctest.NORMALIZE_WHITESPACE | doctest.REPORT_NDIFF),
         doctest.DocFileSuite(
             'folders.txt',
             setUp=foldersSetUp, tearDown=tearDown,
