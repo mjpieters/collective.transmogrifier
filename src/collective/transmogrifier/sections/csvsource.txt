@@ -5,7 +5,8 @@ A CSV source pipeline section lets you create pipeline items from CSV files.
 The CSV source section blueprint name is
 ``collective.transmogrifier.sections.csvsource``.
 
-A CSV source section will load the CSV file named in the ``filename`` option,
+A CSV source section will load the CSV file named in the ``filename``
+option or the CSV file named in an item key using the ``key`` option,
 and will yield an item for each line in the CSV file. It'll use the first line
 of the CSV file to determine what keys to use, or you can specify a
 ``fieldnames`` option to specify the key names.
@@ -15,7 +16,9 @@ The ``filename`` option may be an absolute path, or a package reference, e.g.
 
 By default the CSV file is assumed to use the Excel CSV dialect, but you can
 specify any dialect supported by the python csv module if you specify it with
-the ``dialect`` option.
+the ``dialect`` option.  You can also specify `fmtparams`_ using
+options that start with ``fmtparam-``.
+
 
     >>> import os
     >>> from collective.transmogrifier import tests
@@ -135,6 +138,16 @@ specified for rows that have more values than the fieldnames.
        'bar': 'second-bar',
        'baz': 'second-baz',
        'foo': 'second-foo'}
+
+The ``fmtparam-`` expressions have access to the following:
+
+=================== ==========================================================
+ ``key``             the `fmtparam`_ attribute
+ ``transmogrifier``  the transmogrifier
+ ``name``            the name of the inserter section
+ ``options``         the inserter options
+ ``modules``         sys.modules
+=================== ==========================================================
 
 The ``row-key`` and ``row-value`` expressions have access to the following:
 
