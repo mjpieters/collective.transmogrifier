@@ -18,7 +18,8 @@ class DirWalkerSection(object):
         self.pathkey = options.get('path-key', '_path')
         self.typekey = options.get('type-key', '_type')
         self.foldertype = options.get('folder-type', 'Folder')
-        self.dirname = resolvePackageReferenceOrFile(options['dirname'])
+        self.dirname = options['dirname'] = resolvePackageReferenceOrFile(
+            options['dirname'])
         self.sortkey = Expression(
             options.get('sort-key',
                         "python:not basename.lower() == '.htaccess', "

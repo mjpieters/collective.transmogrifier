@@ -20,7 +20,8 @@ class CSVSourceSection(object):
         self.key = defaultMatcher(options, 'key', name)
         self.filename = options.get('filename')
         if self.filename:
-            self.filename = resolvePackageReferenceOrFile(self.filename)
+            self.filename = options['filename'] = (
+                resolvePackageReferenceOrFile(self.filename))
 
         if 'row-key' in options:
             self.rowkey = Expression(
