@@ -36,7 +36,9 @@ class URLOpenerSection(object):
             'headers-extension', mimetypes.guess_extension('message/rfc822'))
 
         self.cachedir = resolvePackageReferenceOrFile(
-            options.get('cache-directory', 'var/urlopener.cache.d'))
+            options.get('cache-directory',
+                        os.path.join(os.environ.get('PWD', os.getcwd()),
+                                     'var/urlopener.cache.d')))
         if not os.path.isdir(self.cachedir):
             os.makedirs(self.cachedir)
         self.defaultpagename = options.get(
