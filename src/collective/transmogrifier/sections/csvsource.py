@@ -23,9 +23,10 @@ class CSVSourceSection(object):
             self.filename = options['filename'] = (
                 resolvePackageReferenceOrFile(self.filename))
 
+        self.rowkey = options.get('row-key')
         if 'row-key' in options:
             self.rowkey = Expression(
-                options['row-key'], transmogrifier, name, options)
+                self.rowkey, transmogrifier, name, options)
             self.rowvalue = Expression(
                 options.get('row-value', 'filename'),
                 transmogrifier, name, options)
@@ -51,7 +52,7 @@ class CSVSourceSection(object):
 
             filename = resolvePackageReferenceOrFile(item[key])
             for row_item in self.rows(filename):
-                if hasattr(self, 'rowkey'):
+                if self.rowkey:
                     rowkey = self.rowkey(
                         row_item, filename=filename, source_item=item)
                     if rowkey:
