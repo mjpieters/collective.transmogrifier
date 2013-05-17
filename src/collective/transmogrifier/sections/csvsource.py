@@ -19,7 +19,14 @@ class CSVSourceSection(object):
 
         self.key = defaultMatcher(options, 'key', name)
         self.filename = options.get('filename')
-        self.filenamekey = options.get('filename-key', '_csvsource')
+
+        if 'row-key' in options:
+            self.rowkey = Expression(
+                options['row-key'], transmogrifier, name, options)
+            self.rowvalue = Expression(
+                options.get('row-value', 'filename'),
+                transmogrifier, name, options)
+
         self.dialect = options.get('dialect', 'excel')
         self.restkey = options.get('restkey', '_csvsource_rest')
         self.fmtparam = dict(
@@ -41,8 +48,12 @@ class CSVSourceSection(object):
 
             filename = item[key]
             for row_item in self.rows(filename):
-                if self.filenamekey:
-                    row_item[self.filenamekey] = filename
+                if hasattr(self, 'rowkey'):
+                    rowkey = self.rowkey(
+                        row_item, filename=filename, source_item=item)
+                    if rowkey:
+                        row_item[rowkey] = self.rowvalue(
+                            row_item, filename=filename, source_item=item)
                 yield row_item
 
         if self.filename:
