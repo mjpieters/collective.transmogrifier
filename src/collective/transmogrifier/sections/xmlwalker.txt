@@ -13,7 +13,7 @@ to the following:
 =================== ==========================================================
  ``element``         the current walked element
  ``item``            the current walked element item to be yielded
- ``tree_item``       the original item containing the walked tree
+ ``source_item``     the original item containing the walked tree
  ``tree``            the original walked tree
  ``transmogrifier``  the transmogrifier
  ``name``            the name of the inserter section

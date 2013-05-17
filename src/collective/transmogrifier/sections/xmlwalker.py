@@ -133,7 +133,7 @@ class XMLWalkerSection(object):
                         previous.update(
                             (key, expression(
                                 previous, element=previous_element,
-                                tree_item=item, tree=tree))
+                                source_item=item, tree=tree))
                             for key, expression in self.keys)
 
                         yield previous
@@ -142,7 +142,7 @@ class XMLWalkerSection(object):
                             defaultpage.update(
                                 (key, expression(
                                     defaultpage, element=previous_element,
-                                    tree_item=item, tree=tree))
+                                    source_item=item, tree=tree))
                                 for key, expression in self.keys)
 
                             yield defaultpage
@@ -153,7 +153,7 @@ class XMLWalkerSection(object):
                         previous.update(
                             (key, expression(
                                 previous, element=previous_element,
-                                tree_item=item, tree=tree))
+                                source_item=item, tree=tree))
                             for key, expression in self.keys)
 
                         yield previous
@@ -183,7 +183,7 @@ class XMLWalkerSection(object):
             # Add option keys
             previous.update(
                 (key, expression(previous, element=previous_element,
-                                 tree_item=item, tree=tree))
+                                 source_item=item, tree=tree))
                 for key, expression in self.keys)
 
             yield previous
