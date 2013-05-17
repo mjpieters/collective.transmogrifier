@@ -19,6 +19,8 @@ class CSVSourceSection(object):
 
         self.key = defaultMatcher(options, 'key', name)
         self.filename = options.get('filename')
+        if self.filename:
+            self.filename = resolvePackageReferenceOrFile(self.filename)
 
         if 'row-key' in options:
             self.rowkey = Expression(
@@ -46,7 +48,7 @@ class CSVSourceSection(object):
             if not key:
                 continue
 
-            filename = item[key]
+            filename = resolvePackageReferenceOrFile(item[key])
             for row_item in self.rows(filename):
                 if hasattr(self, 'rowkey'):
                     rowkey = self.rowkey(
@@ -61,7 +63,6 @@ class CSVSourceSection(object):
                 yield item
 
     def rows(self, filename):
-        filename = resolvePackageReferenceOrFile(filename)
         if os.path.isfile(filename):
             file_ = open(filename, 'r')
             reader = csv.DictReader(
