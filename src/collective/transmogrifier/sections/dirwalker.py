@@ -21,7 +21,8 @@ class DirWalkerSection(object):
         self.dirname = resolvePackageReferenceOrFile(options['dirname'])
         self.sortkey = Expression(
             options.get('sort-key',
-                        "python:not basename.lower().startswith('index'), "
+                        "python:not basename.lower() == '.htaccess', "
+                        "not basename.lower().startswith('index'), "
                         "not 'overview' in basename.lower(), basename"),
             transmogrifier, name, options)
 
