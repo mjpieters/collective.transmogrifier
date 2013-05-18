@@ -39,10 +39,10 @@ def resolvePackageReference(reference):
     return os.path.join(os.path.dirname(package.__file__), filename)
 
 
-def pathsplit(path):
+def pathsplit(path, ospath=posixpath):
     if path:
-        dirname, basename = posixpath.split(path)
-        if dirname == posixpath.sep:
+        dirname, basename = ospath.split(path)
+        if dirname == ospath.sep:
             yield dirname
         else:
             for elem in pathsplit(dirname):

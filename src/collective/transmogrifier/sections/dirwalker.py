@@ -7,6 +7,7 @@ from collective.transmogrifier.interfaces import ISection
 
 from collective.transmogrifier.utils import resolvePackageReferenceOrFile
 from collective.transmogrifier.utils import Expression
+from collective.transmogrifier.utils import pathsplit
 
 
 class DirWalkerSection(object):
@@ -39,6 +40,9 @@ class DirWalkerSection(object):
             os.chdir(self.dirname)
             for (dirpath, dirnames, filenames) in os.walk(os.curdir):
                 os.chdir(cwd)
+
+                # Convert path from os.path to posixpath
+                dirpath = posixpath.join(*pathsplit(dirpath, ospath=os.path))
 
                 def sortkey(basename, dirpath=dirpath, sortkey=self.sortkey):
                     return sortkey({}, dirpath=dirpath, basename=basename)
