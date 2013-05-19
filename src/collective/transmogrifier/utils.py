@@ -40,14 +40,15 @@ def resolvePackageReference(reference):
 
 
 def pathsplit(path, ospath=posixpath):
-    if path:
-        dirname, basename = ospath.split(path)
-        if dirname == ospath.sep:
-            yield dirname
-        else:
-            for elem in pathsplit(dirname):
-                yield elem
-            yield basename
+    dirname, basename = ospath.split(path)
+    if dirname == ospath.sep:
+        yield dirname
+    elif dirname:
+        for elem in pathsplit(dirname):
+            yield elem
+        yield basename
+    elif basename:
+        yield basename
 
 
 def traverse(context, path, default=None):
