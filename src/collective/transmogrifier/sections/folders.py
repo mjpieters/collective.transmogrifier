@@ -44,7 +44,7 @@ class FoldersSection(object):
             # This may be a new container
             if container not in self.seen:
                 
-                containerPathItems = container.split('/')
+                containerPathItems = list(pathsplit(container))
                 if containerPathItems:
                     
                     checkedElements = []
@@ -62,9 +62,6 @@ class FoldersSection(object):
                                 # skeleton folder
                                 yield {newPathKey: '/' + currentPath,
                                        newTypeKey: self.folderType}
-                            else:
-                                obj = obj._getOb(element)
-
                             if self.cache:
                                 self.seen.add(currentPath)
 

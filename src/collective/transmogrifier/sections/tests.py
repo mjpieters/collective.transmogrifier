@@ -319,6 +319,8 @@ def foldersSetUp(test):
     
     class MockPortal(MockObjectManager):
 
+        exists = set()
+
         def __init__(self, id_='', container=None):
             if container is None:
                 self._path = ''
@@ -326,9 +328,13 @@ def foldersSetUp(test):
                 self._path = container._path + '/' + id_
 
         def hasObject(self, id_):
+            path = self._path + '/' + id_
+            if path in self.exists:
+                return True
+            self.exists.add(path)
             if isinstance(id_, unicode):
                 return False
-            if not (self._path + '/' + id_).startswith('/existing'):
+            if not path.startswith('/existing'):
                 return False
             return True
 
@@ -430,7 +436,7 @@ def test_suite():
         doctest.DocFileSuite(
             'folders.txt',
             setUp=foldersSetUp, tearDown=tearDown,
-            optionflags = doctest.NORMALIZE_WHITESPACE),
+            optionflags=doctest.NORMALIZE_WHITESPACE | doctest.REPORT_NDIFF),
         doctest.DocFileSuite(
             'breakpoint.txt',
             setUp=pdbSetUp, tearDown=tearDown,

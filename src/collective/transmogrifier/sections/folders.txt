@@ -116,12 +116,13 @@ To specify alternate types and keys, we can do something like this:
     >>> registerConfig(u'collective.transmogrifier.sections.tests.folders2',
     ...                constructor)
     >>> handler.clear()
+    >>> plone.exists.clear()
     >>> transmogrifier(u'collective.transmogrifier.sections.tests.folders2')
     >>> print handler
     logger INFO
-        {'_path': '/foo', '_type': 'Document'}
+      {'_path': '/foo', '_type': 'Document'}
     logger INFO
-        {'_path': '/existing/foo', '_type': 'Document'}
+      {'_path': '/existing/foo', '_type': 'Document'}
     logger INFO
         {"'_folderconstructor_path": '/nonexisting',
        "'_folderconstructor_type": 'My Folder'}
