@@ -55,7 +55,7 @@ def traverse(context, path, default=None):
     """Resolve an object without acquisition or views."""
     for element in pathsplit(path.strip(posixpath.sep)):
         if not hasattr(context, '_getOb'):
-            break
+            return default
         context = context._getOb(element, default=default)
         if context is default:
             break
