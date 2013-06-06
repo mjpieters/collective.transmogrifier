@@ -46,7 +46,7 @@ class ConstructorSection(object):
             context = traverse(self.context, container, None)
             if context is None:
                 error = 'Container %s does not exist for item %s' % (
-                    posixpath.join(*container), path)
+                    container, path)
                 if self.required:
                     raise KeyError(error)
                 logger.warn(error)
