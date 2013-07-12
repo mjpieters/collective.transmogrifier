@@ -89,6 +89,95 @@ Here is the same example, loading a file from a package instead:
        'baz': 'second-baz',
        'foo': 'second-foo'}
 
+We can also load a file from a GS import context:
+
+    >>> from collective.transmogrifier.transmogrifier import Transmogrifier
+    >>> from collective.transmogrifier.genericsetup import IMPORT_CONTEXT
+    >>> from zope.annotation.interfaces import IAnnotations
+    >>> class FakeImportContext(object):
+    ...  def __init__(self, filename, contents):
+    ...      self.filename = filename
+    ...      self.contents = contents
+    ...  def readDataFile(self, filename, subdir=None):
+    ...      if subdir == '' and filename == self.filename:
+    ...          return self.contents
+    ...      return None
+    >>> csvsource = """
+    ... [transmogrifier]
+    ... pipeline =
+    ...     csvsource
+    ...     logger
+    ...
+    ... [csvsource]
+    ... blueprint = collective.transmogrifier.sections.csvsource
+    ... filename = importcontext:somefile.csv
+    ...
+    ... [logger]
+    ... blueprint = collective.transmogrifier.sections.logger
+    ... name = logger
+    ... level = INFO
+    ... """
+    >>> registerConfig(u'collective.transmogrifier.sections.tests.csvsource.gs',
+    ...                csvsource)
+    >>> handler.clear()
+    >>> t = Transmogrifier({})
+    >>> IAnnotations(t)[IMPORT_CONTEXT] = FakeImportContext('somefile.csv',
+    ... """animal,name
+    ... cow,daisy
+    ... pig,george
+    ... duck,archibald
+    ... """)
+    >>> t(u'collective.transmogrifier.sections.tests.csvsource.gs')
+    >>> print handler
+    logger INFO
+        {'animal': 'cow', 'name': 'daisy'}
+    logger INFO
+        {'animal': 'pig', 'name': 'george'}
+    logger INFO
+        {'animal': 'duck', 'name': 'archibald'}
+
+Import contexts can be chunked, and that's okay:
+
+    >>> import StringIO
+    >>> class FakeChunkedImportContext(object):
+    ...  def __init__(self, filename, contents):
+    ...      self.filename = filename
+    ...      self.contents = contents
+    ...  def openDataFile(self, filename, subdir=None):
+    ...      if subdir == '' and filename == self.filename:
+    ...          return StringIO.StringIO(self.contents)
+    ...      return None
+    >>> handler.clear()
+    >>> t = Transmogrifier({})
+    >>> IAnnotations(t)[IMPORT_CONTEXT] = FakeChunkedImportContext('somefile.csv',
+    ... """animal,name
+    ... fish,wanda
+    ... """)
+    >>> t(u'collective.transmogrifier.sections.tests.csvsource.gs')
+    >>> print handler
+    logger INFO
+        {'animal': 'fish', 'name': 'wanda'}
+
+Attempting to load a nonexistant file won't do anything:
+
+    >>> handler.clear()
+    >>> t = Transmogrifier({})
+    >>> IAnnotations(t)[IMPORT_CONTEXT] = FakeImportContext('someotherfile.csv',
+    ... """animal,name
+    ... cow,daisy
+    ... pig,george
+    ... duck,archibald
+    ... """)
+    >>> t(u'collective.transmogrifier.sections.tests.csvsource.gs')
+    >>> print handler
+
+Not having an import context around will also find nothing:
+
+    >>> handler.clear()
+    >>> t = Transmogrifier({})
+    >>> t(u'collective.transmogrifier.sections.tests.csvsource.gs')
+    >>> print handler
+
 The file can also be taken from a source item's key. A key can also be
 specified for rows that have more values than the fieldnames.
 

@@ -5,7 +5,7 @@ from zope.interface import classProvides, implements
 from collective.transmogrifier.interfaces import ISectionBlueprint
 from collective.transmogrifier.interfaces import ISection
 
-from collective.transmogrifier.utils import resolvePackageReferenceOrFile
+from collective.transmogrifier.utils import openFileReference
 from collective.transmogrifier.utils import defaultMatcher
 from collective.transmogrifier.utils import Expression
 
@@ -16,12 +16,12 @@ class CSVSourceSection(object):
 
     def __init__(self, transmogrifier, name, options, previous):
         self.previous = previous
+        self.transmogrifier = transmogrifier
 
         self.key = defaultMatcher(options, 'key', name)
         self.filename = options.get('filename')
         if self.filename:
-            self.filename = options['filename'] = (
-                resolvePackageReferenceOrFile(self.filename))
+            self.filename = options['filename'] = self.filename
 
         self.rowkey = options.get('row-key')
         if 'row-key' in options:
@@ -50,14 +50,13 @@ class CSVSourceSection(object):
             if not key:
                 continue
 
-            filename = resolvePackageReferenceOrFile(item[key])
-            for row_item in self.rows(filename):
+            for row_item in self.rows(item[key]):
                 if self.rowkey:
                     rowkey = self.rowkey(
-                        row_item, filename=filename, source_item=item)
+                        row_item, filename=item[key], source_item=item)
                     if rowkey:
                         row_item[rowkey] = self.rowvalue(
-                            row_item, filename=filename, source_item=item)
+                            row_item, filename=item[key], source_item=item)
                 yield row_item
 
         if self.filename:
@@ -65,11 +64,13 @@ class CSVSourceSection(object):
                 yield item
 
     def rows(self, filename):
-        if os.path.isfile(filename):
-            file_ = open(filename, 'r')
-            reader = csv.DictReader(
-                file_, dialect=self.dialect,
-                fieldnames=self.fieldnames, restkey=self.restkey,
-                **self.fmtparam)
-            for item in reader:
-                yield item
+        file_ = openFileReference(self.transmogrifier, filename)
+        if file_ is None:
+            return
+        reader = csv.DictReader(
+            file_, dialect=self.dialect,
+            fieldnames=self.fieldnames, restkey=self.restkey,
+            **self.fmtparam)
+        for item in reader:
+            yield item
+        file_.close()
