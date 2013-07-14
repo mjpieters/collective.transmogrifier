@@ -73,17 +73,11 @@ headers as RFC822 messages.
 
     >>> import os
     >>> import pprint
-    >>> pprint.pprint(list(os.walk('var/tests.urlopener.cache.d')))
-    [('var/tests.urlopener.cache.d', ['http', 'file'], []),
-     ('var/tests.urlopener.cache.d/http', ['foo'], []),
-     ('var/tests.urlopener.cache.d/http/foo', ['bar'], []),
-     ('var/tests.urlopener.cache.d/http/foo/bar', ['qux'], []),
-     ('var/tests.urlopener.cache.d/http/foo/bar/qux',
-      [],
-      ['non-existent.html.mht',
-       'redirect.html.mht',
-       'redirect.html',
-       'non-existent.html']),
+    >>> pprint.pprint(sorted(list(
+    ...     (x[0], sorted(x[1]), sorted(x[2]))
+    ...     for x in os.walk('var/tests.urlopener.cache.d')
+    ... ), key= lambda x: x[0]))
+    [('var/tests.urlopener.cache.d', ['file', 'http'], []),
      ('var/tests.urlopener.cache.d/file', ...
      ('var/tests.urlopener.cache.d/file/...',
       ['collective'],
@@ -93,4 +87,13 @@ headers as RFC822 messages.
       []),
      ('var/tests.urlopener.cache.d/file/.../collective/transmogrifier',
       [],
-      ['transmogrifier.txt', 'transmogrifier.txt.mht'])]
+      ['transmogrifier.txt', 'transmogrifier.txt.mht']),
+     ('var/tests.urlopener.cache.d/http', ['foo'], []),
+     ('var/tests.urlopener.cache.d/http/foo', ['bar'], []),
+     ('var/tests.urlopener.cache.d/http/foo/bar', ['qux'], []),
+     ('var/tests.urlopener.cache.d/http/foo/bar/qux',
+      [],
+      ['non-existent.html',
+       'non-existent.html.mht',
+       'redirect.html',
+       'redirect.html.mht'])]
