@@ -95,11 +95,12 @@ We can also load a file from a GS import context:
     >>> from collective.transmogrifier.genericsetup import IMPORT_CONTEXT
     >>> from zope.annotation.interfaces import IAnnotations
     >>> class FakeImportContext(object):
-    ...  def __init__(self, filename, contents):
+    ...  def __init__(self, subdir, filename, contents):
     ...      self.filename = filename
+    ...      self.subdir = subdir
     ...      self.contents = contents
     ...  def readDataFile(self, filename, subdir=None):
-    ...      if subdir == '' and filename == self.filename:
+    ...      if subdir == self.subdir and filename == self.filename:
     ...          return self.contents
     ...      return None
     >>> csvsource = """
@@ -110,7 +111,7 @@ We can also load a file from a GS import context:
     ...
     ... [csvsource]
     ... blueprint = collective.transmogrifier.sections.csvsource
-    ... filename = importcontext:somefile.csv
+    ... filename = importcontext:sub/dir/somefile.csv
     ...
     ... [logger]
     ... blueprint = collective.transmogrifier.sections.logger
@@ -121,7 +122,7 @@ We can also load a file from a GS import context:
     ...                csvsource)
     >>> handler.clear()
     >>> t = Transmogrifier({})
-    >>> IAnnotations(t)[IMPORT_CONTEXT] = FakeImportContext('somefile.csv',
+    >>> IAnnotations(t)[IMPORT_CONTEXT] = FakeImportContext('sub/dir/', 'somefile.csv',
     ... """animal,name
     ... cow,daisy
     ... pig,george
