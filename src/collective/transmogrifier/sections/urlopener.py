@@ -73,6 +73,8 @@ class URLOpenerSection(object):
                 self.cachedir, url.scheme, url.netloc,
                 os.path.dirname(url.path.lstrip('/')),
                 os.path.basename(url.path.lstrip('/')) or self.defaultpagename)
+            if os.path.isdir(cache):
+                cache = os.path.join(cache, self.defaultpagename)
             headers_cache = cache + self.headersext
 
             cachekey = self.cachekey(item, key=key)
