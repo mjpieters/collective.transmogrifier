@@ -100,9 +100,11 @@ We can also load a file from a GS import context:
     ...      self.subdir = subdir
     ...      self.contents = contents
     ...  def readDataFile(self, filename, subdir=None):
-    ...      if subdir == self.subdir and filename == self.filename:
-    ...          return self.contents
-    ...      return None
+    ...      if subdir is None and self.subdir is not None:
+    ...          return None
+    ...      if filename != self.filename:
+    ...          return None
+    ...      return self.contents
     >>> csvsource = """
     ... [transmogrifier]
     ... pipeline =
@@ -141,16 +143,18 @@ Import contexts can be chunked, and that's okay:
 
     >>> import StringIO
     >>> class FakeChunkedImportContext(object):
-    ...  def __init__(self, filename, contents):
+    ...  def __init__(self, subdir, filename, contents):
     ...      self.filename = filename
     ...      self.contents = contents
     ...  def openDataFile(self, filename, subdir=None):
-    ...      if subdir == '' and filename == self.filename:
-    ...          return StringIO.StringIO(self.contents)
-    ...      return None
+    ...      if subdir is None and self.subdir is not None:
+    ...          return None
+    ...      if filename != self.filename:
+    ...          return None
+    ...      return StringIO.StringIO(self.contents)
     >>> handler.clear()
     >>> t = Transmogrifier({})
-    >>> IAnnotations(t)[IMPORT_CONTEXT] = FakeChunkedImportContext('somefile.csv',
+    >>> IAnnotations(t)[IMPORT_CONTEXT] = FakeChunkedImportContext(None, 'somefile.csv',
     ... """animal,name
     ... fish,wanda
     ... """)
@@ -163,7 +167,7 @@ Attempting to load a nonexistant file won't do anything:
 
     >>> handler.clear()
     >>> t = Transmogrifier({})
-    >>> IAnnotations(t)[IMPORT_CONTEXT] = FakeImportContext('someotherfile.csv',
+    >>> IAnnotations(t)[IMPORT_CONTEXT] = FakeImportContext(None, 'someotherfile.csv',
     ... """animal,name
     ... cow,daisy
     ... pig,george

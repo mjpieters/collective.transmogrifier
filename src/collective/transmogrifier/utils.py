@@ -32,6 +32,10 @@ def openFileReference(transmogrifier, ref):
             from zope.annotation.interfaces import IAnnotations
             context = IAnnotations(transmogrifier).get(IMPORT_CONTEXT, None)
             (subdir, filename) = os.path.split(ref.replace('importcontext:',''))
+            if subdir == '':
+                # Subdir of '' results import contexts looking for a ''
+                # directory I think
+                subdir = None
             if hasattr(context, "openDataFile"):
                 return context.openDataFile(filename, subdir=subdir)
             if hasattr(context, "readDataFile"):
