@@ -6,6 +6,9 @@ Change History
 1.5 (unreleased)
 ================
 
+- Allow csvsource to read files from GS import context
+  [lentinj]
+
 - Don't use traversal to avoid problems with acquisition or views.
   [rpatterson]
 

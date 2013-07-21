@@ -15,6 +15,41 @@ except ImportError:
 from interfaces import ISection
 from interfaces import ISectionBlueprint
 
+def openFileReference(transmogrifier, ref):
+    """
+    Get an open file handle in one of the following forms:
+
+    * importcontext:file.txt
+    * dotted.package:file.txt
+    * /file/system/file.txt
+
+    Where "importcontext:" means find the file in the GS import context.
+    Return None if there was no file to be found
+    """
+    if ref.startswith('importcontext:'):
+        try:
+            from collective.transmogrifier.genericsetup import IMPORT_CONTEXT
+            from zope.annotation.interfaces import IAnnotations
+            context = IAnnotations(transmogrifier).get(IMPORT_CONTEXT, None)
+            (subdir, filename) = os.path.split(ref.replace('importcontext:',''))
+            if subdir == '':
+                # Subdir of '' results import contexts looking for a ''
+                # directory I think
+                subdir = None
+            if hasattr(context, "openDataFile"):
+                return context.openDataFile(filename, subdir=subdir)
+            if hasattr(context, "readDataFile"):
+                import StringIO
+                return StringIO.StringIO(
+                    context.readDataFile(filename, subdir=subdir))
+        except ImportError:
+            return None
+    # Either no import context or not there.
+    filename = resolvePackageReferenceOrFile(ref)
+    if os.path.isfile(filename):
+        return open(filename, 'r')
+    return None
+
 def resolvePackageReferenceOrFile(reference):
     """A wrapper around def ``resolvePackageReference`` which also work if
     reference is a "plain" filename.
