@@ -222,7 +222,9 @@ class Expression(object):
         self.name = name
         self.options = options
         self.extras = extras
-        self.logger = getLogger(transmogrifier.configuration_id + '.' + name)
+        logger_base = getattr(transmogrifier, 'configuration_id',
+                              'transmogrifier')
+        self.logger = getLogger(logger_base + '.' + name)
 
     def __call__(self, item, **extras):
         extras.update(self.extras)
