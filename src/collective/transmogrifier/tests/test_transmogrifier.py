@@ -316,12 +316,13 @@ class GenericSetupImporterTest(unittest.TestCase):
         ))
         self.assertEqual(context.run, ('foo.bar', 'spam.eggs'))
 
+
 def test_suite():
     import sys
     suite = unittest.findTestCases(sys.modules[__name__])
     suite.addTests((
         doctest.DocFileSuite(
-            '../transmogrifier.txt',
+            '../../../../docs/source/transmogrifier.rst',
             setUp=setUp, tearDown=tearDown,
             optionflags=doctest.NORMALIZE_WHITESPACE),
     ))
