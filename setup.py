@@ -12,8 +12,6 @@ long_description = ('\n'.join((
     read('docs', 'HISTORY.txt'),
 )))
 
-open('doc.txt', 'w').write(long_description)
-
 
 setup(
     name='collective.transmogrifier',
