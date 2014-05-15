@@ -9,12 +9,12 @@ paths from a filesystem using `os.walk()`_.
     ... pipeline =
     ...     source
     ...     logger
-    ... 
+    ...
     ... [source]
     ... blueprint = collective.transmogrifier.sections.dirwalker
     ... dirname = collective.transmogrifier:.
     ... sort-key = python:not basename.lower().startswith('dir'), basename
-    ... 
+    ...
     ... [logger]
     ... blueprint = collective.transmogrifier.sections.logger
     ... name = logger
@@ -30,17 +30,11 @@ paths from a filesystem using `os.walk()`_.
       {'_path': '__init__.py'}
     ...
     logger INFO
-      {'_path': 'transmogrifier.txt'}
-    ...
-    logger INFO
       {'_path': 'sections/', '_type': 'Folder'}
     logger INFO
       {'_path': 'tests/', '_type': 'Folder'}
     logger INFO
       {'_path': 'sections/dirwalker.py'}
-    ...
-    logger INFO
-      {'_path': 'sections/dirwalker.txt'}
     ...
     logger INFO
       {'_path': 'sections/breakpoint.py'}

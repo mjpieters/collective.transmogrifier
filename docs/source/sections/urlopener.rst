@@ -12,11 +12,11 @@ response and header optionally also using a local cache.
     ...     urlopen
     ...     headers
     ...     logger
-    ... 
+    ...
     ... [source]
     ... blueprint = collective.transmogrifier.sections.csvsource
     ... filename = collective.transmogrifier.tests:urlopener.csv
-    ... 
+    ...
     ... [url]
     ... blueprint = collective.transmogrifier.sections.inserter
     ... key = string:_url
@@ -25,20 +25,20 @@ response and header optionally also using a local cache.
     ... value = python:'file://' + modules['posixpath'].join(
     ...     modules['os.path'].dirname(
     ...         modules['collective.transmogrifier'].__file__), item['_url'])
-    ... 
+    ...
     ... [urlopen]
     ... blueprint = collective.transmogrifier.sections.urlopener
     ... handlers = python:[modules[
     ...     'collective.transmogrifier.sections.tests'].HTTPHandler]
     ... ignore-error = python:error.code == 404
     ... cache-directory = var/tests.urlopener.cache.d
-    ... 
+    ...
     ... [headers]
     ... blueprint = collective.transmogrifier.sections.inserter
     ... key = string:_headers
     ... condition = exists:item/_headers
     ... value = python:dict(item['_headers'])
-    ... 
+    ...
     ... [logger]
     ... blueprint = collective.transmogrifier.sections.logger
     ... name = logger
@@ -49,13 +49,6 @@ response and header optionally also using a local cache.
 
     >>> transmogrifier(u'collective.transmogrifier.sections.tests.urlopener')
     >>> print handler
-    logger INFO
-        {'_cache': 'var/tests.urlopener.cache.d/file/.../collective/transmogrifier/transmogrifier.txt',
-       '_headers': {'content-length': '...',
-                    'content-type': 'text/plain',
-                    'last-modified': '...',
-                    'url': 'file:///.../collective/transmogrifier/transmogrifier.txt'},
-       '_url': 'file:///.../collective/transmogrifier/transmogrifier.txt'}
     logger INFO
         {'_cache': 'var/tests.urlopener.cache.d/http/foo/bar/qux/non-existent.html',
        '_headers': {'status': '404 Not Found',
@@ -77,17 +70,7 @@ headers as RFC822 messages.
     ...     (x[0], sorted(x[1]), sorted(x[2]))
     ...     for x in os.walk('var/tests.urlopener.cache.d')
     ... ), key= lambda x: x[0]))
-    [('var/tests.urlopener.cache.d', ['file', 'http'], []),
-     ('var/tests.urlopener.cache.d/file', ...
-     ('var/tests.urlopener.cache.d/file/...',
-      ['collective'],
-      []),
-     ('var/tests.urlopener.cache.d/file/.../collective',
-      ['transmogrifier'],
-      []),
-     ('var/tests.urlopener.cache.d/file/.../collective/transmogrifier',
-      [],
-      ['transmogrifier.txt', 'transmogrifier.txt.mht']),
+    [('var/tests.urlopener.cache.d', ['http'], []),
      ('var/tests.urlopener.cache.d/http', ['foo'], []),
      ('var/tests.urlopener.cache.d/http/foo', ['bar'], []),
      ('var/tests.urlopener.cache.d/http/foo/bar', ['qux'], []),
