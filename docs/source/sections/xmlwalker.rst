@@ -1,5 +1,5 @@
 XML Walker section
-================
+==================
 
 An XML walker source section yields a hierarchy of items by iterating
 over an `lxml.etree`_ tree of XML elements that match an `XPath`_.

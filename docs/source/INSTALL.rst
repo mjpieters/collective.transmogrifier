@@ -10,7 +10,7 @@ Installation
    ``/path/to/instance/etc/package-includes`` directory.  The file
    should only contain this::
 
-       <include package="collective.transmogrifier" />
+   <include package="collective.transmogrifier" />
 
 
 Alternatively, if you are using zc.buildout and the plone.recipe.zope2instance
@@ -24,7 +24,7 @@ recipe to manage your project, you can do this:
         ...
         collective.transmogrifier
 
-  * Tell the plone.recipe.zope2instance recipe to install a ZCML slug::
+ * Tell the plone.recipe.zope2instance recipe to install a ZCML slug::
 
     [instance]
     recipe = plone.recipe.zope2instance
@@ -32,7 +32,7 @@ recipe to manage your project, you can do this:
     zcml =
         collective.transmogrifier
 
-  * Re-run buildout, e.g. with::
+ * Re-run buildout, e.g. with::
 
     $ ./bin/buildout
 
