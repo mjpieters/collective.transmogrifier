@@ -42,7 +42,7 @@ class URLOpenerSection(object):
         if not os.path.isdir(self.cachedir):
             os.makedirs(self.cachedir)
         self.defaultpagename = options.get(
-            'default-page-name', '.{}.cache'.format(options['blueprint']))
+            'default-page-name', '.{0}.cache'.format(options['blueprint']))
 
         handlers = Expression(
             options.get('handlers', 'python:[]'),
