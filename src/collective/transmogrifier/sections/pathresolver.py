@@ -8,6 +8,7 @@ from collective.transmogrifier.utils import traverse
 def boolean(val):
     return val.lower() in ('yes', 'true', 'on', '1')
 
+
 def assequence(val):
     """If a string, make it a sequence
     
@@ -18,17 +19,18 @@ def assequence(val):
         return True, (val,)
     return False, val
 
+
 class PathResolverSection(object):
     classProvides(ISectionBlueprint)
     implements(ISection)
-    
+
     def __init__(self, transmogrifier, name, options, previous):
         self.keys = Matcher(*options['keys'].splitlines())
         self.defer = boolean(options.get('defer-until-present', 'no'))
         self.previous = previous
         self._deferred = []
         self.context = transmogrifier.context
-    
+
     def process_item(self, item, defer=None):
         """Replace paths with objects
         
@@ -43,7 +45,7 @@ class PathResolverSection(object):
             defer = self.defer
         context = self.context
         resolved = {}
-        
+
         for key in item.keys():
             match = self.keys(key)[1]
             if match:
@@ -58,10 +60,10 @@ class PathResolverSection(object):
                     # Strip unresolved items
                     result = filter(lambda x: x is not None, result)
                 resolved[key] = result
-        
+
         item.update(resolved)
         return True
-    
+
     def process_deferred(self):
         """Process deferred items
         
@@ -75,7 +77,7 @@ class PathResolverSection(object):
                 yield item
             else:
                 self._deferred.append(item)
-    
+
     def __iter__(self):
         for item in self.previous:
             if self.process_item(item):
@@ -84,7 +86,7 @@ class PathResolverSection(object):
                     yield item
             else:
                 self._deferred.append(item)
-        
+
         # anything in the queue still needs to be processed
         # without deferring (skipping non-existing items)
         for item in self._deferred:

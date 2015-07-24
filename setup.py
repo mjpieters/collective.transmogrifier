@@ -6,10 +6,10 @@ from setuptools import setup, find_packages
 def read(*rnames):
     return open(os.path.join(os.path.dirname(__file__), *rnames)).read()
 
-long_description = (
-    open('README.rst').read() + '\n' +
-    open('CHANGES.rst').read()
-)
+long_description = ('\n'.join((
+    read('README.rst'), '\n\n',
+    read('docs', 'HISTORY.txt'),
+)))
 
 setup(
     name='collective.transmogrifier',

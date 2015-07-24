@@ -87,6 +87,7 @@ class SplitterConditionSectionTests(unittest.TestCase):
             self.assertEqual(original, yielded)
             self.assertFalse(original is yielded)
 
+
 class SplitterSectionTests(unittest.TestCase):
     def _makeOne(self, transmogrifier, options, previous):
         from splitter import SplitterSection
@@ -102,8 +103,10 @@ class SplitterSectionTests(unittest.TestCase):
     def testInsertExtra(self):
         class Inserter(object):
             implements(ISection)
+
             def __init__(self, transmogrifier, name, options, previous):
                 self.previous = previous
+
             def __iter__(self):
                 count = 0
                 for item in self.previous:
@@ -134,8 +137,10 @@ class SplitterSectionTests(unittest.TestCase):
     def testSkipItems(self):
         class Skip(object):
             implements(ISection)
+
             def __init__(self, transmogrifier, name, options, previous):
                 self.previous = previous
+
             def __iter__(self):
                 count = 0
                 for item in self.previous:
@@ -182,7 +187,6 @@ class SampleSource(object):
                  status=u'\u00A9'),
         )
 
-
     def __iter__(self):
         for item in self.previous:
             yield item
@@ -193,6 +197,7 @@ class SampleSource(object):
                 item['title'] = item['title'].encode(self.encoding)
                 item['status'] = item['status'].encode(self.encoding)
             yield item
+
 
 class RangeSource(object):
     classProvides(ISectionBlueprint)
@@ -232,38 +237,41 @@ def sectionsSetUp(test):
 
 class MockObjectManager(object):
 
-        _last_path = ['']
+    _last_path = ['']
 
-        def __init__(self, id_='', container=None):
-            self.id = id_
-            if container is None:
-                self._path = ''
-            else:
-                self._path = posixpath.join(container._path, id_)
-            self._last_path[:] = [self._path]
+    def __init__(self, id_='', container=None):
+        self.id = id_
+        if container is None:
+            self._path = ''
+        else:
+            self._path = posixpath.join(container._path, id_)
+        self._last_path[:] = [self._path]
 
-        def _getOb(self, id_, default=_marker):
-            if not self.hasObject(id_):
-                if default is _marker:
-                    raise AttributeError(id_)
-                else:
-                    return default
+    def _getOb(self, id_, default=_marker):
+        if not self.hasObject(id_):
+            if default is _marker:
+                raise AttributeError(id_)
             else:
-                return self.__class__(id_, container=self)
+                return default
+        else:
+            return self.__class__(id_, container=self)
 
 
 def constructorSetUp(test):
     sectionsSetUp(test)
 
     class MockPortal(MockObjectManager):
-        existing = True # Existing object
+        existing = True  # Existing object
 
         @property
-        def portal_types(self): return self
+        def portal_types(self):
+            return self
+
         def getTypeInfo(self, type_name):
             self._last_path[:] = ['']
             self._last_type = type_name
-            if type_name in ('FooType', 'BarType'): return self
+            if type_name in ('FooType', 'BarType'):
+                return self
 
         def hasObject(self, id_):
             if isinstance(id_, unicode):
@@ -314,6 +322,7 @@ def constructorSetUp(test):
     provideUtility(ContentSource,
         name=u'collective.transmogrifier.sections.tests.contentsource')
 
+
 def foldersSetUp(test):
     sectionsSetUp(test)
 
@@ -358,6 +367,7 @@ def foldersSetUp(test):
     provideUtility(FoldersSource,
         name=u'collective.transmogrifier.sections.tests.folderssource')
 
+
 def pdbSetUp(test):
     sectionsSetUp(test)
 
@@ -366,12 +376,14 @@ def pdbSetUp(test):
 
     class Input:
         """A helper to push data onto stdin"""
+
         def __init__(self, src):
             self.lines = src.split('\n')
+
         def readline(self):
             line = self.lines.pop(0)
             print line
-            return line+'\n'
+            return line + '\n'
 
     def make_stdin(data):
         oldstdin = sys.stdin

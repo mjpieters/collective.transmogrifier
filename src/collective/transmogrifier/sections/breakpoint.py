@@ -9,7 +9,6 @@ from pdb import Pdb
 
 # Breaks on a condition.
 
-
 class BreakpointSection(object):
     classProvides(ISectionBlueprint)
     implements(ISection)
@@ -20,7 +19,7 @@ class BreakpointSection(object):
         condition = options['condition']
         self.condition = Condition(condition, transmogrifier, name, options)
         self.previous = previous
-        
+
     def __iter__(self):
         for item in self.previous:
             if self.condition(item):

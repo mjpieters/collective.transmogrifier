@@ -18,7 +18,13 @@ The script accepts buildout command-line options, so you can
 use the -c option to specify an alternate configuration file.
 """
 
-import os, shutil, sys, tempfile, urllib, urllib2, subprocess
+import os
+import shutil
+import sys
+import tempfile
+import urllib
+import urllib2
+import subprocess
 from optparse import OptionParser
 
 if sys.platform == 'win32':
@@ -212,6 +218,7 @@ if version is None and not options.accept_buildout_test_releases:
     import setuptools.package_index
     _final_parts = '*final-', '*final'
 
+
     def _final_version(parsed_version):
         for part in parsed_version:
             if (part[:1] == '*') and (part not in _final_parts):
@@ -240,7 +247,7 @@ if version is None and not options.accept_buildout_test_releases:
             version = best[-1].version
 
 if version:
-    requirement += '=='+version
+    requirement += '==' + version
 else:
     requirement += '<2dev'
 

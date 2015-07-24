@@ -126,6 +126,7 @@ class OptionSubstitutionTests(unittest.TestCase):
         self.assertRaises(KeyError, operator.itemgetter('dontexist'),
                           opts['empty'])
 
+
 class InclusionManipulationTests(cleanup.CleanUp, unittest.TestCase):
     def setUp(self):
         super(InclusionManipulationTests, self).setUp()
@@ -186,6 +187,7 @@ bar +=
         self.assertEquals(opts['bar']['foo'], 'spam')
         self.assertEquals(opts['bar']['baz'], '')
 
+
 class ConstructPipelineTests(cleanup.CleanUp, unittest.TestCase):
     def _doConstruct(self, transmogrifier, sections, pipeline=None):
         from collective.transmogrifier.utils import constructPipeline
@@ -199,6 +201,7 @@ class ConstructPipelineTests(cleanup.CleanUp, unittest.TestCase):
         class NotAnISection(object):
             def __init__(self, transmogrifier, name, options, previous):
                 self.previous = previous
+
             def __iter__(self):
                 for item in self.previous:
                     yield item
@@ -211,6 +214,7 @@ class ConstructPipelineTests(cleanup.CleanUp, unittest.TestCase):
         classImplements(NotAnISection, ISection)
         # No longer raises
         self._doConstruct(config, ['noisection'])
+
 
 class DefaultKeysTest(unittest.TestCase):
     def _defaultKeys(self, *args):
@@ -228,6 +232,7 @@ class DefaultKeysTest(unittest.TestCase):
             self._defaultKeys('foo.bar.baz', 'spam'),
             ('_foo.bar.baz_spam', '_foo.bar.baz', '_spam'))
 
+
 class PackageReferenceResolverTest(unittest.TestCase):
     def setUp(self):
         self._package_path = os.path.dirname(__file__)[:-len('/tests')]
@@ -243,6 +248,7 @@ class PackageReferenceResolverTest(unittest.TestCase):
     def testNonexistingPackage(self):
         self.assertRaises(ImportError, self._resolvePackageReference,
                           'collective.transmogrifier.nonexistent:test')
+
 
 class MockImportContext(object):
     implements(ITransmogrifier)
@@ -262,15 +268,18 @@ class MockImportContext(object):
         return self
 
     log = ()
+
     def info(self, msg):
         self.log += (msg,)
 
     run = ()
+
     def __call__(self, config):
         from zope.annotation.interfaces import IAnnotations
         from collective.transmogrifier.genericsetup import IMPORT_CONTEXT
         assert IAnnotations(self)[IMPORT_CONTEXT] is self
         self.run += (config,)
+
 
 class GenericSetupImporterTest(unittest.TestCase):
     def setUp(self):

@@ -35,8 +35,9 @@ class IRegisterConfigDirective(Interface):
         description=u"The pipeline configuration file to register.",
         required=True)
 
-
 _configuration_regs = []
+
+
 def registerConfig(_context, configuration, name=u'default', title=None,
                    description=None):
     """Add a new configuration to the registry"""
