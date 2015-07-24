@@ -55,6 +55,7 @@ class Transmogrifier(UserDict.DictMixin):
         self.configuration_id = configuration_id
         self._raw = _load_config(configuration_id, **overrides)
         self._data = {}
+        self.reset_info()
 
         options = self._raw['transmogrifier']
         sections = options['pipeline'].splitlines()
@@ -89,6 +90,43 @@ class Transmogrifier(UserDict.DictMixin):
 
     def __iter__(self):
         return iter(self._raw)
+
+    def add_info(self, category, section, info):
+        """
+        Store a chunk of information with the transmogrifier object;
+        needed e.g. to access an export_context after the __call__.
+        The information is stored in an _collected_info attribute.
+
+        category -- e.g. 'export_context'
+        section --  the name of the section, e.g. 'writer'
+        info --     the actual information
+        """
+        self._collected_info.append({
+                  'category': category,
+                  'section':  section,
+                  'info':     info,
+                  })
+
+    def get_info(self, category=None, section=None, short=False):
+        """
+        Generate stored information
+        """
+        for dic in self._collected_info:
+            if category is not None and dic['category'] != category:
+                continue
+            if section is not None and dic['section'] != section:
+                continue
+            if short:
+                yield dic['info']
+            else:
+                yield dic
+
+    def reset_info(self):
+        a = getattr(self, '_collected_info', None)
+        if a is None:
+            self._collected_info = []
+        else:
+            del a[:]
 
 
 class Options(UserDict.DictMixin):
