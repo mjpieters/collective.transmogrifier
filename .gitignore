@@ -21,6 +21,7 @@
 /src/plone*
 /src/collective*
 *.mo
+*~
 docs/Makefile
 docs/make.bat
 docs/doctrees
