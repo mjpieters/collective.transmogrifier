@@ -260,3 +260,37 @@ class Condition(Expression):
 
     def __call__(self, item, **extras):
         return bool(super(Condition, self).__call__(item, **extras))
+
+
+def wrapped_tarball(export_context, context):
+    """
+    Return a tarball, created as an export context, for download
+
+    Usage exmaple:
+
+      transmogrifier(...)
+      for info in transmogrifier.get_info('export_context', short=True):
+	  # there should be exactly one:
+	  return wrapped_tarball(info['context'], self.context)
+    """
+    result = _export_result_dict(export_context)
+    RESPONSE = context.REQUEST.RESPONSE
+    RESPONSE.setHeader('Content-type', 'application/x-gzip')
+    RESPONSE.setHeader('Content-disposition',
+                       'attachment; filename=%s' % result['filename'])
+    return result['tarball']
+
+
+def _export_result_dict(context, steps=None, messages=None):
+    """
+    Return a dictionary, like returned by SetupTool._doRunExportSteps
+    (Products/GenericSetup/tool.py)
+
+    context -- an *export* context!
+
+    (helper for --> wrapped_tarball)
+    """
+    return {'steps': steps,
+            'messages': messages,
+            'tarball': context.getArchive(),
+            'filename': context.getArchiveFilename()}
