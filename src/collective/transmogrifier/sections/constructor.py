@@ -14,6 +14,14 @@ logger = logging.getLogger('collective.transmogrifier.constructor')
 
 
 class ConstructorSection(object):
+    """
+    For imports: construct ZODB objects
+
+    Needs type information, e.g. created by ... <XXX>
+
+    Currently doesn't create missing containers;
+    see .folders.FoldersSection
+    """
     classProvides(ISectionBlueprint)
     implements(ISection)
 

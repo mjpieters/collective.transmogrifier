@@ -7,6 +7,9 @@ from collective.transmogrifier.utils import traverse
 
 
 class FoldersSection(object):
+    """
+    Create missing container objects, by default of type Folder
+    """
     classProvides(ISectionBlueprint)
     implements(ISection)
 
