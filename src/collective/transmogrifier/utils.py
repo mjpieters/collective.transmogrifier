@@ -294,3 +294,187 @@ def _export_result_dict(context, steps=None, messages=None):
             'messages': messages,
             'tarball': context.getArchive(),
             'filename': context.getArchiveFilename()}
+
+
+def name_and_length(key, val):
+    """
+    Helper for the itemInfo functions (created by make_itemInfo)
+
+    >>> name_and_length('key', 'value')
+    'key (5)'
+    """
+    if isinstance(val, basestring):
+        L = len(val)
+        return '%s (%d)' % (key, L)
+    elif isinstance(val, (int, float, bool)):
+        return '%s=%r' % (key, val)
+    else:
+        try:
+            clsname = val.__class__.__name__
+        except AttributeError:
+            clsname = None
+        return '%s (%s)' % (key, clsname)
+
+
+def make_itemInfo(name, *values_of, **kwargs):
+    """
+    For development: create a function which prints a short information about
+    the given item.
+
+    >>> itemInfo = make_itemInfo('example', '_path')
+    >>> item = dict(_type='text/plain', _path='path/to/item', _other='foo')
+    >>> itemInfo(item)
+    [example], item #1:
+        _path='path/to/item'
+        other keys: _other (3), _type (10)
+    True
+
+    The futher calls won't print anything ...
+
+    >>> itemInfo(item)
+    False
+
+    ... unless shownext or showone options are used.
+    """
+    data = {'cnt': 0,
+            'prefix': '[%(name)s], item #%%d:' % locals(),
+            'shownext': 0,
+            'showkeys': set(),
+            'shown': set(),
+            }
+    summary_formatter = kwargs.pop('summary_formatter', name_and_length)
+    if kwargs.pop('debug', False):
+        import pdb
+        pdb.set_trace()  # make_itemInfo
+    if kwargs:
+        raise ValueError('Unsupported keyword arguments: %s' % kwargs)
+    if not values_of:
+        values_of = [('_path',), ('_type',)]
+
+    def itemInfo(item, shownext=None, showone=None, trace=False):
+        """
+        Print a short info about the given item; by default, only for the first.
+
+        shownext -- a number >= 0; show the next <shownext> items, including this one
+        showone -- a string; show the item in this iteration (in the following
+                   iterations, this key will be consumed)
+        trace -- boolean: if true, pdb.set_trace() after printing
+                 (no printing -> no set_trace)
+        """
+        data['cnt'] += 1
+        if shownext is not None:
+            if not isinstance(shownext, int) or shownext < 0:
+                raise ValueError('shownext=%(shownext)r: integer >= 0'
+                                 ' expected!' % locals())
+            data['shownext'] = shownext
+        if showone is not None and showone not in data['showkeys']:
+            data['showkeys'].add(showone)
+            data['shownext'] += 1
+        if data['shownext']:
+            data['shownext'] -= 1
+        elif data['cnt'] > 1:  # by default only print 1st items
+            return False
+        print data['prefix'] % data['cnt']
+        shadow = dict(item)
+        for keyset in values_of:
+            if isinstance(keyset, basestring):
+                keyset = [keyset]
+            for key in keyset:
+                if key in shadow:
+                    val = shadow.pop(key)
+                    print '    %(key)s=%(val)r' % locals()
+                    break
+        other = sorted(shadow.keys())
+        if other:
+            print '    other keys: ' + ', '.join([
+                summary_formatter(key, shadow[key])
+                for key in other
+                ])
+        if trace:
+            import pdb
+            pdb.set_trace()
+        return True
+
+    return itemInfo
+
+
+def _dump_section(name, dic, main='blueprint'):
+    """
+    Return a list of strings, representing a pipeline section;
+    a helper for --> dump_sections().
+
+    >>> values = {'blueprint': 'my.example',
+    ...           'a-boolean': 'false'}
+    >>> _dump_section('example', values)
+    ['[example]', 'blueprint = my.example', 'a-boolean = false']
+
+    The dictionary was not changed or consumed:
+
+    >>> sorted(values.values())
+    [('a-boolean', 'false'), ('blueprint', 'my.example')]
+    """
+    res = ['[%s]' % name]
+    keys = sorted([key for key in dic.keys()
+                   if key != main
+                   ])
+    keys.insert(0, main)
+    for key in keys:
+        try:
+            val = dic[key]
+        except KeyError:
+            # can happen for main key only
+            res.append('# !! No %s value!' % (main,))
+        else:
+            try:
+                val = val.strip()
+                if '\n' in val:
+                    res.append(key + ' =')
+                    for s in filter(None, val.splitlines()):
+                        res.append('   '+s)
+                else:
+                    res.append('%s = %s' % (key, val))
+            except (AttributeError, TypeError):
+                res.append('%s = %r' % (key, val))
+    return res
+
+
+def dump_sections(dic, joiner='\n'):
+    """
+    Return a dump of the given transmogrifier configuration (_raw attribute)
+
+    Will handle non-string values gracefully; such values can't be specified in
+    a configuration file, though.
+
+    The result is a string which could be written to a configuration file;
+    the sections are written in pipeline order.
+    Unused sections are skipped.
+    """
+    res = []
+    sections = None
+    try:
+        tm = dic['transmogrifier']
+    except KeyError:
+        res.append('# !! No [transmogrifier] section!')
+    else:
+        try:
+            sections = filter(None, tm.get('pipeline').splitlines())
+        except KeyError:
+            res.append('# !! [transmogrifier] section lacks pipeline value!')
+        res.extend(_dump_section('transmogrifier', tm, 'pipeline'))
+    res.append('')
+    if sections is None:
+        sections = sorted([k for k in dic.keys()
+                           if k != 'transmogrifier'
+                           ])
+    for section in sections:
+        try:
+            secdict = dic[section]
+        except KeyError:
+            res.append('# !! [%s] section missing!')
+        else:
+            res.extend(_dump_section(section, secdict))
+        res.append('')
+
+    if joiner is None:
+        return res
+    return joiner.join(res)
