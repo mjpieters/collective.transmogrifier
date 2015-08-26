@@ -10,14 +10,41 @@ from Products.CMFCore.interfaces import IFolderish
 from interfaces import ITransmogrifier
 from utils import resolvePackageReference, constructPipeline
 
+CLEANUP_VALUES = tuple(range(4))
+OFF, SILENT, SMART, NOISY = CLEANUP_VALUES
+CLEANUP = SILENT
+
 
 class ConfigurationRegistry(object):
     def __init__(self):
-        self.clear()
+        self.clear(SILENT)
 
-    def clear(self):
+    def clear(self, verbosity=None):
+        """
+        Clear the registry, removing all known configurations
+
+        If this happens unnoticed, users will wonder why their configurations
+        are not found; thus, the call can be made "noisy", or the call by the
+        zope.testing framework can be suppressed at all.
+        """
+        if verbosity is None:
+            verbosity = CLEANUP
+        assert verbosity in CLEANUP_VALUES
+        if verbosity >= NOISY:
+            tell = True
+        elif verbosity >= SMART:
+            tell = bool(self._config_ids)
+        else:
+            tell = False
+        if tell:
+            print '!' * 79
+            print '!! clearing ConfigurationRegistry'
+
         self._config_info = {}
         self._config_ids = []
+
+        if tell:
+            print '!' * 79
 
     def registerConfiguration(self, name, title, description, configuration):
         if name in self._config_info:
@@ -39,9 +66,10 @@ class ConfigurationRegistry(object):
 configuration_registry = ConfigurationRegistry()
 
 # Test cleanup support
-from zope.testing.cleanup import addCleanUp
-addCleanUp(configuration_registry.clear)
-del addCleanUp
+if CLEANUP:
+    from zope.testing.cleanup import addCleanUp
+    addCleanUp(configuration_registry.clear)
+    del addCleanUp
 
 
 class Transmogrifier(UserDict.DictMixin):
@@ -50,6 +78,7 @@ class Transmogrifier(UserDict.DictMixin):
 
     def __init__(self, context):
         self.context = context
+        self._raw = None  # overridden by __call__
 
     def __call__(self, configuration_id, **overrides):
         self.configuration_id = configuration_id
