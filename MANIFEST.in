@@ -1,0 +1,7 @@
+recursive-include src *
+recursive-include docs *
+include *
+global-exclude *.pyc
+
+exclude doc.txt
+exclude .gitignore
