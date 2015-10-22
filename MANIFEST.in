@@ -4,4 +4,7 @@ include *
 global-exclude *.pyc
 
 exclude doc.txt
+exclude docs/Makefile
+exclude docs/make.bat
 exclude .gitignore
+exclude .installed.cfg
