@@ -3,10 +3,11 @@ Change History
 
 (name of developer listed in brackets)
 
-1.6 (unreleased)
-================
+1.5.1 (unreleased)
+==================
 
-- Nothing changed yet.
+- Fix broken distribution.
+  [hvelarde]
 
 
 1.5 (2015-10-22)
