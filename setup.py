@@ -1,17 +1,15 @@
 version = '1.6.dev0'
 
-import os
 from setuptools import setup, find_packages
 
 
 def read(*rnames):
     return open(os.path.join(os.path.dirname(__file__), *rnames)).read()
 
-long_description = ('\n'.join((
-    read('README.rst'), '\n\n',
-    read('docs', 'HISTORY.txt'),
-)))
-
+long_description = (
+    open('README.rst').read() + '\n' +
+    open('CHANGES.rst').read()
+)
 
 setup(
     name='collective.transmogrifier',
