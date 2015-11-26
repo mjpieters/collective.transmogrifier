@@ -3,7 +3,7 @@ Change History
 
 (name of developer listed in brackets)
 
-1.5.1 (unreleased)
+1.5.1 (2015-11-26)
 ==================
 
 - Fix broken distribution.
