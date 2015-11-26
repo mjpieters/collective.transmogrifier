@@ -3,6 +3,12 @@ Change History
 
 (name of developer listed in brackets)
 
+1.6 (unreleased)
+================
+
+- Nothing changed yet.
+
+
 1.5.1 (2015-11-26)
 ==================
 
