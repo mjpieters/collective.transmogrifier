@@ -1,10 +1,7 @@
-recursive-include src *
-recursive-include docs *
-include *
 global-exclude *.pyc
+graft src
+graft docs
+include *.rst
 
-exclude doc.txt
 exclude docs/Makefile
 exclude docs/make.bat
-exclude .gitignore
-exclude .installed.cfg
