@@ -6,7 +6,7 @@
 collective.transmogrifier documentation
 =======================================
 
-.. include:: ../README.rst
+.. include:: ../../README.rst
 
 Content
 -------
