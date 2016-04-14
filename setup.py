@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""Installer for the bda.aaf.migration package."""
+"""Installer for the collective.transmogrifier package."""
 
 from setuptools import find_packages
 from setuptools import setup
