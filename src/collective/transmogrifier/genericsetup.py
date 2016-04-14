@@ -1,8 +1,11 @@
+# -*- coding: utf-8 -*-
 """Generic setup integration"""
-from zope.annotation.interfaces import IAnnotations
 from interfaces import ITransmogrifier
+from zope.annotation.interfaces import IAnnotations
+
 
 IMPORT_CONTEXT = 'collective.transmogrifier.genericsetup.import_context'
+
 
 def importTransmogrifier(context):
     """Run named transmogrifier pipelines read from transmogrifier.txt

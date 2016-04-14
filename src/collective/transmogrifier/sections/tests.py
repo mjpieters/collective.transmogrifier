@@ -1,22 +1,29 @@
-import sys
+# -*- coding: utf-8 -*-
+from collective.transmogrifier.interfaces import ISection
+from collective.transmogrifier.interfaces import ISectionBlueprint
+from collective.transmogrifier.tests import setUp
+from collective.transmogrifier.tests import tearDown
+from Products.Five import zcml
+from zope.component import provideUtility
+from zope.interface import classProvides
+from zope.interface import implements
+from zope.testing import doctest
+
 import io
 import itertools
-import unittest
 import mimetools
-import urllib2
-import shutil
 import posixpath
-from zope.component import provideUtility
-from zope.interface import classProvides, implements
-from zope.testing import doctest
-from collective.transmogrifier.interfaces import ISectionBlueprint, ISection
-from collective.transmogrifier.tests import setUp, tearDown
-from Products.Five import zcml
+import shutil
+import sys
+import unittest
+import urllib2
+
 
 _marker = object()
 
 
 class SplitterConditionSectionTests(unittest.TestCase):
+
     def _makeOne(self, previous, condition=None):
         from splitter import SplitterConditionSection
         return SplitterConditionSection(condition, previous)
@@ -87,7 +94,9 @@ class SplitterConditionSectionTests(unittest.TestCase):
             self.assertEqual(original, yielded)
             self.assertFalse(original is yielded)
 
+
 class SplitterSectionTests(unittest.TestCase):
+
     def _makeOne(self, transmogrifier, options, previous):
         from splitter import SplitterSection
         return SplitterSection(transmogrifier, 'unittest', options, previous)
@@ -102,8 +111,10 @@ class SplitterSectionTests(unittest.TestCase):
     def testInsertExtra(self):
         class Inserter(object):
             implements(ISection)
+
             def __init__(self, transmogrifier, name, options, previous):
                 self.previous = previous
+
             def __iter__(self):
                 count = 0
                 for item in self.previous:
@@ -113,20 +124,20 @@ class SplitterSectionTests(unittest.TestCase):
                     count += 1
 
         provideUtility(Inserter, ISectionBlueprint,
-            name=u'collective.transmogrifier.tests.inserter')
+                       name=u'collective.transmogrifier.tests.inserter')
         splitter = self._makeOne(dict(
             inserter=dict(
                 blueprint='collective.transmogrifier.tests.inserter')),
             {'pipeline-1': 'inserter', 'pipeline-2': ''},
             (dict(id='item-%02d' % i) for i in range(3)))
         self.assertEqual(list(splitter), [
-            dict(id='item-00', pipeline=1), # p1 advanced, look at p2
+            dict(id='item-00', pipeline=1),  # p1 advanced, look at p2
             dict(id='item-00'),             # p2 advanced, look at p1
             dict(id='extra-00'),            # p1 did not advance
-            dict(id='item-01', pipeline=1), # p1 advanced, look at p2
+            dict(id='item-01', pipeline=1),  # p1 advanced, look at p2
             dict(id='item-01'),             # p2 advanced, look at p1
             dict(id='extra-01'),            # p1 did not advance
-            dict(id='item-02', pipeline=1), # p1 advanced, condition isDone
+            dict(id='item-02', pipeline=1),  # p1 advanced, condition isDone
             dict(id='extra-02'),            # last in p1 after isDone, l.a. p2
             dict(id='item-02'),             # p2 advanced
         ])                                  # p2 is done
@@ -134,8 +145,10 @@ class SplitterSectionTests(unittest.TestCase):
     def testSkipItems(self):
         class Skip(object):
             implements(ISection)
+
             def __init__(self, transmogrifier, name, options, previous):
                 self.previous = previous
+
             def __iter__(self):
                 count = 0
                 for item in self.previous:
@@ -144,22 +157,23 @@ class SplitterSectionTests(unittest.TestCase):
                         yield item
                     count += 1
         provideUtility(Skip, ISectionBlueprint,
-            name=u'collective.transmogrifier.tests.skip')
+                       name=u'collective.transmogrifier.tests.skip')
         splitter = self._makeOne(dict(
             skip=dict(
                 blueprint='collective.transmogrifier.tests.skip')),
             {'pipeline-1': 'skip', 'pipeline-2': ''},
             (dict(id='item-%02d' % i) for i in range(4)))
         self.assertEqual(list(splitter), [
-            dict(id='item-01', pipeline=1), # p1 is ahead
+            dict(id='item-01', pipeline=1),  # p1 is ahead
             dict(id='item-00'),             # p2 advanced, p1 is skipped
             dict(id='item-01'),             # p2 advanced, p1 no longer ahead
-            dict(id='item-03', pipeline=1), # p1 is ahead again
+            dict(id='item-03', pipeline=1),  # p1 is ahead again
             dict(id='item-02'),             # p2 advanced, p1 is skipped
             dict(id='item-03')              # p2 advanced, p1 no longer ahead
         ])                                  # p1 is done, p2 is done
 
 # Doctest support
+
 
 class SampleSource(object):
     classProvides(ISectionBlueprint)
@@ -182,7 +196,6 @@ class SampleSource(object):
                  status=u'\u00A9'),
         )
 
-
     def __iter__(self):
         for item in self.previous:
             yield item
@@ -193,6 +206,7 @@ class SampleSource(object):
                 item['title'] = item['title'].encode(self.encoding)
                 item['status'] = item['status'].encode(self.encoding)
             yield item
+
 
 class RangeSource(object):
     classProvides(ISectionBlueprint)
@@ -219,9 +233,11 @@ def sectionsSetUp(test):
     import collective.transmogrifier.sections
     zcml.load_config('testing.zcml', collective.transmogrifier.sections)
 
-    provideUtility(SampleSource,
+    provideUtility(
+        SampleSource,
         name=u'collective.transmogrifier.sections.tests.samplesource')
-    provideUtility(RangeSource,
+    provideUtility(
+        RangeSource,
         name=u'collective.transmogrifier.sections.tests.rangesource')
 
     import logging
@@ -232,34 +248,35 @@ def sectionsSetUp(test):
 
 class MockObjectManager(object):
 
-        _last_path = ['']
+    _last_path = ['']
 
-        def __init__(self, id_='', container=None):
-            self.id = id_
-            if container is None:
-                self._path = ''
-            else:
-                self._path = posixpath.join(container._path, id_)
-            self._last_path[:] = [self._path]
+    def __init__(self, id_='', container=None):
+        self.id = id_
+        if container is None:
+            self._path = ''
+        else:
+            self._path = posixpath.join(container._path, id_)
+        self._last_path[:] = [self._path]
 
-        def _getOb(self, id_, default=_marker):
-            if not self.hasObject(id_):
-                if default is _marker:
-                    raise AttributeError(id_)
-                else:
-                    return default
+    def _getOb(self, id_, default=_marker):
+        if not self.hasObject(id_):
+            if default is _marker:
+                raise AttributeError(id_)
             else:
-                return self.__class__(id_, container=self)
+                return default
+        else:
+            return self.__class__(id_, container=self)
 
 
 def constructorSetUp(test):
     sectionsSetUp(test)
 
     class MockPortal(MockObjectManager):
-        existing = True # Existing object
+        existing = True  # Existing object
 
         @property
         def portal_types(self): return self
+
         def getTypeInfo(self, type_name):
             self._last_path[:] = ['']
             self._last_type = type_name
@@ -311,8 +328,10 @@ def constructorSetUp(test):
                 dict(_type='FooType', _path='/spam/eggs/changeme',
                      title='Factories are allowed to change the id'),
             )
-    provideUtility(ContentSource,
+    provideUtility(
+        ContentSource,
         name=u'collective.transmogrifier.sections.tests.contentsource')
+
 
 def foldersSetUp(test):
     sectionsSetUp(test)
@@ -348,15 +367,33 @@ def foldersSetUp(test):
         def __init__(self, *args, **kw):
             super(FoldersSource, self).__init__(*args, **kw)
             self.sample = (
-                dict(_type='Document', _path='/foo'),                   # in root, do nothing
-                dict(_type='Document', _path='/existing/foo'),          # in existing folder, do nothing
-                dict(_type='Document', _path='/nonexisting/alpha/foo'), # neither parent exists, yield both
-                dict(_type='Document', _path='/nonexisting/beta/foo'),  # this time yield only beta
-                dict(_type='Document'),                                 # no path key
-                dict(_type='Document', _folders_path='/delta/foo'),     # specific path key
+                dict(
+                    _type='Document',
+                    _path='/foo'),
+                # in root, do nothing
+                dict(
+                    _type='Document',
+                    _path='/existing/foo'),
+                # in existing folder, do nothing
+                dict(
+                    _type='Document',
+                    _path='/nonexisting/alpha/foo'),
+                # neither parent exists, yield both
+                dict(
+                    _type='Document',
+                    _path='/nonexisting/beta/foo'),
+                # this time yield only beta
+                # no path key
+                dict(_type='Document'),
+                dict(
+                    _type='Document',
+                    _folders_path='/delta/foo'),
+                # specific path key
             )
-    provideUtility(FoldersSource,
+    provideUtility(
+        FoldersSource,
         name=u'collective.transmogrifier.sections.tests.folderssource')
+
 
 def pdbSetUp(test):
     sectionsSetUp(test)
@@ -365,13 +402,16 @@ def pdbSetUp(test):
     from collective.transmogrifier.sections import breakpoint
 
     class Input:
+
         """A helper to push data onto stdin"""
+
         def __init__(self, src):
             self.lines = src.split('\n')
+
         def readline(self):
             line = self.lines.pop(0)
             print line
-            return line+'\n'
+            return line + '\n'
 
     def make_stdin(data):
         oldstdin = sys.stdin

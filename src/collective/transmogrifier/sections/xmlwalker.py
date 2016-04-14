@@ -1,14 +1,13 @@
-import logging
-
+# -*- coding: utf-8 -*-
+from collective.transmogrifier.interfaces import ISection
+from collective.transmogrifier.interfaces import ISectionBlueprint
+from collective.transmogrifier.utils import Expression
 from lxml import etree
 from lxml import html
-
 from zope.interface import classProvides
 from zope.interface import implements
 
-from collective.transmogrifier.interfaces import ISectionBlueprint
-from collective.transmogrifier.interfaces import ISection
-from collective.transmogrifier.utils import Expression
+import logging
 
 
 class XMLWalkerSection(object):
@@ -80,8 +79,8 @@ class XMLWalkerSection(object):
                 trees = [trees]
             for tree in trees:
                 if not (
-                    callable(getattr(tree, 'read', None))
-                    or isinstance(tree, etree.ElementBase)):
+                        callable(getattr(tree, 'read', None))
+                        or isinstance(tree, etree.ElementBase)):
                     tree = html.fragment_fromstring(
                         tree, create_parent=True)
                 if self.cache:
@@ -91,7 +90,7 @@ class XMLWalkerSection(object):
                         continue
                     self.seen.add(tree_string)
                 for child_item in self.walk(
-                    item, tree, elementkey, parentkey, childrenkey):
+                        item, tree, elementkey, parentkey, childrenkey):
                     yield child_item
 
     def walk(self, item, tree, elementkey, parentkey, childrenkey):
