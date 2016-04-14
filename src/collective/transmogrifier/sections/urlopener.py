@@ -1,18 +1,20 @@
-import os
+# -*- coding: utf-8 -*-
+from collective.transmogrifier.interfaces import ISection
+from collective.transmogrifier.interfaces import ISectionBlueprint
+from collective.transmogrifier.utils import defaultMatcher
+from collective.transmogrifier.utils import Expression
+from collective.transmogrifier.utils import resolvePackageReferenceOrFile
+from zope.interface import classProvides
+from zope.interface import implements
+
+import contextlib
 import io
 import logging
-import urlparse
-import urllib2
 import mimetools
 import mimetypes
-import contextlib
-
-from zope.interface import classProvides, implements
-from collective.transmogrifier.interfaces import ISectionBlueprint
-from collective.transmogrifier.interfaces import ISection
-from collective.transmogrifier.utils import Expression
-from collective.transmogrifier.utils import defaultMatcher
-from collective.transmogrifier.utils import resolvePackageReferenceOrFile
+import os
+import urllib2
+import urlparse
 
 
 class URLOpenerSection(object):

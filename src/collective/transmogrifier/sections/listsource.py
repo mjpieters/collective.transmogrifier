@@ -1,10 +1,12 @@
+# -*- coding: utf-8 -*-
+from collective.transmogrifier.interfaces import ISection
+from collective.transmogrifier.interfaces import ISectionBlueprint
+from collective.transmogrifier.utils import Condition
+from collective.transmogrifier.utils import Expression
+from zope.annotation.interfaces import IAnnotations
 from zope.interface import classProvides
 from zope.interface import implements
-from zope.annotation.interfaces import IAnnotations
 
-from collective.transmogrifier.interfaces import ISectionBlueprint
-from collective.transmogrifier.interfaces import ISection
-from collective.transmogrifier.utils import Condition, Expression
 
 LISTKEY = 'collective.transmogrifier.sections.listsource'
 
