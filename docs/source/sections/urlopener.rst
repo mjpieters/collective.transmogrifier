@@ -77,6 +77,6 @@ headers as RFC822 messages.
      ('var/tests.urlopener.cache.d/http/foo/bar/qux',
       [],
       ['non-existent.html',
-       'non-existent.html.mht',
+       'non-existent.html...',
        'redirect.html',
-       'redirect.html.mht'])]
+       'redirect.html...'])]
