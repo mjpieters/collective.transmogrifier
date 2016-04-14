@@ -6,7 +6,8 @@ Change History
 1.6 (unreleased)
 ================
 
-- Nothing changed yet.
+- pep 8, utf-8 headers, whitespace strip and sorted imports.
+  [thet]
 
 
 1.5.1 (2015-11-26)
