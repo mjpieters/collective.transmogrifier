@@ -1,15 +1,15 @@
+# -*- coding: utf-8 -*-
+"""Installer for the bda.aaf.migration package."""
+
+from setuptools import find_packages
+from setuptools import setup
+
+
 version = '1.6.dev0'
-
-from setuptools import setup, find_packages
-
-
-def read(*rnames):
-    return open(os.path.join(os.path.dirname(__file__), *rnames)).read()
-
-long_description = (
-    open('README.rst').read() + '\n' +
-    open('CHANGES.rst').read()
-)
+long_description = '\n\n'.join([
+    open('README.rst').read(),
+    open('CHANGES.rst').read(),
+])
 
 setup(
     name='collective.transmogrifier',
@@ -17,8 +17,8 @@ setup(
     description='A configurable pipeline, aimed at transforming content for '
                 'import and export',
     long_description=long_description,
-    # Get more strings from http://www.python.org/pypi?%3Aaction=list_classifiers
     classifiers=[
+        'Framework :: Plone'
     ],
     keywords='content import filtering',
     author='Jarn',

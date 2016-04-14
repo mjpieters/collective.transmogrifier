@@ -1,13 +1,14 @@
-import os
-import posixpath
-
-from zope.interface import classProvides, implements
-from collective.transmogrifier.interfaces import ISectionBlueprint
+# -*- coding: utf-8 -*-
 from collective.transmogrifier.interfaces import ISection
-
-from collective.transmogrifier.utils import resolvePackageReferenceOrFile
+from collective.transmogrifier.interfaces import ISectionBlueprint
 from collective.transmogrifier.utils import Expression
 from collective.transmogrifier.utils import pathsplit
+from collective.transmogrifier.utils import resolvePackageReferenceOrFile
+from zope.interface import classProvides
+from zope.interface import implements
+
+import os
+import posixpath
 
 
 class DirWalkerSection(object):
