@@ -22,7 +22,7 @@ version.
     ...     simple-insertion
     ...     expression-insertion
     ...     transform-id
-    ...     printer
+    ...     logger
     ...     
     ... [source]
     ... blueprint = collective.transmogrifier.sections.tests.rangesource
@@ -44,15 +44,26 @@ version.
     ... key = string:id
     ... value = string:foo-${item/id}
     ... 
-    ... [printer]
-    ... blueprint = collective.transmogrifier.sections.tests.pprinter
+    ... [logger]
+    ... blueprint = collective.transmogrifier.sections.logger
+    ... name = logger
+    ... level = INFO
     ... """
     >>> registerConfig(u'collective.transmogrifier.sections.tests.inserter',
     ...                inserter)
     >>> transmogrifier(u'collective.transmogrifier.sections.tests.inserter')
-    [('foo', 'bar (inserted into "item-00" by the "simple-insertion" section)'), ('id', 'foo-item-00')]
-    [('foo', 'bar (inserted into "item-01" by the "simple-insertion" section)'), ('foo-01', 15), ('id', 'foo-item-01')]
-    [('foo', 'bar (inserted into "item-02" by the "simple-insertion" section)'), ('foo-02', 30), ('id', 'foo-item-02')]
+    >>> print handler
+    logger INFO
+        {'foo': 'bar (inserted into "item-00" by the "simple-insertion" section)',
+        'id': 'foo-item-00'}
+    logger INFO
+        {'foo': 'bar (inserted into "item-01" by the "simple-insertion" section)',
+        'foo-01': 15,
+        'id': 'foo-item-01'}
+    logger INFO
+        {'foo': 'bar (inserted into "item-02" by the "simple-insertion" section)',
+        'foo-02': 30,
+        'id': 'foo-item-02'}
 
 The ``key``, ``value`` and ``condition`` expressions have access to the
 following:
@@ -60,8 +71,8 @@ following:
 =================== ==========================================================
  ``item``            the current pipeline item
  ``transmogrifier``  the transmogrifier
- ``name``            the name of the splitter section
- ``options``         the splitter options
+ ``name``            the name of the inserter section
+ ``options``         the inserter options
  ``modules``         sys.modules
  ``key``             (only for the value and condition expressions) the key
                      being inserted

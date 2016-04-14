@@ -50,7 +50,7 @@ required = True key to the constructor section it will instead raise a KeyError.
     ... pipeline =
     ...     contentsource
     ...     constructor
-    ...     printer
+    ...     logger
     ...     
     ... [contentsource]
     ... blueprint = collective.transmogrifier.sections.tests.contentsource
@@ -58,41 +58,55 @@ required = True key to the constructor section it will instead raise a KeyError.
     ... [constructor]
     ... blueprint = collective.transmogrifier.sections.constructor
     ... 
-    ... [printer]
-    ... blueprint = collective.transmogrifier.sections.tests.pprinter
+    ... [logger]
+    ... blueprint = collective.transmogrifier.sections.logger
+    ... name = logger
+    ... level = INFO
     ... """
     >>> registerConfig(u'collective.transmogrifier.sections.tests.constructor',
     ...                constructor)
     >>> transmogrifier(u'collective.transmogrifier.sections.tests.constructor')
-    [('_path', '/spam/eggs/foo'), ('_type', 'FooType')]
-    [('_path', '/foo'), ('_type', 'FooType')]
-    [('_path', u'/unicode/encoded/to/ascii'), ('_type', 'FooType')]
-    [('_path', 'not/existing/bar'),
-     ('_type', 'BarType'),
-     ('title', 'Should not be constructed, not an existing path')]
-    [('_path', '/spam/eggs/existing'),
-     ('_type', 'FooType'),
-     ('title', 'Should not be constructed, an existing object')]
-    [('_path', '/spam/eggs/incomplete'),
-     ('title', 'Should not be constructed, no type')]
-    [('_path', '/spam/eggs/nosuchtype'),
-     ('_type', 'NonExisting'),
-     ('title', 'Should not be constructed, not an existing type')]
-    [('_path', 'spam/eggs/changedByFactory'),
-     ('_type', 'FooType'),
-     ('title', 'Factories are allowed to change the id')]
+    >>> print handler
+    logger INFO
+      {'_path': '/eggs/foo', '_type': 'FooType'}
+    logger INFO
+      {'_path': '/spam/eggs/foo', '_type': 'FooType'}
+    logger INFO
+      {'_path': '/foo', '_type': 'FooType'}
+    logger INFO
+      {'_path': u'/unicode/encoded/to/ascii', '_type': 'FooType'}
+    logger INFO
+        {'_path': 'not/existing/bar',
+       '_type': 'BarType',
+       'title': 'Should not be constructed, not an existing path'}
+    logger INFO
+        {'_path': '/spam/eggs/existing',
+       '_type': 'FooType',
+       'title': 'Should not be constructed, an existing object'}
+    logger INFO
+        {'_path': '/spam/eggs/incomplete',
+       'title': 'Should not be constructed, no type'}
+    logger INFO
+        {'_path': '/spam/eggs/nosuchtype',
+       '_type': 'NonExisting',
+       'title': 'Should not be constructed, not an existing type'}
+    logger INFO
+        {'_path': 'spam/eggs/changedByFactory',
+       '_type': 'FooType',
+       'title': 'Factories are allowed to change the id'}
     >>> pprint.pprint(plone.constructed)
-    (('spam/eggs', 'foo', 'FooType'),
+    [('eggs', 'foo', 'FooType'),
+     ('spam/eggs', 'foo', 'FooType'),
      ('', 'foo', 'FooType'),
      ('unicode/encoded/to', 'ascii', 'FooType'),
-     ('spam/eggs', 'changedByFactory', 'FooType'))
+     ('spam/eggs', 'changedByFactory', 'FooType')]
 
     >>> constructor = """
     ... [transmogrifier]
     ... pipeline =
     ...     contentsource
     ...     constructor
-    ...     printer
+    ...     logger
     ...     
     ... [contentsource]
     ... blueprint = collective.transmogrifier.sections.tests.contentsource
@@ -101,16 +115,25 @@ required = True key to the constructor section it will instead raise a KeyError.
     ... blueprint = collective.transmogrifier.sections.constructor
     ... required = True
     ... 
-    ... [printer]
-    ... blueprint = collective.transmogrifier.sections.tests.pprinter
+    ... [logger]
+    ... blueprint = collective.transmogrifier.sections.logger
+    ... name = logger
+    ... level = INFO
     ... """
     >>> registerConfig(u'collective.transmogrifier.sections.tests.constructor2',
     ...                constructor)
+    >>> handler.clear()
     >>> try:
     ...     transmogrifier(u'collective.transmogrifier.sections.tests.constructor2')
     ...     raise AssertionError("Required constructor did not raise an error for missing folder")
     ... except KeyError:
     ...     pass
-    [('_path', '/spam/eggs/foo'), ('_type', 'FooType')]
-    [('_path', '/foo'), ('_type', 'FooType')]
-    [('_path', u'/unicode/encoded/to/ascii'), ('_type', 'FooType')]
+    >>> print handler
+    logger INFO
+      {'_path': '/eggs/foo', '_type': 'FooType'}
+    logger INFO
+      {'_path': '/spam/eggs/foo', '_type': 'FooType'}
+    logger INFO
+      {'_path': '/foo', '_type': 'FooType'}
+    logger INFO
+      {'_path': u'/unicode/encoded/to/ascii', '_type': 'FooType'}

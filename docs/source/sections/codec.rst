@@ -32,7 +32,7 @@ happening. The condition is evaluated for every matched key.
     ...     decode-all
     ...     encode-id
     ...     encode-title
-    ...     printer
+    ...     logger
     ...     
     ... [source]
     ... blueprint = collective.transmogrifier.sections.tests.samplesource
@@ -55,15 +55,21 @@ happening. The condition is evaluated for every matched key.
     ... to-error-handler = backslashreplace
     ... condition = python:'Brand' not in item['title']
     ... 
-    ... [printer]
-    ... blueprint = collective.transmogrifier.sections.tests.pprinter
+    ... [logger]
+    ... blueprint = collective.transmogrifier.sections.logger
+    ... name = logger
+    ... level = INFO
     ... """
     >>> registerConfig(u'collective.transmogrifier.sections.tests.codecs',
     ...                codecs)
     >>> transmogrifier(u'collective.transmogrifier.sections.tests.codecs')
-    [('id', 'foo'), ('status', u'\u2117'), ('title', 'The Foo Fighters \\u2117')]
-    [('id', 'bar'), ('status', u'\u2122'), ('title', u'Brand Chocolate Bar \u2122')]
-    [('id', 'monty-python'), ('status', u'\xa9'), ('title', "Monty Python's Flying Circus \\xa9")]
+    >>> print handler
+    logger INFO
+        {'id': 'foo', 'status': u'\u2117', 'title': 'The Foo Fighters \\u2117'}
+    logger INFO
+        {'id': 'bar', 'status': u'\u2122', 'title': u'Brand Chocolate Bar \u2122'}
+    logger INFO
+        {'id': 'monty-python', 'status': u'\xa9', 'title': "Monty Python's Flying Circus \\xa9"}
 
 The ``condition`` expression has access to the following:
 
