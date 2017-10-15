@@ -61,7 +61,14 @@ class ConstructorSection(object):
             if getattr(aq_base(context), id, None) is not None:  # item exists
                 yield item; continue
 
-            obj = fti._constructInstance(context, id)
+            try:
+                obj = fti._constructInstance(context, id)
+            except ValueError:
+                error = 'Could not create type %s with id %s at %s' % (
+                    type_, id, path)
+                logger.warn(error)
+                yield item
+                continue
 
             # For CMF <= 2.1 (aka Plone 3)
             if hasattr(fti, '_finishConstruction'):
