@@ -9,6 +9,11 @@ Change History
 - pep 8, utf-8 headers, whitespace strip and sorted imports.
   [thet]
 
+- Ignore - but log - rare cases of construction errors. Usually this
+  happens for objects you do not want to migrate, but a detailed log entry is
+  written.
+  [sunew]
+
 
 1.5.1 (2015-11-26)
 ==================
