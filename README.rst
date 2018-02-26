@@ -1,8 +1,5 @@
-**************
-Transmogrifier 
-**************
-
-.. contents::
+Transmogrifier
+==============
 
 Transmogrifier provides support for building pipelines that turn one thing
 into another. Specifically, transmogrifier pipelines are used to convert and
@@ -21,25 +18,20 @@ Note that a transmogrifier pipeline can be used to process any number of
 things, and is not specific to Plone content import. However, it's original
 intent is to provide a pluggable way to import legacy content.
 
-Installation
-************
-
-See docs/INSTALL.txt for installation instructions.
-
 Credits
-*******
+=======
 
 Development sponsored by
     Elkjøp Nordic AS
-    
+
 Design and development
     `Martijn Pieters`_ at Jarn_
-    
+
 Project name
-    A transmogrifier_ is fictional device used for transforming one object 
-    into another object. The term was coined by Bill Waterson of Calvin and 
+    A transmogrifier_ is fictional device used for transforming one object
+    into another object. The term was coined by Bill Waterson of Calvin and
     Hobbes fame.
-    
+
 .. _Martijn Pieters: mailto:mj@jarn.com
 .. _Jarn: http://www.jarn.com/
 .. _Transmogrifier: http://en.wikipedia.org/wiki/Transmogrifier

@@ -1,15 +1,15 @@
+# -*- coding: utf-8 -*-
+from transmogrifier import configuration_registry
 from zope.configuration.fields import MessageID
 from zope.configuration.fields import Path
 from zope.configuration.fields import PythonIdentifier
 from zope.interface import Interface
 
-from transmogrifier import configuration_registry
-
-#### transmogrifier:registerConfig
 
 class IRegisterConfigDirective(Interface):
-
     """Register pipeline configurations with the global registry.
+
+    transmogrifier:registerConfig
     """
 
     name = PythonIdentifier(
@@ -37,6 +37,8 @@ class IRegisterConfigDirective(Interface):
 
 
 _configuration_regs = []
+
+
 def registerConfig(_context, configuration, name=u'default', title=None,
                    description=None):
     """Add a new configuration to the registry"""

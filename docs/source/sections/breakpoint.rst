@@ -14,7 +14,7 @@ breakpoint and restarting the server. This speeds up the process.
     ... pipeline =
     ...     source
     ...     breaker
-    ...     printer
+    ...     logger
     ...     
     ... [source]
     ... blueprint = collective.transmogrifier.sections.tests.rangesource
@@ -24,8 +24,10 @@ breakpoint and restarting the server. This speeds up the process.
     ... blueprint = collective.transmogrifier.sections.breakpoint
     ... condition = python: item['id'] == 'item-01'
     ... 
-    ... [printer]
-    ... blueprint = collective.transmogrifier.sections.tests.pprinter
+    ... [logger]
+    ... blueprint = collective.transmogrifier.sections.logger
+    ... name = logger
+    ... level = INFO
     ... """
     >>> registerConfig(u'collective.transmogrifier.sections.tests.breaker',
     ...                breaker)
@@ -35,12 +37,16 @@ giving some input (just a continue cammand).
 
     >>> oldstdin = make_stdin('c\n')
     >>> transmogrifier(u'collective.transmogrifier.sections.tests.breaker')
-    [('id', 'item-00')]
-    >.../collective.transmogrifier/src/collective/transmogrifier/sections/breakpoint.py(25)__iter__()
-    -> yield item
+    > .../collective.transmogrifier/src/collective/transmogrifier/sections/logger.py(...)__iter__()
+    -> ...
     (Pdb) c
-    [('id', 'item-01')]
-    [('id', 'item-02')]
+    >>> print handler
+    logger INFO
+        {'id': 'item-00'}
+    logger INFO
+        {'id': 'item-01'}
+    logger INFO
+        {'id': 'item-02'}
 
 
 And finally we reset the stdin:

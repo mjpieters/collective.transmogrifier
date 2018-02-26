@@ -3,8 +3,63 @@ Change History
 
 (name of developer listed in brackets)
 
-1.5 (unreleased)
+1.6 (unreleased)
 ================
+
+- pep 8, utf-8 headers, whitespace strip and sorted imports.
+  [thet]
+
+- Ignore - but log - rare cases of construction errors. Usually this
+  happens for objects you do not want to migrate, but a detailed log entry is
+  written.
+  [sunew]
+
+
+1.5.1 (2015-11-26)
+==================
+
+- Fix broken distribution.
+  [hvelarde]
+
+
+1.5 (2015-10-22)
+================
+
+- Allow csvsource to read files from GS import context
+  [lentinj]
+
+- Don't use traversal to avoid problems with acquisition or views.
+  [rpatterson]
+
+- Add csvsource support for taking the filename from an item key.
+  [rpatterson]
+
+- Add csvsource restkey handling for rows with more keys than fieldnames.
+  [rpatterson]
+
+- Add a blueprint for opening and caching URLs with `urllib2`_.
+  [rpatterson]
+
+- Add a source for walking a directory with `os.walk`_.
+  [rpatterson]
+
+- Add support for arbitrary csvsource fmtparam options.
+  [rpatterson]
+
+- Add DEBUG logging for expressions, useful for tracking changes to
+  items as they move through the pipeline.
+  [rpatterson]
+
+- Add an XML walker source section for walking a tree of elements.
+  [rpatterson]
+
+- Add a list source section for adding recursion and/or looping to pipelines.
+  [rpatterson]
+
+- Add pprint support to the logger section, moved from the pprint
+  section used in tests to make it more useful and available in actual
+  pipelines.
+  [rpatterson]
 
 1.4 (2013-04-07)
 ================

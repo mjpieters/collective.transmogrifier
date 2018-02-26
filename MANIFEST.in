@@ -1,0 +1,7 @@
+global-exclude *.pyc
+graft src
+graft docs
+include *.rst
+
+exclude docs/Makefile
+exclude docs/make.bat
