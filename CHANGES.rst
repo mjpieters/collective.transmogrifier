@@ -3,6 +3,12 @@ Change History
 
 (name of developer listed in brackets)
 
+1.5.3 (unreleased)
+==================
+
+- Nothing changed yet.
+
+
 1.5.2 (2018-02-27)
 ==================
 
