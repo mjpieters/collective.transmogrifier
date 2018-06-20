@@ -5,6 +5,7 @@ from collective.transmogrifier.interfaces import ISectionBlueprint
 from collective.transmogrifier.utils import defaultMatcher
 from collective.transmogrifier.utils import traverse
 from Products.CMFCore.utils import getToolByName
+from zExceptions import BadRequest
 from zope.interface import classProvides
 from zope.interface import implements
 
@@ -63,7 +64,7 @@ class ConstructorSection(object):
 
             try:
                 obj = fti._constructInstance(context, id)
-            except ValueError:
+            except (BadRequest, ValueError):
                 error = 'Could not create type %s with id %s at %s' % (
                     type_, id, path)
                 logger.warn(error)

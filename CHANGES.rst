@@ -6,7 +6,8 @@ Change History
 1.5.3 (unreleased)
 ==================
 
-- Nothing changed yet.
+- Avoid failures if the ``id`` of an item is invalid for Zope.
+  [hvelarde]
 
 
 1.5.2 (2018-02-27)
