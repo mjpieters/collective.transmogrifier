@@ -6,8 +6,7 @@ Change History
 1.5.3 (unreleased)
 ==================
 
-- Avoid ``UnicodeEncodeError`` if a path contains invalid characters.
-  [hvelarde]
+- Nothing changed yet.
 
 
 1.5.2 (2018-02-27)

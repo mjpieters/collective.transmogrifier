@@ -46,7 +46,7 @@ class ConstructorSection(object):
                 logger.warn('Not an existing type: %s' % type_)
                 yield item; continue
 
-            path = path.encode('ASCII', 'ignore')
+            path = path.encode('ASCII')
             container, id = posixpath.split(path.strip('/'))
             context = traverse(self.context, container, None)
             if context is None:
