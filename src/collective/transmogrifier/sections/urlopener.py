@@ -4,8 +4,8 @@ from collective.transmogrifier.interfaces import ISectionBlueprint
 from collective.transmogrifier.utils import defaultMatcher
 from collective.transmogrifier.utils import Expression
 from collective.transmogrifier.utils import resolvePackageReferenceOrFile
-from zope.interface import classProvides
-from zope.interface import implements
+from zope.interface import provider
+from zope.interface import implementer
 
 import contextlib
 import io
@@ -18,8 +18,8 @@ import urlparse
 
 
 class URLOpenerSection(object):
-    classProvides(ISectionBlueprint)
-    implements(ISection)
+    provider(ISectionBlueprint)
+    implementer(ISection)
 
     def __init__(self, transmogrifier, name, options, previous):
         self.previous = previous

@@ -3,8 +3,8 @@ from collective.transmogrifier.interfaces import ISection
 from collective.transmogrifier.interfaces import ISectionBlueprint
 from collective.transmogrifier.utils import Condition
 from collective.transmogrifier.utils import constructPipeline
-from zope.interface import classProvides
-from zope.interface import implements
+from zope.interface import provider
+from zope.interface import implementer
 
 import collections
 import copy
@@ -32,8 +32,8 @@ _empty = []
 _stop = []
 
 
+@implementer(ISection)
 class SplitterConditionSection(object):
-    implements(ISection)
 
     # how far ahead are we
     ahead = 0
@@ -106,9 +106,9 @@ class SplitterConditionSection(object):
         return self._getBuffer() is _stop
 
 
+@provider(ISectionBlueprint)
+@implementer(ISection)
 class SplitterSection(object):
-    classProvides(ISectionBlueprint)
-    implements(ISection)
 
     def __init__(self, transmogrifier, name, options, previous):
         self.subpipes = collections.deque()

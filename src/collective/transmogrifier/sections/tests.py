@@ -5,8 +5,8 @@ from collective.transmogrifier.tests import setUp
 from collective.transmogrifier.tests import tearDown
 from Products.Five import zcml
 from zope.component import provideUtility
-from zope.interface import classProvides
-from zope.interface import implements
+from zope.interface import provider
+from zope.interface import implementer
 from zope.testing import doctest
 
 import io
@@ -110,7 +110,7 @@ class SplitterSectionTests(unittest.TestCase):
 
     def testInsertExtra(self):
         class Inserter(object):
-            implements(ISection)
+            implementer(ISection)
 
             def __init__(self, transmogrifier, name, options, previous):
                 self.previous = previous
@@ -144,7 +144,7 @@ class SplitterSectionTests(unittest.TestCase):
 
     def testSkipItems(self):
         class Skip(object):
-            implements(ISection)
+            implementer(ISection)
 
             def __init__(self, transmogrifier, name, options, previous):
                 self.previous = previous
@@ -176,8 +176,8 @@ class SplitterSectionTests(unittest.TestCase):
 
 
 class SampleSource(object):
-    classProvides(ISectionBlueprint)
-    implements(ISection)
+    provider(ISectionBlueprint)
+    implementer(ISection)
 
     def __init__(self, transmogrifier, name, options, previous):
         self.encoding = options.get('encoding')
@@ -209,8 +209,8 @@ class SampleSource(object):
 
 
 class RangeSource(object):
-    classProvides(ISectionBlueprint)
-    implements(ISection)
+    provider(ISectionBlueprint)
+    implementer(ISection)
 
     def __init__(self, transmogrifier, name, options, previous):
         self.previous = previous
@@ -307,8 +307,8 @@ def constructorSetUp(test):
     test.globs['transmogrifier'].context = test.globs['plone']
 
     class ContentSource(SampleSource):
-        classProvides(ISectionBlueprint)
-        implements(ISection)
+        provider(ISectionBlueprint)
+        implementer(ISection)
 
         def __init__(self, *args, **kw):
             super(ContentSource, self).__init__(*args, **kw)
@@ -361,8 +361,8 @@ def foldersSetUp(test):
     test.globs['transmogrifier'].context = test.globs['plone']
 
     class FoldersSource(SampleSource):
-        classProvides(ISectionBlueprint)
-        implements(ISection)
+        provider(ISectionBlueprint)
+        implementer(ISection)
 
         def __init__(self, *args, **kw):
             super(FoldersSource, self).__init__(*args, **kw)

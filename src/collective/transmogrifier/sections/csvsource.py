@@ -4,15 +4,15 @@ from collective.transmogrifier.interfaces import ISectionBlueprint
 from collective.transmogrifier.utils import defaultMatcher
 from collective.transmogrifier.utils import Expression
 from collective.transmogrifier.utils import openFileReference
-from zope.interface import classProvides
-from zope.interface import implements
+from zope.interface import provider
+from zope.interface import implementer
 
 import csv
 
 
+@provider(ISectionBlueprint)
+@implementer(ISection)
 class CSVSourceSection(object):
-    classProvides(ISectionBlueprint)
-    implements(ISection)
 
     def __init__(self, transmogrifier, name, options, previous):
         self.previous = previous

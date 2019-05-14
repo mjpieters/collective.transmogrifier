@@ -4,15 +4,15 @@ from collective.transmogrifier.interfaces import ISectionBlueprint
 from collective.transmogrifier.utils import Condition
 from collective.transmogrifier.utils import Expression
 from collective.transmogrifier.utils import Matcher
-from zope.interface import classProvides
-from zope.interface import implements
+from zope.interface import provider
+from zope.interface import implementer
 
 import copy
 
 
+@provider(ISectionBlueprint)
+@implementer(ISection)
 class ManipulatorSection(object):
-    classProvides(ISectionBlueprint)
-    implements(ISection)
 
     def __init__(self, transmogrifier, name, options, previous):
         keys = options.get('keys') or ''

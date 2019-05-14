@@ -4,17 +4,17 @@ from collective.transmogrifier.interfaces import ISectionBlueprint
 from collective.transmogrifier.utils import Condition
 from collective.transmogrifier.utils import Matcher
 from collective.transmogrifier.utils import pformat_msg
-from zope.interface import classProvides
-from zope.interface import implements
+from zope.interface import provider
+from zope.interface import implementer
 
 import logging
 
 
+@provider(ISectionBlueprint)
+@implementer(ISection)
 class LoggerSection(object):
     """Logs a value of a key."""
 
-    classProvides(ISectionBlueprint)
-    implements(ISection)
 
     def __init__(self, transmogrifier, name, options, previous):
         self.previous = previous

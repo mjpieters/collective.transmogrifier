@@ -4,15 +4,15 @@ from collective.transmogrifier.interfaces import ISectionBlueprint
 from collective.transmogrifier.utils import Expression
 from lxml import etree
 from lxml import html
-from zope.interface import classProvides
-from zope.interface import implements
+from zope.interface import provider
+from zope.interface import implementer
 
 import logging
 
 
 class XMLWalkerSection(object):
-    classProvides(ISectionBlueprint)
-    implements(ISection)
+    provider(ISectionBlueprint)
+    implementer(ISection)
 
     xpath = "@href | @src"
     prefix = 'element-'
