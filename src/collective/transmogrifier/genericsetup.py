@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """Generic setup integration"""
-from interfaces import ITransmogrifier
+from .interfaces import ITransmogrifier
 from zope.annotation.interfaces import IAnnotations
 
 

@@ -6,8 +6,8 @@ from collective.transmogrifier.utils import defaultMatcher
 from collective.transmogrifier.utils import traverse
 from Products.CMFCore.utils import getToolByName
 from zExceptions import BadRequest
-from zope.interface import classProvides
-from zope.interface import implements
+from zope.interface import provider
+from zope.interface import implementer
 
 import logging
 import posixpath
@@ -15,10 +15,9 @@ import posixpath
 
 logger = logging.getLogger('collective.transmogrifier.constructor')
 
-
+@provider(ISectionBlueprint)
+@implementer(ISection)
 class ConstructorSection(object):
-    classProvides(ISectionBlueprint)
-    implements(ISection)
 
     def __init__(self, transmogrifier, name, options, previous):
         self.previous = previous

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
-from interfaces import ISection
-from interfaces import ISectionBlueprint
+from collective.transmogrifier.interfaces import ISection
+from collective.transmogrifier.interfaces import ISectionBlueprint
 from logging import DEBUG
 from logging import getLogger
 from zope.component import getUtility
@@ -44,8 +44,8 @@ def openFileReference(transmogrifier, ref):
             if hasattr(context, "openDataFile"):
                 return context.openDataFile(filename, subdir=subdir)
             if hasattr(context, "readDataFile"):
-                import StringIO
-                return StringIO.StringIO(
+                import io
+                return io.StringIO(
                     context.readDataFile(filename, subdir=subdir))
         except ImportError:
             return None
