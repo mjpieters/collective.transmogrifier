@@ -66,7 +66,7 @@ class CodecSection(object):
         from_ = self.from_
         if from_ is None:
             def decode(value):
-                if not isinstance(value, unicode):
+                if not isinstance(value, str):
                     raise ValueError('Not a unicode string: %s' % value)
                 return value
         else:
@@ -78,7 +78,7 @@ class CodecSection(object):
         to = self.to
         if to is None:
             def encode(value):
-                if not isinstance(value, unicode):
+                if not isinstance(value, str):
                     raise ValueError('Not a unicode string: %s' % value)
                 return value
         else:

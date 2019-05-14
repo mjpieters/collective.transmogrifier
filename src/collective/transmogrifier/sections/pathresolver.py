@@ -17,7 +17,7 @@ def assequence(val):
     Returns issingle (True, False), sequence
 
     """
-    if isinstance(val, basestring):
+    if isinstance(val, str):
         return True, (val,)
     return False, val
 
@@ -48,7 +48,7 @@ class PathResolverSection(object):
         context = self.context
         resolved = {}
 
-        for key in item.keys():
+        for key in list(item.keys()):
             match = self.keys(key)[1]
             if match:
                 single, paths = assequence(item[key])
@@ -60,7 +60,7 @@ class PathResolverSection(object):
                     result = result[0]
                 else:
                     # Strip unresolved items
-                    result = filter(lambda x: x is not None, result)
+                    result = [x for x in result if x is not None]
                 resolved[key] = result
 
         item.update(resolved)

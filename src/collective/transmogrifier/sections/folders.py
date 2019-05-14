@@ -30,7 +30,7 @@ class FoldersSection(object):
 
         for item in self.previous:
 
-            keys = item.keys()
+            keys = list(item.keys())
             pathKey = self.pathKey(*keys)[0]
 
             if not pathKey:  # not enough info

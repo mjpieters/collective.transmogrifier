@@ -28,7 +28,7 @@ class ManipulatorSection(object):
     def __iter__(self):
         for item in self.previous:
             if self.condition(item):
-                for key in item.keys():
+                for key in list(item.keys()):
                     match = self.keys(key)[1]
                     if match:
                         dest = self.dest(item, key=key, match=match)

@@ -10,9 +10,9 @@ from zope.interface import implementer
 import logging
 
 
+@provider(ISectionBlueprint)
+@implementer(ISection)
 class XMLWalkerSection(object):
-    provider(ISectionBlueprint)
-    implementer(ISection)
 
     xpath = "@href | @src"
     prefix = 'element-'

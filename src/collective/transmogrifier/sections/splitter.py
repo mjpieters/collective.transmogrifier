@@ -46,7 +46,7 @@ class SplitterConditionSection(object):
     def __iter__(self):
         return self
 
-    def next(self):
+    def __next__(self):
         self.ahead += 1
 
         while True:
@@ -57,7 +57,7 @@ class SplitterConditionSection(object):
                 next = self._buffer
                 self._buffer = _empty
             else:
-                next = self.previous.next()
+                next = next(self.previous)
 
             if self.condition(next):
                 return copy.deepcopy(next)
@@ -77,7 +77,7 @@ class SplitterConditionSection(object):
     def _getBuffer(self):
         if self._buffer is _empty:
             try:
-                self._buffer = self.previous.next()
+                self._buffer = next(self.previous)
             except StopIteration:
                 self._buffer = _stop
         return self._buffer
@@ -147,15 +147,15 @@ class SplitterSection(object):
                     continue
 
                 if condition.willMatch:
-                    yield pipe.next()
+                    yield next(pipe)
                     while not condition.isAhead:
                         # pipe is inserting extra items, advance until
                         # item in condition section has been used
-                        yield pipe.next()
+                        yield next(pipe)
 
                 while condition.isDone:
                     # self.previous is done, but perhaps not the sub-pipe
-                    yield pipe.next()
+                    yield next(pipe)
             except StopIteration:
                 subpipes.pop()
             else:

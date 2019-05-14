@@ -10,16 +10,16 @@ from zope.interface import implementer
 import contextlib
 import io
 import logging
-import mimetools
+import email
 import mimetypes
 import os
-import urllib2
-import urlparse
+import urllib.request, urllib.error, urllib.parse
+import urllib.parse
 
 
+@provider(ISectionBlueprint)
+@implementer(ISection)
 class URLOpenerSection(object):
-    provider(ISectionBlueprint)
-    implementer(ISection)
 
     def __init__(self, transmogrifier, name, options, previous):
         self.previous = previous
@@ -56,9 +56,9 @@ class URLOpenerSection(object):
             self.ignore_handler.section = self
             handlers.append(self.ignore_handler)
         if not [handler for handler in handlers
-                if isinstance(handler, urllib2.HTTPRedirectHandler)]:
+                if isinstance(handler, urllib.request.HTTPRedirectHandler)]:
             handlers.append(HTTPRedirectHandler())
-        self.opener = urllib2.build_opener(*handlers)
+        self.opener = urllib.request.build_opener(*handlers)
 
     def __iter__(self):
         for item in self.previous:
@@ -68,8 +68,8 @@ class URLOpenerSection(object):
                 continue
 
             url = item[key]
-            if not isinstance(url, urlparse.SplitResult):
-                url = urlparse.urlsplit(url)
+            if not isinstance(url, urllib.parse.SplitResult):
+                url = urllib.parse.urlsplit(url)
 
             cache = os.path.join(
                 self.cachedir, url.scheme, url.netloc,
@@ -85,7 +85,7 @@ class URLOpenerSection(object):
 
             if os.path.isfile(cache) and os.path.isfile(headers_cache):
                 self.logger.debug('Using cache: %s', cache)
-                headers = mimetools.Message(open(headers_cache))
+                headers = email.Message(open(headers_cache))
             else:
                 if not os.path.isdir(os.path.dirname(cache)):
                     os.makedirs(os.path.dirname(cache))
@@ -116,16 +116,16 @@ class URLOpenerSection(object):
             yield item
 
 
-class HTTPDefaultErrorHandler(urllib2.HTTPDefaultErrorHandler):
+class HTTPDefaultErrorHandler(urllib.request.HTTPDefaultErrorHandler):
 
     def http_error_default(self, req, fp, code, msg, hdrs):
-        if not isinstance(hdrs, mimetools.Message):
-            hdrs = mimetools.Message(io.StringIO(hdrs.decode()))
+        if not isinstance(hdrs, email.Message):
+            hdrs = email.Message(io.StringIO(hdrs.decode()))
         hdrs.setdefault('Status', str(code) + ' ' + msg)
         try:
-            return urllib2.HTTPDefaultErrorHandler.http_error_default(
+            return urllib.request.HTTPDefaultErrorHandler.http_error_default(
                 self, req, fp, code, msg, hdrs)
-        except urllib2.URLError as error:
+        except urllib.error.URLError as error:
             if not self.section.ignore_error(self.item, error=error):
                 raise
             self.section.logger.warn(
@@ -133,10 +133,10 @@ class HTTPDefaultErrorHandler(urllib2.HTTPDefaultErrorHandler):
             return error
 
 
-class HTTPRedirectHandler(urllib2.HTTPRedirectHandler):
+class HTTPRedirectHandler(urllib.request.HTTPRedirectHandler):
 
     def http_error_302(self, req, fp, code, msg, headers):
-        resp = urllib2.HTTPRedirectHandler.http_error_302(
+        resp = urllib.request.HTTPRedirectHandler.http_error_302(
             self, req, fp, code, msg, headers)
         resp.headers.setdefault(
             'Redirect-Status',

@@ -37,7 +37,7 @@ class CSVSourceSection(object):
             (key[len('fmtparam-'):],
              Expression(value, transmogrifier, name, options)(
                  options, key=key[len('fmtparam-'):])) for key, value
-            in options.iteritems() if key.startswith('fmtparam-'))
+            in options.items() if key.startswith('fmtparam-'))
         self.fieldnames = options.get('fieldnames')
         if self.fieldnames:
             self.fieldnames = self.fieldnames.split()

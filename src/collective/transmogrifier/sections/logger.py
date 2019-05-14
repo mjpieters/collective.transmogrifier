@@ -43,7 +43,7 @@ class LoggerSection(object):
             if self.logger.isEnabledFor(self.level) and self.condition(item):
                 if self.key is None:
                     copy = {}
-                    for key in item.keys():
+                    for key in list(item.keys()):
                         if not self.delete(key)[1]:
                             copy[key] = item[key]
                     msg = pformat_msg(copy)
