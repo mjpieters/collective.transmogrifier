@@ -2,7 +2,7 @@
 from collective.transmogrifier.transmogrifier import configuration_registry
 from zope.configuration.fields import MessageID
 from zope.configuration.fields import Path
-from zope.configuration.fields import PythonIdentifier
+from zope.configuration.fields import GlobalObject
 from zope.interface import Interface
 
 
@@ -12,7 +12,7 @@ class IRegisterConfigDirective(Interface):
     transmogrifier:registerConfig
     """
 
-    name = PythonIdentifier(
+    name = GlobalObject(
         title='Name',
         description="If not specified 'default' is used.",
         default='default',
