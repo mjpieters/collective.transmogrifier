@@ -5,6 +5,7 @@ from collective.transmogrifier.interfaces import ISectionBlueprint
 from collective.transmogrifier.utils import defaultMatcher
 from collective.transmogrifier.utils import traverse
 from Products.CMFCore.utils import getToolByName
+from Products.CMFPlone.utils import safe_unicode
 from zExceptions import BadRequest
 from zope.interface import provider
 from zope.interface import implementer
@@ -46,7 +47,7 @@ class ConstructorSection(object):
                 logger.warn('Not an existing type: %s' % type_)
                 yield item; continue
 
-            path = path.encode('ASCII')
+            path = safe_unicode(path)
             container, id = posixpath.split(path.strip('/'))
             context = traverse(self.context, container, None)
             if context is None:

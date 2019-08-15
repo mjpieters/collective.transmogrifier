@@ -14,7 +14,7 @@ def importTransmogrifier(context):
     with a # are skipped.
 
     """
-    data = context.readDataFile('transmogrifier.txt')
+    data = context.readDataFile('transmogrifier.txt').decode('utf-8')
     if not data:
         return
 

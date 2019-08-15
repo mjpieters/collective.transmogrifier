@@ -57,6 +57,13 @@ class Transmogrifier(DictMixin):
     def __init__(self, context):
         self.context = context
 
+    def __len__(self):
+        return len(self.mylist)
+
+    def __iter__(self):
+        for i in self.mylist:
+            yield i
+
     def __call__(self, configuration_id, **overrides):
         self.configuration_id = configuration_id
         self._raw = _load_config(configuration_id, **overrides)
@@ -104,6 +111,13 @@ class Options(DictMixin):
         self._raw = data
         self._cooked = {}
         self._data = {}
+
+    def __len__(self):
+        return len(self.mylist)
+
+    def __iter__(self):
+        for i in self.mylist:
+            yield i
 
     def _substitute(self):
         for key, value in list(self._raw.items()):

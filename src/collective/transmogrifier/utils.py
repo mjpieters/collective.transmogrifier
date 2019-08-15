@@ -118,7 +118,7 @@ def constructPipeline(transmogrifier, sections, pipeline=None):
         if not section_id:
             continue
         section_options = transmogrifier[section_id]
-        blueprint_id = section_options['blueprint'].decode('ascii')
+        blueprint_id = section_options['blueprint']
         blueprint = getUtility(ISectionBlueprint, blueprint_id)
         pipeline = blueprint(transmogrifier, section_id, section_options,
                              pipeline)
