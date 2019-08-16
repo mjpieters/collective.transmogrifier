@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 """Generic setup integration"""
 from .interfaces import ITransmogrifier
+from Products.CMFPlone.utils import safe_unicode
 from zope.annotation.interfaces import IAnnotations
 
 
@@ -14,7 +15,7 @@ def importTransmogrifier(context):
     with a # are skipped.
 
     """
-    data = context.readDataFile('transmogrifier.txt').decode('utf-8')
+    data = safe_unicode(context.readDataFile('transmogrifier.txt'))
     if not data:
         return
 
