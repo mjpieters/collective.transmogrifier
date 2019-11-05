@@ -109,8 +109,8 @@ class SplitterSectionTests(unittest.TestCase):
         self._makeOne({}, {'pipeline-1': '', 'pipeline-2': ''}, iter(()))
 
     def testInsertExtra(self):
+        @implementer(ISection)
         class Inserter(object):
-            implementer(ISection)
 
             def __init__(self, transmogrifier, name, options, previous):
                 self.previous = previous
@@ -143,8 +143,8 @@ class SplitterSectionTests(unittest.TestCase):
         ])                                  # p2 is done
 
     def testSkipItems(self):
+        @implementer(ISection)
         class Skip(object):
-            implementer(ISection)
 
             def __init__(self, transmogrifier, name, options, previous):
                 self.previous = previous
@@ -175,9 +175,9 @@ class SplitterSectionTests(unittest.TestCase):
 # Doctest support
 
 
+@provider(ISectionBlueprint)
+@implementer(ISection)
 class SampleSource(object):
-    provider(ISectionBlueprint)
-    implementer(ISection)
 
     def __init__(self, transmogrifier, name, options, previous):
         self.encoding = options.get('encoding')
@@ -208,9 +208,9 @@ class SampleSource(object):
             yield item
 
 
+@provider(ISectionBlueprint)
+@implementer(ISection)
 class RangeSource(object):
-    provider(ISectionBlueprint)
-    implementer(ISection)
 
     def __init__(self, transmogrifier, name, options, previous):
         self.previous = previous
@@ -306,9 +306,9 @@ def constructorSetUp(test):
     test.globs['plone'] = MockPortal()
     test.globs['transmogrifier'].context = test.globs['plone']
 
+    @provider(ISectionBlueprint)
+    @implementer(ISection)
     class ContentSource(SampleSource):
-        provider(ISectionBlueprint)
-        implementer(ISection)
 
         def __init__(self, *args, **kw):
             super(ContentSource, self).__init__(*args, **kw)
@@ -360,9 +360,9 @@ def foldersSetUp(test):
     test.globs['plone'] = MockPortal()
     test.globs['transmogrifier'].context = test.globs['plone']
 
+    @provider(ISectionBlueprint)
+    @implementer(ISection)
     class FoldersSource(SampleSource):
-        provider(ISectionBlueprint)
-        implementer(ISection)
 
         def __init__(self, *args, **kw):
             super(FoldersSource, self).__init__(*args, **kw)
