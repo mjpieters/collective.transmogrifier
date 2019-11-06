@@ -8,7 +8,7 @@ from zope.component import adapts
 from zope.interface import implementer
 from zope.testing.cleanup import addCleanUp
 
-import configparser
+from six.moves import configparser
 import re
 
 try:
@@ -265,7 +265,8 @@ def _load_config(configuration_id, seen=None, **overrides):
         configuration_file = config_info['configuration']
     parser = configparser.RawConfigParser()
     parser.optionxform = str  # case sensitive
-    parser.readfp(open(configuration_file))
+    with open(configuration_file) as config_opened:
+        parser.read_file(config_opened)
 
     includes = None
     result = {}

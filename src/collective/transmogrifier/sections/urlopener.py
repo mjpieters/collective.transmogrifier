@@ -128,7 +128,7 @@ class HTTPDefaultErrorHandler(urllib.request.HTTPDefaultErrorHandler):
         except urllib.error.URLError as error:
             if not self.section.ignore_error(self.item, error=error):
                 raise
-            self.section.logger.warn(
+            self.section.logger.warning(
                 'Ignoring error opening URL: %s', error)
             return error
 

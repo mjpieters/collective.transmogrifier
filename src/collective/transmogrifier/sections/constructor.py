@@ -37,14 +37,14 @@ class ConstructorSection(object):
             pathkey = self.pathkey(*keys)[0]
 
             if not (typekey and pathkey):
-                logger.warn('Not enough info for item: %s' % item)
+                logger.warning('Not enough info for item: %s' % item)
                 yield item; continue
 
             type_, path = item[typekey], item[pathkey]
 
             fti = self.ttool.getTypeInfo(type_)
             if fti is None:
-                logger.warn('Not an existing type: %s' % type_)
+                logger.warning('Not an existing type: %s' % type_)
                 yield item; continue
 
             path = safe_unicode(path)
@@ -55,7 +55,7 @@ class ConstructorSection(object):
                     container, path)
                 if self.required:
                     raise KeyError(error)
-                logger.warn(error)
+                logger.warning(error)
                 yield item
                 continue
 
@@ -67,7 +67,7 @@ class ConstructorSection(object):
             except (BadRequest, ValueError):
                 error = 'Could not create type %s with id %s at %s' % (
                     type_, id, path)
-                logger.warn(error)
+                logger.warning(error)
                 yield item
                 continue
 
