@@ -58,10 +58,10 @@ class Transmogrifier(DictMixin):
         self.context = context
 
     def __len__(self):
-        return len(self.mylist)
+        return len(self._raw)
 
     def __iter__(self):
-        for i in self.mylist:
+        for i in self._raw:
             yield i
 
     def __call__(self, configuration_id, **overrides):
@@ -113,10 +113,10 @@ class Options(DictMixin):
         self._data = {}
 
     def __len__(self):
-        return len(self.mylist)
+        return len(self._raw)
 
     def __iter__(self):
-        for i in self.mylist:
+        for i in self._raw:
             yield i
 
     def _substitute(self):
