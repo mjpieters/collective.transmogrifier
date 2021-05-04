@@ -1,0 +1,56 @@
+name: collective.transmogrifier CI
+on: [push]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: [2.7]
+        plone-version: [51, 50, 43]
+
+    steps:
+      # git checkout
+      - uses: actions/checkout@v2
+
+      # python setup
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v1
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      # python cache
+      - uses: actions/cache@v1
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-
+
+      - name: Install xmllint
+        run: sudo apt-get install libxml2-dev libxslt1-dev
+
+      # before install
+      - name: before install
+        run: |
+          mkdir -p $HOME/buildout-cache/{downloads,eggs,extends}
+          mkdir -p $HOME/buildout-cache/{downloads,eggs,extends}
+          mkdir -p $HOME/.buildout
+          echo "[buildout]" > $HOME/.buildout/default.cfg
+          echo "download-cache = $HOME/buildout-cache/downloads" >> $HOME/.buildout/default.cfg
+          echo "eggs-directory = $HOME/buildout-cache/eggs" >> $HOME/.buildout/default.cfg
+          echo "extends-cache = $HOME/buildout-cache/extends" >> $HOME/.buildout/default.cfg
+          echo "abi-tag-eggs = true" >> $HOME/.buildout/default.cfg
+          git config --global user.email "githubaction@github.com"
+          git config --global user.name "GitHub Action CI"
+          cp test_plone${{ matrix.plone-version }}.cfg buildout.cfg
+
+      # virtualenv install
+      - run: pip install virtualenv
+
+      # Install dependencies
+      - run: pip install -U tox coveralls coverage -c constraints.txt
+
+      # test
+      - name: test
+        run: PYTEST_ADDOPTS="-s -vv" tox -e py${{ matrix.python-version }}-Plone${{ matrix.plone-version }}
