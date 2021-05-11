@@ -7,7 +7,14 @@ jobs:
       fail-fast: false
       matrix:
         python-version: [2.7]
-        plone-version: [51, 50, 43]
+        tox-environment: [py27-Plone43, py27-Plone50, py27-Plone51, py27-Plone52]
+        include:
+          - python-version: 3.6
+            tox-environment: py36-Plone52
+          - python-version: 3.7
+            tox-environment: py37-Plone52
+          - python-version: 3.8
+            tox-environment: py38-Plone52
 
     steps:
       # git checkout
@@ -43,7 +50,6 @@ jobs:
           echo "abi-tag-eggs = true" >> $HOME/.buildout/default.cfg
           git config --global user.email "githubaction@github.com"
           git config --global user.name "GitHub Action CI"
-          cp test_plone${{ matrix.plone-version }}.cfg buildout.cfg
 
       # virtualenv install
       - run: pip install virtualenv
@@ -53,4 +59,4 @@ jobs:
 
       # test
       - name: test
-        run: PYTEST_ADDOPTS="-s -vv" tox -e py${{ matrix.python-version }}-Plone${{ matrix.plone-version }}
+        run: PYTEST_ADDOPTS="-s -vv" tox -e ${{ matrix.tox-environment }}
