@@ -265,8 +265,7 @@ def _load_config(configuration_id, seen=None, **overrides):
         configuration_file = config_info['configuration']
     parser = configparser.RawConfigParser()
     parser.optionxform = str  # case sensitive
-    with open(configuration_file) as config_opened:
-        parser.read_file(config_opened)
+    parser.read(configuration_file)
 
     includes = None
     result = {}
