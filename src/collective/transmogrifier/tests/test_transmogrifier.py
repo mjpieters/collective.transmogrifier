@@ -5,7 +5,7 @@ from collective.transmogrifier.interfaces import ITransmogrifier
 from collective.transmogrifier.tests import setUp
 from collective.transmogrifier.tests import tearDown
 from collective.transmogrifier.transmogrifier import configuration_registry
-from Products.Five import zcml
+from Zope2.App import zcml
 from zope.component import provideAdapter
 from zope.component import provideUtility
 from zope.interface import classImplements

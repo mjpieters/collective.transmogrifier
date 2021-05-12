@@ -3,11 +3,11 @@ from collective.transmogrifier.interfaces import ISection
 from collective.transmogrifier.interfaces import ISectionBlueprint
 from collective.transmogrifier.tests import setUp
 from collective.transmogrifier.tests import tearDown
-from Products.Five import zcml
 from zope.component import provideUtility
-from zope.interface import provider
 from zope.interface import implementer
+from zope.interface import provider
 from zope.testing import doctest
+from Zope2.App import zcml
 
 import io
 import itertools
