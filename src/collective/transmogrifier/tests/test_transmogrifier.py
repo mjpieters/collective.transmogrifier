@@ -5,16 +5,16 @@ from collective.transmogrifier.interfaces import ITransmogrifier
 from collective.transmogrifier.tests import setUp
 from collective.transmogrifier.tests import tearDown
 from collective.transmogrifier.transmogrifier import configuration_registry
-from Zope2.App import zcml
 from zope.component import provideAdapter
 from zope.component import provideUtility
 from zope.interface import classImplements
 from zope.interface import directlyProvides
 from zope.interface import implements
 from zope.testing import cleanup
-from zope.testing import doctest
+from Zope2.App import zcml
 
 import collective.transmogrifier
+import doctest
 import operator
 import os
 import shutil

@@ -6,9 +6,9 @@ from collective.transmogrifier.tests import tearDown
 from zope.component import provideUtility
 from zope.interface import implementer
 from zope.interface import provider
-from zope.testing import doctest
 from Zope2.App import zcml
 
+import doctest
 import io
 import itertools
 import mimetools
