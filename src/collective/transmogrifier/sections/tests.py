@@ -15,8 +15,8 @@ import mimetools
 import posixpath
 import shutil
 import sys
+import six.moves.urllib.request  # pylint: disable=import-error
 import unittest
-import urllib.request, urllib.error, urllib.parse
 
 
 _marker = object()
@@ -425,7 +425,7 @@ def pdbSetUp(test):
     test.globs['reset_stdin'] = reset_stdin
 
 
-class HTTPHandler(urllib.request.HTTPHandler):
+class HTTPHandler(six.moves.urllib.request.HTTPHandler):
 
     def http_open(self, req):
         url = req.get_full_url()
