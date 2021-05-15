@@ -9,13 +9,13 @@ from zope.interface import provider
 from Zope2.App import zcml
 
 import doctest
+import email
 import io
 import itertools
-import mimetools
 import posixpath
 import shutil
-import sys
 import six.moves.urllib.request  # pylint: disable=import-error
+import sys
 import unittest
 
 
@@ -430,7 +430,9 @@ class HTTPHandler(six.moves.urllib.request.HTTPHandler):
     def http_open(self, req):
         url = req.get_full_url()
         resp = urllib2.addinfourl(
-            io.StringIO(), mimetools.Message(io.StringIO()), url)
+            io.StringIO(),
+            email.Message(io.StringIO()), url,
+        )
         if 'redirect' in url:
             resp.code = 301
             resp.msg = 'Permanent'
