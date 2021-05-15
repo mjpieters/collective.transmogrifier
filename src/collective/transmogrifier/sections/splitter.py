@@ -54,13 +54,13 @@ class SplitterConditionSection(object):
                 raise StopIteration
 
             if self._buffer is not _empty:
-                next = self._buffer
+                _next = self._buffer
                 self._buffer = _empty
             else:
-                next = next(self.previous)
+                _next = next(self.previous)
 
-            if self.condition(next):
-                return copy.deepcopy(next)
+            if self.condition(_next):
+                return copy.deepcopy(_next)
 
     next = __next__  # Python 2
 
