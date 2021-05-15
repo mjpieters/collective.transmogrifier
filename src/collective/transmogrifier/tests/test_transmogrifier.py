@@ -9,7 +9,7 @@ from zope.component import provideAdapter
 from zope.component import provideUtility
 from zope.interface import classImplements
 from zope.interface import directlyProvides
-from zope.interface import implements
+from zope.interface import implementer
 from zope.testing import cleanup
 from Zope2.App import zcml
 
@@ -262,8 +262,8 @@ class PackageReferenceResolverTest(unittest.TestCase):
                           'collective.transmogrifier.nonexistent:test')
 
 
+@implementer(ITransmogrifier)
 class MockImportContext(object):
-    implements(ITransmogrifier)
 
     def __init__(self, configfile=None):
         self.configfile = configfile
