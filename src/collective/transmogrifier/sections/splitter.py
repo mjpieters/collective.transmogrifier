@@ -62,6 +62,8 @@ class SplitterConditionSection(object):
             if self.condition(next):
                 return copy.deepcopy(next)
 
+    next = __next__  # Python 2
+
     @property
     def isAhead(self):
         """Are we ahead?
