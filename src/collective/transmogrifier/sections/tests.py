@@ -13,8 +13,9 @@ import email
 import io
 import itertools
 import posixpath
+import re
 import shutil
-import six.moves.urllib.request  # pylint: disable=import-error
+import six
 import sys
 import unittest
 
@@ -184,16 +185,16 @@ class SampleSource(object):
         self.previous = previous
         self.sample = (
             dict(
-                id='foo',
-                title='The Foo Fighters \u2117',
-                status='\u2117'),
+                id="foo",
+                title=u"The Foo Fighters \u2117",
+                status=u"\u2117"),
             dict(
-                id='bar',
-                title='Brand Chocolate Bar \u2122',
-                status='\u2122'),
-            dict(id='monty-python',
-                 title="Monty Python's Flying Circus \u00A9",
-                 status='\u00A9'),
+                id="bar",
+                title=u"Brand Chocolate Bar \u2122",
+                status=u"\u2122"),
+            dict(id="monty-python",
+                 title=u"Monty Python's Flying Circus \u00A9",
+                 status=u"\u00A9"),
         )
 
     def __iter__(self):
@@ -280,7 +281,8 @@ def constructorSetUp(test):
         def getTypeInfo(self, type_name):
             self._last_path[:] = ['']
             self._last_type = type_name
-            if type_name in ('FooType', 'BarType'): return self
+            if type_name in ('FooType', 'BarType'):
+                return self
 
         def hasObject(self, id_):
             if isinstance(id_, str):
@@ -451,6 +453,34 @@ def urlopenTearDown(test):
     tearDown(test)
 
 
+class Py23DocChecker(doctest.OutputChecker):
+
+    def __init__(self):
+        """Constructor"""
+
+    def transformer_py2_output(self, got):
+        """Handles differences in output between Python 2 and Python 3."""
+        if six.PY2:
+            got = re.sub("u\\'", "'", got)
+
+            # Adaptation to codec.rst test in Python 2
+            got = re.sub("\\'\\\\u2117\\'", "\'\xe2\x84\x97\'", got)
+            got = re.sub("\\'\\\\u2122\\'", "\'\xe2\x84\xa2\'", got)
+            got = re.sub("\\\\u2122\\'", "\xe2\x84\xa2\'", got)
+            got = re.sub("\\'\\\\xa9\\'", "\'\xc2\xa9\'", got)
+
+        return got
+
+    def check_output(self, want, got, optionflags):
+
+        got = self.transformer_py2_output(got)
+        return doctest.OutputChecker.check_output(self, want, got, optionflags)
+
+    def output_difference(self, example, got, optionflags):
+        got = self.transformer_py2_output(got)
+        return doctest.OutputChecker.output_difference(self, example, got, optionflags)
+
+
 def test_suite():
     return unittest.TestSuite((
         unittest.makeSuite(SplitterConditionSectionTests),
@@ -466,7 +496,9 @@ def test_suite():
             '../../../../docs/source/sections/listsource.rst',
             '../../../../docs/source/sections/xmlwalker.rst',
             setUp=sectionsSetUp, tearDown=tearDown,
-            optionflags=doctest.NORMALIZE_WHITESPACE | doctest.REPORT_NDIFF),
+            optionflags=doctest.NORMALIZE_WHITESPACE | doctest.REPORT_NDIFF,
+            checker=Py23DocChecker(),
+        ),
         doctest.DocFileSuite(
             '../../../../docs/source/sections/csvsource.rst',
             '../../../../docs/source/sections/dirwalker.rst',

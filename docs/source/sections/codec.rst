@@ -33,11 +33,11 @@ happening. The condition is evaluated for every matched key.
     ...     encode-id
     ...     encode-title
     ...     logger
-    ...     
+    ...
     ... [source]
     ... blueprint = collective.transmogrifier.sections.tests.samplesource
     ... encoding = utf8
-    ... 
+    ...
     ... [decode-all]
     ... blueprint = collective.transmogrifier.sections.codec
     ... keys = re:.*
@@ -54,7 +54,7 @@ happening. The condition is evaluated for every matched key.
     ... to = ascii
     ... to-error-handler = backslashreplace
     ... condition = python:'Brand' not in item['title']
-    ... 
+    ...
     ... [logger]
     ... blueprint = collective.transmogrifier.sections.logger
     ... name = logger
@@ -63,13 +63,13 @@ happening. The condition is evaluated for every matched key.
     >>> registerConfig(u'collective.transmogrifier.sections.tests.codecs',
     ...                codecs)
     >>> transmogrifier(u'collective.transmogrifier.sections.tests.codecs')
-    >>> print handler
+    >>> print(handler)
     logger INFO
-        {'id': 'foo', 'status': u'\u2117', 'title': 'The Foo Fighters \\u2117'}
+      {'id': 'foo', 'status': '℗', 'title': 'The Foo Fighters \\u2117'}
     logger INFO
-        {'id': 'bar', 'status': u'\u2122', 'title': u'Brand Chocolate Bar \u2122'}
+      {'id': 'bar', 'status': '™', 'title': 'Brand Chocolate Bar ™'}
     logger INFO
-        {'id': 'monty-python', 'status': u'\xa9', 'title': "Monty Python's Flying Circus \\xa9"}
+      {'id': 'monty-python', 'status': '©', 'title': "Monty Python's Flying Circus \\xa9"}
 
 The ``condition`` expression has access to the following:
 
