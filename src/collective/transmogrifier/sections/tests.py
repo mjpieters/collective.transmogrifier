@@ -461,18 +461,22 @@ class Py23DocChecker(doctest.OutputChecker):
     def transformer_py2_output(self, got):
         """Handles differences in output between Python 2 and Python 3."""
         if six.PY2:
-            got = re.sub("u\\'", "'", got)
+            got = re.sub("u'", "'", got)
+            got = re.sub('u"', '"', got)
 
-            # Adaptation to codec.rst test in Python 2
             got = re.sub("\\'\\\\u2117\\'", "\'\xe2\x84\x97\'", got)
-            got = re.sub("\\'\\\\u2122\\'", "\'\xe2\x84\xa2\'", got)
-            got = re.sub("\\\\u2122\\'", "\xe2\x84\xa2\'", got)
+            got = re.sub("\\\\u2122", "\xe2\x84\xa2", got)
             got = re.sub("\\'\\\\xa9\\'", "\'\xc2\xa9\'", got)
+
+            # Adaptation to manipulator.rst test in Python 2
+            got = re.sub("\\\\u2117", "\xe2\x84\x97", got)
+            got = re.sub("\\\\\\xe2\\x84\\x97", "\\\\\\u2117", got)
+            got = re.sub("\\\\xa9", "\xc2\xa9", got)
+            got = re.sub("\\\\\\xc2\xa9", "\\\\\\xa9", got)
 
         return got
 
     def check_output(self, want, got, optionflags):
-
         got = self.transformer_py2_output(got)
         return doctest.OutputChecker.check_output(self, want, got, optionflags)
 

@@ -32,13 +32,13 @@ happening. The condition is evaluated for every matched key.
     ...     rename
     ...     delete
     ...     logger
-    ...     
+    ...
     ... [source]
     ... blueprint = collective.transmogrifier.sections.tests.samplesource
-    ... 
+    ...
     ... [copy]
     ... blueprint = collective.transmogrifier.sections.manipulator
-    ... keys = 
+    ... keys =
     ...     title
     ...     id
     ... destination = string:$key-copy
@@ -52,7 +52,7 @@ happening. The condition is evaluated for every matched key.
     ... [delete]
     ... blueprint = collective.transmogrifier.sections.manipulator
     ... delete = status
-    ... 
+    ...
     ... [logger]
     ... blueprint = collective.transmogrifier.sections.logger
     ... name = logger
@@ -61,22 +61,22 @@ happening. The condition is evaluated for every matched key.
     >>> registerConfig(u'collective.transmogrifier.sections.tests.manipulator',
     ...                manipulator)
     >>> transmogrifier(u'collective.transmogrifier.sections.tests.manipulator')
-    >>> print handler
+    >>> print(handler)
     logger INFO
         {'id': 'foo',
         'id-duplicate': 'foo',
-        'title': u'The Foo Fighters \u2117',
-        'title-duplicate': u'The Foo Fighters \u2117'}
+        'title': 'The Foo Fighters ℗',
+        'title-duplicate': 'The Foo Fighters ℗'}
     logger INFO
         {'id': 'bar',
         'id-duplicate': 'bar',
-        'title': u'Brand Chocolate Bar \u2122',
-        'title-duplicate': u'Brand Chocolate Bar \u2122'}
+        'title': 'Brand Chocolate Bar ™',
+        'title-duplicate': 'Brand Chocolate Bar ™'}
     logger INFO
         {'id': 'monty-python',
         'id-duplicate': 'monty-python',
-        'title': u"Monty Python's Flying Circus \xa9",
-        'title-duplicate': u"Monty Python's Flying Circus \xa9"}
+        'title': "Monty Python's Flying Circus ©",
+        'title-duplicate': "Monty Python's Flying Circus ©"}
     >>> handler.clear()
 
 The ``destination`` expression has access to the following:
