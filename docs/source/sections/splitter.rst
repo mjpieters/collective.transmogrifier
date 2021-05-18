@@ -15,16 +15,16 @@ own copy [*]_ of the items:
     ...     source
     ...     splitter
     ...     logger
-    ...     
+    ...
     ... [source]
     ... blueprint = collective.transmogrifier.sections.tests.rangesource
     ... size = 3
-    ... 
+    ...
     ... [splitter]
     ... blueprint = collective.transmogrifier.sections.splitter
     ... pipeline-1 =
     ... pipeline-2 =
-    ... 
+    ...
     ... [logger]
     ... blueprint = collective.transmogrifier.sections.logger
     ... name = logger
@@ -33,7 +33,7 @@ own copy [*]_ of the items:
     >>> registerConfig(u'collective.transmogrifier.sections.tests.emptysplitter',
     ...                emptysplitter)
     >>> transmogrifier(u'collective.transmogrifier.sections.tests.emptysplitter')
-    >>> print handler
+    >>> print(handler)
     logger INFO
         {'id': 'item-00'}
     logger INFO
@@ -61,28 +61,28 @@ optional and use the pipeline option name plus ``-condition``:
     ...     source
     ...     splitter
     ...     logger
-    ...     
+    ...
     ... [source]
     ... blueprint = collective.transmogrifier.sections.tests.rangesource
     ... size = 3
-    ... 
+    ...
     ... [splitter]
     ... blueprint = collective.transmogrifier.sections.splitter
     ... pipeline-even-condition = python:int(item['id'][-2:]) % 2
     ... pipeline-even = even-section
     ... pipeline-odd-condition = not:${splitter:pipeline-even-condition}
     ... pipeline-odd = odd-section
-    ... 
+    ...
     ... [odd-section]
     ... blueprint = collective.transmogrifier.sections.inserter
     ... key = string:even
     ... value = string:The even pipe
-    ... 
+    ...
     ... [even-section]
     ... blueprint = collective.transmogrifier.sections.inserter
     ... key = string:odd
     ... value = string:The odd pipe
-    ... 
+    ...
     ... [logger]
     ... blueprint = collective.transmogrifier.sections.logger
     ... name = logger
@@ -92,7 +92,7 @@ optional and use the pipeline option name plus ``-condition``:
     ...                evenoddsplitter)
     >>> handler.clear()
     >>> transmogrifier(u'collective.transmogrifier.sections.tests.evenodd')
-    >>> print handler
+    >>> print(handler)
     logger INFO
         {'even': 'The even pipe', 'id': 'item-00'}
     logger INFO

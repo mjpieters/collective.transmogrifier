@@ -52,13 +52,13 @@ Here is how it might look by default:
     ...     contentsource
     ...     folders
     ...     logger
-    ...     
+    ...
     ... [contentsource]
     ... blueprint = collective.transmogrifier.sections.tests.folderssource
-    ... 
+    ...
     ... [folders]
     ... blueprint = collective.transmogrifier.sections.folders
-    ... 
+    ...
     ... [logger]
     ... blueprint = collective.transmogrifier.sections.logger
     ... name = logger
@@ -67,7 +67,7 @@ Here is how it might look by default:
     >>> registerConfig(u'collective.transmogrifier.sections.tests.folders',
     ...                constructor)
     >>> transmogrifier(u'collective.transmogrifier.sections.tests.folders')
-    >>> print handler
+    >>> print(handler)
     logger INFO
         {'_path': '/foo', '_type': 'Document'}
     logger INFO
@@ -88,7 +88,7 @@ Here is how it might look by default:
         {'_folders_path': '/delta', '_type': 'Folder'}
     logger INFO
         {'_folders_path': '/delta/foo', '_type': 'Document'}
-    
+
 To specify alternate types and keys, we can do something like this:
 
     >>> import pprint
@@ -98,16 +98,16 @@ To specify alternate types and keys, we can do something like this:
     ...     contentsource
     ...     folders
     ...     logger
-    ...     
+    ...
     ... [contentsource]
     ... blueprint = collective.transmogrifier.sections.tests.folderssource
-    ... 
+    ...
     ... [folders]
     ... blueprint = collective.transmogrifier.sections.folders
     ... folder-type = My Folder
     ... new-type-key = '_folderconstructor_type
     ... new-path-key = '_folderconstructor_path
-    ... 
+    ...
     ... [logger]
     ... blueprint = collective.transmogrifier.sections.logger
     ... name = logger
@@ -118,7 +118,7 @@ To specify alternate types and keys, we can do something like this:
     >>> handler.clear()
     >>> plone.exists.clear()
     >>> transmogrifier(u'collective.transmogrifier.sections.tests.folders2')
-    >>> print handler
+    >>> print(handler)
     logger INFO
       {'_path': '/foo', '_type': 'Document'}
     logger INFO

@@ -32,24 +32,24 @@ Assemble and register a transmogrifier with a list source section.
     ...     logger
     ...     insert
     ...     append
-    ...     
+    ...
     ... [source]
     ... blueprint = collective.transmogrifier.sections.tests.rangesource
     ... size = 1
-    ... 
+    ...
     ... [list]
     ... blueprint = collective.transmogrifier.sections.listsource
-    ... 
+    ...
     ... [logger]
     ... blueprint = collective.transmogrifier.sections.logger
     ... name = logger
     ... level = INFO
-    ...       
+    ...
     ... [insert]
     ... blueprint = collective.transmogrifier.sections.inserter
     ... key = string:id
     ... value = python:'item-%02d' % (int(item['id'].rsplit('-', 1)[-1]) + 1)
-    ... 
+    ...
     ... [append]
     ... blueprint = collective.transmogrifier.sections.listappender
     ... condition = python:item['id'] < 'item-03'
@@ -66,7 +66,7 @@ be broken up on newlines into a list.
 
     >>> transmogrifier(
     ...     u'collective.transmogrifier.sections.tests.listsource')
-    >>> print handler
+    >>> print(handler)
     logger INFO
         {'id': 'item-00'}
     logger INFO
@@ -89,15 +89,15 @@ appended to the list source.
     ...     copy
     ...     append
     ...     logger
-    ... 
+    ...
     ... [source]
     ... size = 3
-    ... 
+    ...
     ... [copy]
     ... blueprint = collective.transmogrifier.sections.manipulator
     ... keys = id
     ... destination = string:copy
-    ... 
+    ...
     ... [append]
     ... keys = python:['id']
     ... copy-keys = python:['copy']

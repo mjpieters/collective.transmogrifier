@@ -36,17 +36,17 @@ Start with an HTML file containing a heirarchical navbar.
     ...     defaultpage
     ...     clean
     ...     logger
-    ... 
+    ...
     ... [source]
     ... blueprint = collective.transmogrifier.sections.tests.rangesource
     ... size = 1
-    ... 
+    ...
     ... [parse]
     ... blueprint = collective.transmogrifier.sections.inserter
     ... key = string:_trees
     ... value = python:modules['lxml.html'].parse('{}').xpath(\
     ...     "//*[contains(@class, 'navbar')]//ul[contains(@class, 'nav')]")
-    ... 
+    ...
     ... [walk]
     ... blueprint = collective.transmogrifier.sections.xmlwalker
     ... element-keys =
@@ -56,21 +56,21 @@ Start with an HTML file containing a heirarchical navbar.
     ...     'href', element.attrib.get('src', ''))
     ... element-title = python:element.text_content().strip()\
     ...     or element.attrib.get('alt', '')
-    ... 
+    ...
     ... [defaultpage]
     ... blueprint = collective.transmogrifier.sections.inserter
     ... key = string:_defaultpage
     ... condition = python:item.get('_parent', dict()).pop('_parent', True)\
     ...     and item.get('_defaultpage')
     ... value = exists:item/_defaultpage
-    ... 
+    ...
     ... [clean]
     ... blueprint = collective.transmogrifier.sections.manipulator
     ... delete =
     ...     _trees
     ...     _element
     ...     id
-    ... 
+    ...
     ... [logger]
     ... blueprint = collective.transmogrifier.sections.logger
     ... name = logger
@@ -79,7 +79,7 @@ Start with an HTML file containing a heirarchical navbar.
     >>> registerConfig(u'collective.transmogrifier.sections.tests.xmlwalker',
     ...                infologger)
     >>> transmogrifier(u'collective.transmogrifier.sections.tests.xmlwalker')
-    >>> print handler
+    >>> print(handler)
     logger INFO
       {}
     logger INFO

@@ -27,11 +27,11 @@ options that start with ``fmtparam-``.
     ... pipeline =
     ...     csvsource
     ...     logger
-    ...     
+    ...
     ... [csvsource]
     ... blueprint = collective.transmogrifier.sections.csvsource
     ... filename = {}/csvsource.csv
-    ... 
+    ...
     ... [logger]
     ... blueprint = collective.transmogrifier.sections.logger
     ... name = logger
@@ -40,7 +40,7 @@ options that start with ``fmtparam-``.
     >>> registerConfig(u'collective.transmogrifier.sections.tests.csvsource.file',
     ...                csvsource)
     >>> transmogrifier(u'collective.transmogrifier.sections.tests.csvsource.file')
-    >>> print handler
+    >>> print(handler)
     logger INFO
         {'bar': 'first-bar', 'baz': 'first-baz', 'foo': 'first-foo'}
     logger INFO
@@ -51,7 +51,7 @@ The CSV file column field names can also be specified.
     >>> handler.clear()
     >>> transmogrifier(u'collective.transmogrifier.sections.tests.csvsource.file',
     ...                csvsource=dict(fieldnames='monty spam eggs'))
-    >>> print handler
+    >>> print(handler)
     logger INFO
         {'eggs': 'baz', 'monty': 'foo', 'spam': 'bar'}
     logger INFO
@@ -66,11 +66,11 @@ Here is the same example, loading a file from a package instead:
     ... pipeline =
     ...     csvsource
     ...     logger
-    ...     
+    ...
     ... [csvsource]
     ... blueprint = collective.transmogrifier.sections.csvsource
     ... filename = collective.transmogrifier.tests:sample.csv
-    ... 
+    ...
     ... [logger]
     ... blueprint = collective.transmogrifier.sections.logger
     ... name = logger
@@ -80,7 +80,7 @@ Here is the same example, loading a file from a package instead:
     ...                csvsource)
     >>> handler.clear()
     >>> transmogrifier(u'collective.transmogrifier.sections.tests.csvsource.package')
-    >>> print handler
+    >>> print(handler)
     logger INFO
         {'bar': 'first-bar', 'baz': 'first-baz', 'foo': 'first-foo'}
     logger INFO
@@ -131,7 +131,7 @@ We can also load a file from a GS import context:
     ... duck,archibald
     ... """)
     >>> t(u'collective.transmogrifier.sections.tests.csvsource.gs')
-    >>> print handler
+    >>> print(handler)
     logger INFO
         {'animal': 'cow', 'name': 'daisy'}
     logger INFO
@@ -159,7 +159,7 @@ Import contexts can be chunked, and that's okay:
     ... fish,wanda
     ... """)
     >>> t(u'collective.transmogrifier.sections.tests.csvsource.gs')
-    >>> print handler
+    >>> print(handler)
     logger INFO
         {'animal': 'fish', 'name': 'wanda'}
 
@@ -174,14 +174,14 @@ Attempting to load a nonexistant file won't do anything:
     ... duck,archibald
     ... """)
     >>> t(u'collective.transmogrifier.sections.tests.csvsource.gs')
-    >>> print handler
+    >>> print(handler)
 
 Not having an import context around will also find nothing:
 
     >>> handler.clear()
     >>> t = Transmogrifier({})
     >>> t(u'collective.transmogrifier.sections.tests.csvsource.gs')
-    >>> print handler
+    >>> print(handler)
 
 The file can also be taken from a source item's key. A key can also be
 specified for rows that have more values than the fieldnames.
@@ -194,11 +194,11 @@ specified for rows that have more values than the fieldnames.
     ...     filename
     ...     item-csvsource
     ...     logger
-    ...     
+    ...
     ... [csvsource]
     ... blueprint = collective.transmogrifier.sections.csvsource
     ... filename = collective.transmogrifier.tests:keysource.csv
-    ...     
+    ...
     ... [filename]
     ... blueprint = collective.transmogrifier.sections.inserter
     ... key = string:_item-csvsource
@@ -206,19 +206,19 @@ specified for rows that have more values than the fieldnames.
     ... value = python:modules['os.path'].join(modules['os.path'].dirname(
     ...     modules['collective.transmogrifier.tests'].__file__),
     ...     item['_item-csvsource'])
-    ...     
+    ...
     ... [item-csvsource]
     ... blueprint = collective.transmogrifier.sections.csvsource
     ... restkey = _args
     ... row-key = string:_csvsource
-    ... 
+    ...
     ... """
     >>> registerConfig(u'collective.transmogrifier.sections.tests.csvsource.key',
     ...                csvsource)
 
     >>> handler.clear()
     >>> transmogrifier(u'collective.transmogrifier.sections.tests.csvsource.key')
-    >>> print handler
+    >>> print(handler)
     logger INFO
         {'_item-csvsource': '.../collective/transmogrifier/tests/sample.csv'}
     logger INFO
