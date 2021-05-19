@@ -44,8 +44,8 @@ def openFileReference(transmogrifier, ref):
             if hasattr(context, "openDataFile"):
                 return context.openDataFile(filename, subdir=subdir)
             if hasattr(context, "readDataFile"):
-                import io
-                return io.StringIO(
+                import six
+                return six.StringIO(
                     context.readDataFile(filename, subdir=subdir))
         except ImportError:
             return None
