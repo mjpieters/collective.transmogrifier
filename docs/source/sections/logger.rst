@@ -18,11 +18,11 @@ is ``collective.transmogrifier.sections.logger``.
     ... pipeline =
     ...     source
     ...     logger
-    ...     
+    ...
     ... [source]
     ... blueprint = collective.transmogrifier.sections.tests.rangesource
     ... size = 3
-    ... 
+    ...
     ... [logger]
     ... blueprint = collective.transmogrifier.sections.logger
     ... level = INFO
@@ -36,7 +36,7 @@ is ``collective.transmogrifier.sections.logger``.
     Infologger test: item-01
     Infologger test: item-02
 
-    
+
 We can also have numerical levels, and if the key is missing, it will print out
 a message to that effect.  A condition may also be used to restrict
 the items logged.
@@ -46,11 +46,11 @@ the items logged.
     ... pipeline =
     ...     source
     ...     logger
-    ...     
+    ...
     ... [source]
     ... blueprint = collective.transmogrifier.sections.tests.rangesource
     ... size = 3
-    ... 
+    ...
     ... [logger]
     ... blueprint = collective.transmogrifier.sections.logger
     ... level = 10
@@ -74,10 +74,10 @@ text fields which may be too large and make the output too noisy.
     ... pipeline =
     ...     source
     ...     logger
-    ...     
+    ...
     ... [source]
     ... blueprint = collective.transmogrifier.sections.tests.samplesource
-    ... 
+    ...
     ... [logger]
     ... blueprint = collective.transmogrifier.sections.logger
     ... level = INFO
@@ -90,11 +90,8 @@ text fields which may be too large and make the output too noisy.
     ...                logger)
     >>> transmogrifier(u'collective.transmogrifier.sections.tests.logger')
     collective.transmogrifier.sections.tests.logger.logger:
-      {'id': 'foo', 'status': u'\u2117', 'title': u'The Foo Fighters \u2117'}
+      {'id': 'foo', 'status': '℗', 'title': 'The Foo Fighters ℗'}
     collective.transmogrifier.sections.tests.logger.logger:
-      {'id': 'bar', 'status': u'\u2122', 'title': u'Brand Chocolate Bar \u2122'}
+      {'id': 'bar', 'status': '™', 'title': 'Brand Chocolate Bar ™'}
     collective.transmogrifier.sections.tests.logger.logger:
-      {'id': 'monty-python',
-       'status': u'\xa9',
-       'title': u"Monty Python's Flying Circus \xa9"}
-    
+      {'id': 'monty-python', 'status': '©', 'title': "Monty Python's Flying Circus ©"}
