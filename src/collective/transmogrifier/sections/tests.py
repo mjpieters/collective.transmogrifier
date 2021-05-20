@@ -1,15 +1,15 @@
 # -*- coding: utf-8 -*-
 from collective.transmogrifier.interfaces import ISection
 from collective.transmogrifier.interfaces import ISectionBlueprint
+from collective.transmogrifier.sections.urlopener import get_message
 from collective.transmogrifier.tests import setUp
 from collective.transmogrifier.tests import tearDown
+from Zope2.App import zcml
 from zope.component import provideUtility
 from zope.interface import implementer
 from zope.interface import provider
-from Zope2.App import zcml
 
 import doctest
-import email
 import io
 import itertools
 import posixpath
@@ -431,9 +431,9 @@ class HTTPHandler(six.moves.urllib.request.HTTPHandler):
 
     def http_open(self, req):
         url = req.get_full_url()
-        resp = urllib2.addinfourl(
+        resp = six.moves.urllib.response.addinfourl(
             io.StringIO(),
-            email.Message(io.StringIO()), url,
+            get_message(), url,
         )
         if 'redirect' in url:
             resp.code = 301
