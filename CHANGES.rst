@@ -6,6 +6,9 @@ Change History
 1.5.3 (unreleased)
 ==================
 
+- Add Python 3 e Plone 5.2 support.
+  [wesleybl, zopyx, cdw9, rpatterson, flipmcf]
+
 - Avoid failures if the ``id`` of an item is invalid for Zope.
   [hvelarde]
 
