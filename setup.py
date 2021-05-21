@@ -30,7 +30,7 @@ setup(
         "Operating System :: OS Independent",
         "License :: OSI Approved :: GNU General Public License v2 (GPLv2)",
     ],
-    keywords='Python Plone CMS',
+    keywords='content import filtering',
     author='Jarn',
     author_email='info@jarn.com',
     url='https://github.com/collective/collective.transmogrifier',
