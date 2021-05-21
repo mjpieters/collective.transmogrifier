@@ -107,7 +107,7 @@ appended to the list source.
     ...     lister)
     >>> transmogrifier(
     ...     u'collective.transmogrifier.sections.tests.listsource-move')
-    >>> print handler
+    >>> print(handler)
     logger INFO
       {'copy': 'item-01'}
     logger INFO
