@@ -285,7 +285,7 @@ def constructorSetUp(test):
                 return self
 
         def hasObject(self, id_):
-            if isinstance(id_, str):
+            if six.PY2 and isinstance(id_, unicode):
                 return False
             if (self._path + '/' + id_).startswith('not/existing'):
                 return False
@@ -318,7 +318,7 @@ def constructorSetUp(test):
                 dict(_type='FooType', _path='/eggs/foo'),
                 dict(_type='FooType', _path='/spam/eggs/foo'),
                 dict(_type='FooType', _path='/foo'),
-                dict(_type='FooType', _path='/unicode/encoded/to/ascii'),
+                dict(_type='FooType', _path=u'/unicode/encoded/to/ascii'),
                 dict(_type='BarType', _path='not/existing/bar',
                      title='Should not be constructed, not an existing path'),
                 dict(_type='FooType', _path='/spam/eggs/existing',
@@ -353,7 +353,7 @@ def foldersSetUp(test):
             if path in self.exists:
                 return True
             self.exists.add(path)
-            if isinstance(id_, str):
+            if six.PY2 and isinstance(id_, unicode):
                 return False
             if not path.startswith('/existing'):
                 return False
@@ -517,7 +517,9 @@ def test_suite():
         doctest.DocFileSuite(
             '../../../../docs/source/sections/constructor.rst',
             setUp=constructorSetUp, tearDown=tearDown,
-            optionflags=doctest.NORMALIZE_WHITESPACE | doctest.REPORT_NDIFF),
+            optionflags=doctest.NORMALIZE_WHITESPACE | doctest.REPORT_NDIFF,
+            checker=Py23DocChecker(),
+        ),
         doctest.DocFileSuite(
             '../../../../docs/source/sections/folders.rst',
             setUp=foldersSetUp, tearDown=tearDown,

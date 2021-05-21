@@ -5,13 +5,13 @@ from collective.transmogrifier.interfaces import ISectionBlueprint
 from collective.transmogrifier.utils import defaultMatcher
 from collective.transmogrifier.utils import traverse
 from Products.CMFCore.utils import getToolByName
-from Products.CMFPlone.utils import safe_unicode
 from zExceptions import BadRequest
-from zope.interface import provider
 from zope.interface import implementer
+from zope.interface import provider
 
 import logging
 import posixpath
+import six
 
 
 logger = logging.getLogger('collective.transmogrifier.constructor')
@@ -47,7 +47,8 @@ class ConstructorSection(object):
                 logger.warning('Not an existing type: %s' % type_)
                 yield item; continue
 
-            path = safe_unicode(path)
+            if six.PY2:
+                path = path.encode('ASCII')
             container, id = posixpath.split(path.strip('/'))
             context = traverse(self.context, container, None)
             if context is None:

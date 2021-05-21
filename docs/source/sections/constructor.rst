@@ -74,7 +74,7 @@ required = True key to the constructor section it will instead raise a KeyError.
     logger INFO
       {'_path': '/foo', '_type': 'FooType'}
     logger INFO
-      {'_path': u'/unicode/encoded/to/ascii', '_type': 'FooType'}
+      {'_path': '/unicode/encoded/to/ascii', '_type': 'FooType'}
     logger INFO
         {'_path': 'not/existing/bar',
        '_type': 'BarType',
@@ -136,4 +136,4 @@ required = True key to the constructor section it will instead raise a KeyError.
     logger INFO
       {'_path': '/foo', '_type': 'FooType'}
     logger INFO
-      {'_path': u'/unicode/encoded/to/ascii', '_type': 'FooType'}
+      {'_path': '/unicode/encoded/to/ascii', '_type': 'FooType'}
