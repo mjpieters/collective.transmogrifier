@@ -29,9 +29,9 @@ to the next pipe section, otherwise it is not:
     ... name = logger
     ... level = INFO
     ... """
-    >>> registerConfig(u'collective.transmogrifier.sections.tests.condition',
+    >>> registerConfig('collective.transmogrifier.sections.tests.condition',
     ...                condition)
-    >>> transmogrifier(u'collective.transmogrifier.sections.tests.condition')
+    >>> transmogrifier('collective.transmogrifier.sections.tests.condition')
     >>> print(handler)
     logger INFO
         {'id': 'item-03'}

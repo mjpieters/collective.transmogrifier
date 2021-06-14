@@ -63,9 +63,9 @@ required = True key to the constructor section it will instead raise a KeyError.
     ... name = logger
     ... level = INFO
     ... """
-    >>> registerConfig(u'collective.transmogrifier.sections.tests.constructor',
+    >>> registerConfig('collective.transmogrifier.sections.tests.constructor',
     ...                constructor)
-    >>> transmogrifier(u'collective.transmogrifier.sections.tests.constructor')
+    >>> transmogrifier('collective.transmogrifier.sections.tests.constructor')
     >>> print(handler)
     logger INFO
       {'_path': '/eggs/foo', '_type': 'FooType'}
@@ -120,11 +120,11 @@ required = True key to the constructor section it will instead raise a KeyError.
     ... name = logger
     ... level = INFO
     ... """
-    >>> registerConfig(u'collective.transmogrifier.sections.tests.constructor2',
+    >>> registerConfig('collective.transmogrifier.sections.tests.constructor2',
     ...                constructor)
     >>> handler.clear()
     >>> try:
-    ...     transmogrifier(u'collective.transmogrifier.sections.tests.constructor2')
+    ...     transmogrifier('collective.transmogrifier.sections.tests.constructor2')
     ...     raise AssertionError("Required constructor did not raise an error for missing folder")
     ... except KeyError:
     ...     pass

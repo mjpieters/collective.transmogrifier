@@ -20,9 +20,9 @@ paths from a filesystem using `os.walk()`_.
     ... name = logger
     ... level = INFO
     ... """
-    >>> registerConfig(u'collective.transmogrifier.sections.tests.dirwalker',
+    >>> registerConfig('collective.transmogrifier.sections.tests.dirwalker',
     ...                infologger)
-    >>> transmogrifier(u'collective.transmogrifier.sections.tests.dirwalker')
+    >>> transmogrifier('collective.transmogrifier.sections.tests.dirwalker')
     >>> print(handler)
     logger INFO
       {'_path': '/', '_type': 'Folder'...

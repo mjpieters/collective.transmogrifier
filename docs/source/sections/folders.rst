@@ -64,9 +64,9 @@ Here is how it might look by default:
     ... name = logger
     ... level = INFO
     ... """
-    >>> registerConfig(u'collective.transmogrifier.sections.tests.folders',
+    >>> registerConfig('collective.transmogrifier.sections.tests.folders',
     ...                constructor)
-    >>> transmogrifier(u'collective.transmogrifier.sections.tests.folders')
+    >>> transmogrifier('collective.transmogrifier.sections.tests.folders')
     >>> print(handler)
     logger INFO
         {'_path': '/foo', '_type': 'Document'}
@@ -113,11 +113,11 @@ To specify alternate types and keys, we can do something like this:
     ... name = logger
     ... level = INFO
     ... """
-    >>> registerConfig(u'collective.transmogrifier.sections.tests.folders2',
+    >>> registerConfig('collective.transmogrifier.sections.tests.folders2',
     ...                constructor)
     >>> handler.clear()
     >>> plone.exists.clear()
-    >>> transmogrifier(u'collective.transmogrifier.sections.tests.folders2')
+    >>> transmogrifier('collective.transmogrifier.sections.tests.folders2')
     >>> print(handler)
     logger INFO
       {'_path': '/foo', '_type': 'Document'}

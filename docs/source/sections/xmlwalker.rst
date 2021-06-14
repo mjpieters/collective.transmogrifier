@@ -76,9 +76,9 @@ Start with an HTML file containing a heirarchical navbar.
     ... name = logger
     ... level = INFO
     ... """.format(html_file)
-    >>> registerConfig(u'collective.transmogrifier.sections.tests.xmlwalker',
+    >>> registerConfig('collective.transmogrifier.sections.tests.xmlwalker',
     ...                infologger)
-    >>> transmogrifier(u'collective.transmogrifier.sections.tests.xmlwalker')
+    >>> transmogrifier('collective.transmogrifier.sections.tests.xmlwalker')
     >>> print(handler)
     logger INFO
       {}

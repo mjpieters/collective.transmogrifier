@@ -37,9 +37,9 @@ options that start with ``fmtparam-``.
     ... name = logger
     ... level = INFO
     ... """.format(os.path.dirname(tests.__file__))
-    >>> registerConfig(u'collective.transmogrifier.sections.tests.csvsource.file',
+    >>> registerConfig('collective.transmogrifier.sections.tests.csvsource.file',
     ...                csvsource)
-    >>> transmogrifier(u'collective.transmogrifier.sections.tests.csvsource.file')
+    >>> transmogrifier('collective.transmogrifier.sections.tests.csvsource.file')
     >>> print(handler)
     logger INFO
         {'bar': 'first-bar', 'baz': 'first-baz', 'foo': 'first-foo'}
@@ -49,7 +49,7 @@ options that start with ``fmtparam-``.
 The CSV file column field names can also be specified.
 
     >>> handler.clear()
-    >>> transmogrifier(u'collective.transmogrifier.sections.tests.csvsource.file',
+    >>> transmogrifier('collective.transmogrifier.sections.tests.csvsource.file',
     ...                csvsource=dict(fieldnames='monty spam eggs'))
     >>> print(handler)
     logger INFO
@@ -76,10 +76,10 @@ Here is the same example, loading a file from a package instead:
     ... name = logger
     ... level = INFO
     ... """
-    >>> registerConfig(u'collective.transmogrifier.sections.tests.csvsource.package',
+    >>> registerConfig('collective.transmogrifier.sections.tests.csvsource.package',
     ...                csvsource)
     >>> handler.clear()
-    >>> transmogrifier(u'collective.transmogrifier.sections.tests.csvsource.package')
+    >>> transmogrifier('collective.transmogrifier.sections.tests.csvsource.package')
     >>> print(handler)
     logger INFO
         {'bar': 'first-bar', 'baz': 'first-baz', 'foo': 'first-foo'}
@@ -120,7 +120,7 @@ We can also load a file from a GS import context:
     ... name = logger
     ... level = INFO
     ... """
-    >>> registerConfig(u'collective.transmogrifier.sections.tests.csvsource.gs',
+    >>> registerConfig('collective.transmogrifier.sections.tests.csvsource.gs',
     ...                csvsource)
     >>> handler.clear()
     >>> t = Transmogrifier({})
@@ -130,7 +130,7 @@ We can also load a file from a GS import context:
     ... pig,george
     ... duck,archibald
     ... """)
-    >>> t(u'collective.transmogrifier.sections.tests.csvsource.gs')
+    >>> t('collective.transmogrifier.sections.tests.csvsource.gs')
     >>> print(handler)
     logger INFO
         {'animal': 'cow', 'name': 'daisy'}
@@ -158,7 +158,7 @@ Import contexts can be chunked, and that's okay:
     ... """animal,name
     ... fish,wanda
     ... """)
-    >>> t(u'collective.transmogrifier.sections.tests.csvsource.gs')
+    >>> t('collective.transmogrifier.sections.tests.csvsource.gs')
     >>> print(handler)
     logger INFO
         {'animal': 'fish', 'name': 'wanda'}
@@ -173,14 +173,14 @@ Attempting to load a nonexistant file won't do anything:
     ... pig,george
     ... duck,archibald
     ... """)
-    >>> t(u'collective.transmogrifier.sections.tests.csvsource.gs')
+    >>> t('collective.transmogrifier.sections.tests.csvsource.gs')
     >>> print(handler)
 
 Not having an import context around will also find nothing:
 
     >>> handler.clear()
     >>> t = Transmogrifier({})
-    >>> t(u'collective.transmogrifier.sections.tests.csvsource.gs')
+    >>> t('collective.transmogrifier.sections.tests.csvsource.gs')
     >>> print(handler)
 
 The file can also be taken from a source item's key. A key can also be
@@ -213,11 +213,11 @@ specified for rows that have more values than the fieldnames.
     ... row-key = string:_csvsource
     ...
     ... """
-    >>> registerConfig(u'collective.transmogrifier.sections.tests.csvsource.key',
+    >>> registerConfig('collective.transmogrifier.sections.tests.csvsource.key',
     ...                csvsource)
 
     >>> handler.clear()
-    >>> transmogrifier(u'collective.transmogrifier.sections.tests.csvsource.key')
+    >>> transmogrifier('collective.transmogrifier.sections.tests.csvsource.key')
     >>> print(handler)
     logger INFO
         {'_item-csvsource': '.../collective/transmogrifier/tests/sample.csv'}

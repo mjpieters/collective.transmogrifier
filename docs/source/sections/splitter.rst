@@ -30,9 +30,9 @@ own copy [*]_ of the items:
     ... name = logger
     ... level = INFO
     ... """
-    >>> registerConfig(u'collective.transmogrifier.sections.tests.emptysplitter',
+    >>> registerConfig('collective.transmogrifier.sections.tests.emptysplitter',
     ...                emptysplitter)
-    >>> transmogrifier(u'collective.transmogrifier.sections.tests.emptysplitter')
+    >>> transmogrifier('collective.transmogrifier.sections.tests.emptysplitter')
     >>> print(handler)
     logger INFO
         {'id': 'item-00'}
@@ -88,10 +88,10 @@ optional and use the pipeline option name plus ``-condition``:
     ... name = logger
     ... level = INFO
     ... """
-    >>> registerConfig(u'collective.transmogrifier.sections.tests.evenodd',
+    >>> registerConfig('collective.transmogrifier.sections.tests.evenodd',
     ...                evenoddsplitter)
     >>> handler.clear()
-    >>> transmogrifier(u'collective.transmogrifier.sections.tests.evenodd')
+    >>> transmogrifier('collective.transmogrifier.sections.tests.evenodd')
     >>> print(handler)
     logger INFO
         {'even': 'The even pipe', 'id': 'item-00'}

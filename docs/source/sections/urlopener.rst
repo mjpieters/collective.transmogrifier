@@ -45,9 +45,9 @@ response and header optionally also using a local cache.
     ... level = INFO
     ... """
     >>> registerConfig(
-    ...     u'collective.transmogrifier.sections.tests.urlopener', urlopener)
+    ...     'collective.transmogrifier.sections.tests.urlopener', urlopener)
 
-    >>> transmogrifier(u'collective.transmogrifier.sections.tests.urlopener')
+    >>> transmogrifier('collective.transmogrifier.sections.tests.urlopener')
     >>> print(handler)
     logger INFO
         {'_cache': 'var/tests.urlopener.cache.d/http/foo/bar/qux/non-existent.html',

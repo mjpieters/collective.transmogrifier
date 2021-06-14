@@ -60,9 +60,9 @@ happening. The condition is evaluated for every matched key.
     ... name = logger
     ... level = INFO
     ... """
-    >>> registerConfig(u'collective.transmogrifier.sections.tests.codecs',
+    >>> registerConfig('collective.transmogrifier.sections.tests.codecs',
     ...                codecs)
-    >>> transmogrifier(u'collective.transmogrifier.sections.tests.codecs')
+    >>> transmogrifier('collective.transmogrifier.sections.tests.codecs')
     >>> print(handler)
     logger INFO
       {'id': 'foo', 'status': '℗', 'title': 'The Foo Fighters \\u2117'}

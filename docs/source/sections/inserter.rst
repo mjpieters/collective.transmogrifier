@@ -49,9 +49,9 @@ version.
     ... name = logger
     ... level = INFO
     ... """
-    >>> registerConfig(u'collective.transmogrifier.sections.tests.inserter',
+    >>> registerConfig('collective.transmogrifier.sections.tests.inserter',
     ...                inserter)
-    >>> transmogrifier(u'collective.transmogrifier.sections.tests.inserter')
+    >>> transmogrifier('collective.transmogrifier.sections.tests.inserter')
     >>> print(handler)
     logger INFO
         {'foo': 'bar (inserted into "item-00" by the "simple-insertion" section)',

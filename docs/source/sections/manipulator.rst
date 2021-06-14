@@ -58,9 +58,9 @@ happening. The condition is evaluated for every matched key.
     ... name = logger
     ... level = INFO
     ... """
-    >>> registerConfig(u'collective.transmogrifier.sections.tests.manipulator',
+    >>> registerConfig('collective.transmogrifier.sections.tests.manipulator',
     ...                manipulator)
-    >>> transmogrifier(u'collective.transmogrifier.sections.tests.manipulator')
+    >>> transmogrifier('collective.transmogrifier.sections.tests.manipulator')
     >>> print(handler)
     logger INFO
         {'id': 'foo',

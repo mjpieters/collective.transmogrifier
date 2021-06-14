@@ -56,7 +56,7 @@ Assemble and register a transmogrifier with a list source section.
     ... section = list
     ... """
     >>> registerConfig(
-    ...     u'collective.transmogrifier.sections.tests.listsource',
+    ...     'collective.transmogrifier.sections.tests.listsource',
     ...     lister)
 
 Run the transmogrifier.  An item with contents corresponding the
@@ -65,7 +65,7 @@ variable whose name is listed in the listsource-lists variable will
 be broken up on newlines into a list.
 
     >>> transmogrifier(
-    ...     u'collective.transmogrifier.sections.tests.listsource')
+    ...     'collective.transmogrifier.sections.tests.listsource')
     >>> print(handler)
     logger INFO
         {'id': 'item-00'}
@@ -103,10 +103,10 @@ appended to the list source.
     ... copy-keys = python:['copy']
     ... """
     >>> registerConfig(
-    ...     u'collective.transmogrifier.sections.tests.listsource-move',
+    ...     'collective.transmogrifier.sections.tests.listsource-move',
     ...     lister)
     >>> transmogrifier(
-    ...     u'collective.transmogrifier.sections.tests.listsource-move')
+    ...     'collective.transmogrifier.sections.tests.listsource-move')
     >>> print(handler)
     logger INFO
       {'copy': 'item-01'}

@@ -29,14 +29,14 @@ breakpoint and restarting the server. This speeds up the process.
     ... name = logger
     ... level = INFO
     ... """
-    >>> registerConfig(u'collective.transmogrifier.sections.tests.breaker',
+    >>> registerConfig('collective.transmogrifier.sections.tests.breaker',
     ...                breaker)
 
 Since pdb requires input, for this test we replace stdin with something
 giving some input (just a continue cammand).
 
     >>> oldstdin = make_stdin('c\n')
-    >>> transmogrifier(u'collective.transmogrifier.sections.tests.breaker')
+    >>> transmogrifier('collective.transmogrifier.sections.tests.breaker')
     > .../collective.transmogrifier/src/collective/transmogrifier/sections/logger.py(...)__iter__()
     -> ...
     (Pdb) c

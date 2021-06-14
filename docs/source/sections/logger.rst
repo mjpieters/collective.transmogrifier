@@ -29,9 +29,9 @@ is ``collective.transmogrifier.sections.logger``.
     ... name = Infologger test
     ... key = id
     ... """
-    >>> registerConfig(u'collective.transmogrifier.sections.tests.infologger',
+    >>> registerConfig('collective.transmogrifier.sections.tests.infologger',
     ...                infologger)
-    >>> transmogrifier(u'collective.transmogrifier.sections.tests.infologger')
+    >>> transmogrifier('collective.transmogrifier.sections.tests.infologger')
     Infologger test: item-00
     Infologger test: item-01
     Infologger test: item-02
@@ -58,9 +58,9 @@ the items logged.
     ... key = foo
     ... condition = python:item['id'] != 'item-01'
     ... """
-    >>> registerConfig(u'collective.transmogrifier.sections.tests.debuglogger',
+    >>> registerConfig('collective.transmogrifier.sections.tests.debuglogger',
     ...                debuglogger)
-    >>> transmogrifier(u'collective.transmogrifier.sections.tests.debuglogger')
+    >>> transmogrifier('collective.transmogrifier.sections.tests.debuglogger')
     Infologger test: -- Missing key --
     Infologger test: -- Missing key --
 
@@ -86,9 +86,9 @@ text fields which may be too large and make the output too noisy.
     ...     id-duplicate
     ...     nonexistent
     ... """
-    >>> registerConfig(u'collective.transmogrifier.sections.tests.logger',
+    >>> registerConfig('collective.transmogrifier.sections.tests.logger',
     ...                logger)
-    >>> transmogrifier(u'collective.transmogrifier.sections.tests.logger')
+    >>> transmogrifier('collective.transmogrifier.sections.tests.logger')
     collective.transmogrifier.sections.tests.logger.logger:
       {'id': 'foo', 'status': '℗', 'title': 'The Foo Fighters ℗'}
     collective.transmogrifier.sections.tests.logger.logger:
