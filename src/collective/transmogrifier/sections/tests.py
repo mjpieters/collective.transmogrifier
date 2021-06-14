@@ -22,6 +22,16 @@ import unittest
 
 _marker = object()
 
+def get_next_method(iterator):
+    """
+    Returns the method used by the built-in next function, depending on the
+    Python version.
+    """
+    # BBB: Python 2 uses method next in iterators. Python 3 uses __next__
+    if six.PY2:
+        return iterator.next
+    return iterator.__next__
+
 
 class SplitterConditionSectionTests(unittest.TestCase):
 
@@ -58,7 +68,7 @@ class SplitterConditionSectionTests(unittest.TestCase):
         self.assertEqual(section.ahead, 0)
         self.assertFalse(section.isAhead)
 
-        self.assertRaises(StopIteration, section.__next__)
+        self.assertRaises(StopIteration, get_next_method(section))
         self.assertEqual(section.ahead, 1)
         self.assertTrue(section.isAhead)
         self.assertEqual(section.ahead, 0)
@@ -71,14 +81,14 @@ class SplitterConditionSectionTests(unittest.TestCase):
         self.assertTrue(section.willMatch)
         self.assertEqual(next(section), 1)
         self.assertFalse(section.willMatch)
-        self.assertRaises(StopIteration, section.__next__)
+        self.assertRaises(StopIteration, get_next_method(section))
 
         section = self._makeOne(iter(list(range(3))), lambda x: x < 1)
         self.assertTrue(section.willMatch)
         self.assertTrue(section.willMatch)
         self.assertEqual(next(section), 0)
         self.assertFalse(section.willMatch)
-        self.assertRaises(StopIteration, section.__next__)
+        self.assertRaises(StopIteration, get_next_method(section))
 
     def testIsDone(self):
         section = self._makeOne(iter(list(range(1))))
@@ -86,7 +96,7 @@ class SplitterConditionSectionTests(unittest.TestCase):
         self.assertFalse(section.isDone)
         next(section)
         self.assertTrue(section.isDone)
-        self.assertRaises(StopIteration, section.__next__)
+        self.assertRaises(StopIteration, get_next_method(section))
 
     def testCopy(self):
         orig, source = itertools.tee((dict(foo=i) for i in range(2)), 2)
