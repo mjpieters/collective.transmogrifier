@@ -1,22 +1,21 @@
 # -*- coding: utf-8 -*-
 # Test cleanup support
-from Products.CMFCore.interfaces import IFolderish
 from collective.transmogrifier.interfaces import ITransmogrifier
 from collective.transmogrifier.utils import constructPipeline
 from collective.transmogrifier.utils import resolvePackageReference
+from Products.CMFCore.interfaces import IFolderish
+from six.moves import configparser
 from zope.component import adapts
 from zope.interface import implementer
 from zope.testing.cleanup import addCleanUp
 
-from six.moves import configparser
 import re
 
 try:
-    from UserDict import UserDict
-    from UserDict import DictMixin
+    from collections.abc import MutableMapping
 except ImportError:
-    from collections import UserDict
-    from collections import MutableMapping as DictMixin
+    # BBB: Python 2
+    from collections import MutableMapping
 
 
 class ConfigurationRegistry(object):
@@ -51,7 +50,7 @@ del addCleanUp
 
 
 @implementer(ITransmogrifier)
-class Transmogrifier(DictMixin):
+class Transmogrifier(MutableMapping):
     adapts(IFolderish)
 
     def __init__(self, context):
@@ -61,8 +60,7 @@ class Transmogrifier(DictMixin):
         return len(self._raw)
 
     def __iter__(self):
-        for i in self._raw:
-            yield i
+        return iter(self._raw)
 
     def __call__(self, configuration_id, **overrides):
         self.configuration_id = configuration_id
@@ -100,11 +98,8 @@ class Transmogrifier(DictMixin):
     def keys(self):
         return list(self._raw.keys())
 
-    def __iter__(self):
-        return iter(self._raw)
 
-
-class Options(DictMixin):
+class Options(MutableMapping):
     def __init__(self, transmogrifier, section, data):
         self.transmogrifier = transmogrifier
         self.section = section
