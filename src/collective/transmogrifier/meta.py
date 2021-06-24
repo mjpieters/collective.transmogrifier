@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
-from collective.transmogrifier.transmogrifier import configuration_registry
 from collective.transmogrifier import BIGGER_THEN_PLONE51
+from collective.transmogrifier.transmogrifier import configuration_registry
 from zope.configuration.fields import MessageID
 from zope.configuration.fields import Path
-from zope.configuration.fields import PythonIdentifier
 from zope.interface import Interface
+from zope.schema import DottedName
 
 name_default = 'default'
 
@@ -19,7 +19,7 @@ class IRegisterConfigDirective(Interface):
     transmogrifier:registerConfig
     """
 
-    name = PythonIdentifier(
+    name = DottedName(
         title=u'Name',
         description=u"If not specified 'default' is used.",
         default=name_default,

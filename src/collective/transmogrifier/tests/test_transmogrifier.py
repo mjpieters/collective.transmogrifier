@@ -46,19 +46,19 @@ class MetaDirectivesTests(unittest.TestCase):
     xmlns:transmogrifier="http://namespaces.plone.org/transmogrifier"
     i18n_domain="collective.transmogrifier">
 <transmogrifier:registerConfig
-    name="collective_transmogrifier_tests_configname"
+    name="collective.transmogrifier.tests.configname"
     title="config title"
     description="config description"
     configuration="filename.cfg"
     />
 </configure>''')
         self.assertEqual(configuration_registry.listConfigurationIds(),
-                         (u'collective_transmogrifier_tests_configname',))
+                         (u'collective.transmogrifier.tests.configname',))
         path = os.path.split(collective.transmogrifier.__file__)[0]
         self.assertEqual(
             configuration_registry.getConfiguration(
-                u'collective_transmogrifier_tests_configname'),
-            dict(id=u'collective_transmogrifier_tests_configname',
+                u'collective.transmogrifier.tests.configname'),
+            dict(id=u'collective.transmogrifier.tests.configname',
                  title=u'config title',
                  description=u'config description',
                  configuration=os.path.join(path, 'filename.cfg')))
@@ -69,19 +69,19 @@ class MetaDirectivesTests(unittest.TestCase):
     xmlns:transmogrifier="http://namespaces.plone.org/transmogrifier"
     i18n_domain="collective.transmogrifier">
 <transmogrifier:registerConfig
-    name="collective_transmogrifier_tests_configname"
+    name="collective.transmogrifier.tests.configname"
     configuration="filename.cfg"
     />
 </configure>''')
         self.assertEqual(configuration_registry.listConfigurationIds(),
-                         (u'collective_transmogrifier_tests_configname',))
+                         (u'collective.transmogrifier.tests.configname',))
         path = os.path.split(collective.transmogrifier.__file__)[0]
         self.assertEqual(
             configuration_registry.getConfiguration(
-                u'collective_transmogrifier_tests_configname'),
-            dict(id=u'collective_transmogrifier_tests_configname',
+                u'collective.transmogrifier.tests.configname'),
+            dict(id=u'collective.transmogrifier.tests.configname',
                  title=u'Pipeline configuration '
-                       u"'collective_transmogrifier_tests_configname'",
+                       u"'collective.transmogrifier.tests.configname'",
                  description=u'',
                  configuration=os.path.join(path, 'filename.cfg')))
 

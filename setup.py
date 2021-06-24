@@ -55,6 +55,7 @@ setup(
         'Products.CMFCore',
         'setuptools',
         'six',
+        'zope.schema',
     ],
     extras_require={
         'test': [
