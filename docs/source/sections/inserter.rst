@@ -23,11 +23,11 @@ version.
     ...     expression-insertion
     ...     transform-id
     ...     logger
-    ...     
+    ...
     ... [source]
     ... blueprint = collective.transmogrifier.sections.tests.rangesource
     ... size = 3
-    ... 
+    ...
     ... [simple-insertion]
     ... blueprint = collective.transmogrifier.sections.inserter
     ... key = string:foo
@@ -43,16 +43,16 @@ version.
     ... blueprint = collective.transmogrifier.sections.inserter
     ... key = string:id
     ... value = string:foo-${item/id}
-    ... 
+    ...
     ... [logger]
     ... blueprint = collective.transmogrifier.sections.logger
     ... name = logger
     ... level = INFO
     ... """
-    >>> registerConfig(u'collective.transmogrifier.sections.tests.inserter',
+    >>> registerConfig('collective.transmogrifier.sections.tests.inserter',
     ...                inserter)
-    >>> transmogrifier(u'collective.transmogrifier.sections.tests.inserter')
-    >>> print handler
+    >>> transmogrifier('collective.transmogrifier.sections.tests.inserter')
+    >>> print(handler)
     logger INFO
         {'foo': 'bar (inserted into "item-00" by the "simple-insertion" section)',
         'id': 'foo-item-00'}

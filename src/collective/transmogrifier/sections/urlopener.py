@@ -4,22 +4,42 @@ from collective.transmogrifier.interfaces import ISectionBlueprint
 from collective.transmogrifier.utils import defaultMatcher
 from collective.transmogrifier.utils import Expression
 from collective.transmogrifier.utils import resolvePackageReferenceOrFile
-from zope.interface import classProvides
-from zope.interface import implements
+from zope.interface import implementer
+from zope.interface import provider
 
 import contextlib
 import io
 import logging
-import mimetools
 import mimetypes
 import os
-import urllib2
-import urlparse
+import six
+import six.moves.urllib.error
+import six.moves.urllib.parse
+import six.moves.urllib.request
 
 
+# BBB: mimetools.Message doesn't exist in Python 3. Usually email.message.Message
+# is used in Python 3. In some cases it would be possible to use
+# email.message.Message in Python 2 as well. But here we call the method
+# six.moves.urllib.request.HTTPRedirectHandler.http_error_302.
+# In Python 2 the headers parameter of this method must be a mimetools.Message.
+# So, we need to use it here.
+if six.PY2:
+    from mimetools import Message
+else:
+    from email.message import Message
+    from email import message_from_string
+
+
+def get_message(initial_value=""):
+    if six.PY2:
+        return Message(io.StringIO(initial_value.decode()))
+    return message_from_string(initial_value)
+
+
+@provider(ISectionBlueprint)
+@implementer(ISection)
 class URLOpenerSection(object):
-    classProvides(ISectionBlueprint)
-    implements(ISection)
 
     def __init__(self, transmogrifier, name, options, previous):
         self.previous = previous
@@ -55,10 +75,13 @@ class URLOpenerSection(object):
             self.ignore_handler = HTTPDefaultErrorHandler()
             self.ignore_handler.section = self
             handlers.append(self.ignore_handler)
-        if not [handler for handler in handlers
-                if isinstance(handler, urllib2.HTTPRedirectHandler)]:
+        if not [
+            handler
+            for handler in handlers
+            if isinstance(handler, six.moves.urllib.request.HTTPRedirectHandler)
+        ]:
             handlers.append(HTTPRedirectHandler())
-        self.opener = urllib2.build_opener(*handlers)
+        self.opener = six.moves.urllib.request.build_opener(*handlers)
 
     def __iter__(self):
         for item in self.previous:
@@ -68,8 +91,8 @@ class URLOpenerSection(object):
                 continue
 
             url = item[key]
-            if not isinstance(url, urlparse.SplitResult):
-                url = urlparse.urlsplit(url)
+            if not isinstance(url, six.moves.urllib.parse.SplitResult):
+                url = six.moves.urllib.parse.urlsplit(url)
 
             cache = os.path.join(
                 self.cachedir, url.scheme, url.netloc,
@@ -85,7 +108,7 @@ class URLOpenerSection(object):
 
             if os.path.isfile(cache) and os.path.isfile(headers_cache):
                 self.logger.debug('Using cache: %s', cache)
-                headers = mimetools.Message(open(headers_cache))
+                headers = get_message(open(headers_cache))
             else:
                 if not os.path.isdir(os.path.dirname(cache)):
                     os.makedirs(os.path.dirname(cache))
@@ -102,13 +125,12 @@ class URLOpenerSection(object):
                 with contextlib.closing(response) as response:
                     open(cache, 'w').writelines(response)
                     headers = response.info()
-                    headers.setdefault('Url', response.geturl())
+                    headers["url"] = response.geturl()
                     code = response.getcode()
                     if code:
-                        headers.setdefault(
-                            'Status', str(code) + (
-                                hasattr(response, 'msg') and
-                                (' ' + response.msg) or ''))
+                        headers["status"] = str(code) + (
+                            hasattr(response, "msg") and (" " + response.msg) or ""
+                        )
                     open(headers_cache, 'w').write(str(headers))
 
             item[headerskey] = headers
@@ -116,32 +138,33 @@ class URLOpenerSection(object):
             yield item
 
 
-class HTTPDefaultErrorHandler(urllib2.HTTPDefaultErrorHandler):
+class HTTPDefaultErrorHandler(six.moves.urllib.request.HTTPDefaultErrorHandler):
 
     def http_error_default(self, req, fp, code, msg, hdrs):
-        if not isinstance(hdrs, mimetools.Message):
-            hdrs = mimetools.Message(io.StringIO(hdrs.decode()))
-        hdrs.setdefault('Status', str(code) + ' ' + msg)
+        if not isinstance(hdrs, Message):
+            hdrs = get_message(hdrs)
+        hdrs["status"] = str(code) + " " + msg
         try:
-            return urllib2.HTTPDefaultErrorHandler.http_error_default(
-                self, req, fp, code, msg, hdrs)
-        except urllib2.URLError as error:
+            return six.moves.urllib.request.HTTPDefaultErrorHandler.\
+                http_error_default(
+                    self, req, fp, code, msg, hdrs
+                )
+        except six.moves.urllib.error.URLError as error:
             if not self.section.ignore_error(self.item, error=error):
                 raise
-            self.section.logger.warn(
+            self.section.logger.warning(
                 'Ignoring error opening URL: %s', error)
             return error
 
 
-class HTTPRedirectHandler(urllib2.HTTPRedirectHandler):
-
+class HTTPRedirectHandler(six.moves.urllib.request.HTTPRedirectHandler):
     def http_error_302(self, req, fp, code, msg, headers):
-        resp = urllib2.HTTPRedirectHandler.http_error_302(
-            self, req, fp, code, msg, headers)
-        resp.headers.setdefault(
-            'Redirect-Status',
-            headers.get('Redirect-Status', fp.headers.get(
-                'Redirect-Status', str(code) + ' ' + msg)))
+        resp = six.moves.urllib.request.HTTPRedirectHandler.http_error_302(
+            self, req, fp, code, msg, headers
+        )
+        resp.headers["redirect-status"] = headers.get(
+            "redirect-status", fp.headers.get("redirect-status", str(code) + " " + msg)
+        )
         return resp
 
     http_error_301 = http_error_303 = http_error_307 = http_error_302

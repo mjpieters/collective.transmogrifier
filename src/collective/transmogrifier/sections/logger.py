@@ -4,17 +4,17 @@ from collective.transmogrifier.interfaces import ISectionBlueprint
 from collective.transmogrifier.utils import Condition
 from collective.transmogrifier.utils import Matcher
 from collective.transmogrifier.utils import pformat_msg
-from zope.interface import classProvides
-from zope.interface import implements
+from zope.interface import provider
+from zope.interface import implementer
 
 import logging
 
 
+@provider(ISectionBlueprint)
+@implementer(ISection)
 class LoggerSection(object):
     """Logs a value of a key."""
 
-    classProvides(ISectionBlueprint)
-    implements(ISection)
 
     def __init__(self, transmogrifier, name, options, previous):
         self.previous = previous
@@ -43,7 +43,7 @@ class LoggerSection(object):
             if self.logger.isEnabledFor(self.level) and self.condition(item):
                 if self.key is None:
                     copy = {}
-                    for key in item.keys():
+                    for key in list(item.keys()):
                         if not self.delete(key)[1]:
                             copy[key] = item[key]
                     msg = pformat_msg(copy)

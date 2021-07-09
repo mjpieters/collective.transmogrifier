@@ -15,24 +15,24 @@ to the next pipe section, otherwise it is not:
     ...     source
     ...     condition
     ...     logger
-    ...     
+    ...
     ... [source]
     ... blueprint = collective.transmogrifier.sections.tests.rangesource
     ... size = 5
-    ... 
+    ...
     ... [condition]
     ... blueprint = collective.transmogrifier.sections.condition
     ... condition = python:int(item['id'][-2:]) > 2
-    ... 
+    ...
     ... [logger]
     ... blueprint = collective.transmogrifier.sections.logger
     ... name = logger
     ... level = INFO
     ... """
-    >>> registerConfig(u'collective.transmogrifier.sections.tests.condition',
+    >>> registerConfig('collective.transmogrifier.sections.tests.condition',
     ...                condition)
-    >>> transmogrifier(u'collective.transmogrifier.sections.tests.condition')
-    >>> print handler
+    >>> transmogrifier('collective.transmogrifier.sections.tests.condition')
+    >>> print(handler)
     logger INFO
         {'id': 'item-03'}
     logger INFO

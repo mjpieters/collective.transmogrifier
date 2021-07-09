@@ -15,32 +15,32 @@ breakpoint and restarting the server. This speeds up the process.
     ...     source
     ...     breaker
     ...     logger
-    ...     
+    ...
     ... [source]
     ... blueprint = collective.transmogrifier.sections.tests.rangesource
     ... size = 3
-    ... 
+    ...
     ... [breaker]
     ... blueprint = collective.transmogrifier.sections.breakpoint
     ... condition = python: item['id'] == 'item-01'
-    ... 
+    ...
     ... [logger]
     ... blueprint = collective.transmogrifier.sections.logger
     ... name = logger
     ... level = INFO
     ... """
-    >>> registerConfig(u'collective.transmogrifier.sections.tests.breaker',
+    >>> registerConfig('collective.transmogrifier.sections.tests.breaker',
     ...                breaker)
-    
+
 Since pdb requires input, for this test we replace stdin with something
 giving some input (just a continue cammand).
 
     >>> oldstdin = make_stdin('c\n')
-    >>> transmogrifier(u'collective.transmogrifier.sections.tests.breaker')
+    >>> transmogrifier('collective.transmogrifier.sections.tests.breaker')
     > .../collective.transmogrifier/src/collective/transmogrifier/sections/logger.py(...)__iter__()
     -> ...
     (Pdb) c
-    >>> print handler
+    >>> print(handler)
     logger INFO
         {'id': 'item-00'}
     logger INFO
@@ -52,4 +52,4 @@ giving some input (just a continue cammand).
 And finally we reset the stdin:
 
     >>> reset_stdin(oldstdin)
-    
+

@@ -1,55 +1,66 @@
 # -*- coding: utf-8 -*-
 from collective.transmogrifier.interfaces import ISection
 from collective.transmogrifier.interfaces import ISectionBlueprint
+from collective.transmogrifier.sections.urlopener import get_message
 from collective.transmogrifier.tests import setUp
 from collective.transmogrifier.tests import tearDown
-from Products.Five import zcml
+from Zope2.App import zcml
 from zope.component import provideUtility
-from zope.interface import classProvides
-from zope.interface import implements
-from zope.testing import doctest
+from zope.interface import implementer
+from zope.interface import provider
 
+import doctest
 import io
 import itertools
-import mimetools
 import posixpath
+import re
 import shutil
+import six
 import sys
 import unittest
-import urllib2
 
 
 _marker = object()
+
+def get_next_method(iterator):
+    """
+    Returns the method used by the built-in next function, depending on the
+    Python version.
+    """
+    # BBB: Python 2 uses method next in iterators. Python 3 uses __next__
+    if six.PY2:
+        return iterator.next
+    return iterator.__next__
 
 
 class SplitterConditionSectionTests(unittest.TestCase):
 
     def _makeOne(self, previous, condition=None):
-        from splitter import SplitterConditionSection
+        from .splitter import SplitterConditionSection
         return SplitterConditionSection(condition, previous)
 
     def testIterates(self):
-        section = self._makeOne(iter(range(10)))
-        self.assertEqual(range(10), list(section))
+        section = self._makeOne(iter(list(range(10))))
+        self.assertEqual(list(range(10)), list(section))
 
     def testCondition(self):
-        section = self._makeOne(iter(range(10)), lambda x: x % 2)
-        self.assertEqual(range(1, 10, 2), list(section))
+        section = self._makeOne(iter(list(range(10))), lambda x: x % 2)
+        self.assertEqual(list(range(1, 10, 2)), list(section))
 
     def testAhead(self):
-        section = self._makeOne(iter(range(3)))
+        section = self._makeOne(iter(list(range(3))))
 
         self.assertEqual(section.ahead, 0)
         self.assertFalse(section.isAhead)
 
-        section.next()
+        next(section)
         self.assertEqual(section.ahead, 1)
         self.assertTrue(section.isAhead)
         self.assertEqual(section.ahead, 0)
         self.assertFalse(section.isAhead)
 
-        section.next()
-        section.next()
+        next(section)
+        next(section)
         self.assertEqual(section.ahead, 2)
         self.assertTrue(section.isAhead)
         self.assertEqual(section.ahead, 1)
@@ -57,40 +68,40 @@ class SplitterConditionSectionTests(unittest.TestCase):
         self.assertEqual(section.ahead, 0)
         self.assertFalse(section.isAhead)
 
-        self.assertRaises(StopIteration, section.next)
+        self.assertRaises(StopIteration, get_next_method(section))
         self.assertEqual(section.ahead, 1)
         self.assertTrue(section.isAhead)
         self.assertEqual(section.ahead, 0)
         self.assertFalse(section.isAhead)
 
     def testWillMatch(self):
-        section = self._makeOne(iter(range(2)), lambda x: x % 2)
+        section = self._makeOne(iter(list(range(2))), lambda x: x % 2)
 
         self.assertFalse(section.willMatch)
         self.assertTrue(section.willMatch)
-        self.assertEquals(section.next(), 1)
+        self.assertEqual(next(section), 1)
         self.assertFalse(section.willMatch)
-        self.assertRaises(StopIteration, section.next)
+        self.assertRaises(StopIteration, get_next_method(section))
 
-        section = self._makeOne(iter(range(3)), lambda x: x < 1)
+        section = self._makeOne(iter(list(range(3))), lambda x: x < 1)
         self.assertTrue(section.willMatch)
         self.assertTrue(section.willMatch)
-        self.assertEquals(section.next(), 0)
+        self.assertEqual(next(section), 0)
         self.assertFalse(section.willMatch)
-        self.assertRaises(StopIteration, section.next)
+        self.assertRaises(StopIteration, get_next_method(section))
 
     def testIsDone(self):
-        section = self._makeOne(iter(range(1)))
+        section = self._makeOne(iter(list(range(1))))
 
         self.assertFalse(section.isDone)
-        section.next()
+        next(section)
         self.assertTrue(section.isDone)
-        self.assertRaises(StopIteration, section.next)
+        self.assertRaises(StopIteration, get_next_method(section))
 
     def testCopy(self):
         orig, source = itertools.tee((dict(foo=i) for i in range(2)), 2)
         section = self._makeOne(source)
-        for original, yielded in itertools.izip(orig, section):
+        for original, yielded in zip(orig, section):
             self.assertEqual(original, yielded)
             self.assertFalse(original is yielded)
 
@@ -98,7 +109,7 @@ class SplitterConditionSectionTests(unittest.TestCase):
 class SplitterSectionTests(unittest.TestCase):
 
     def _makeOne(self, transmogrifier, options, previous):
-        from splitter import SplitterSection
+        from .splitter import SplitterSection
         return SplitterSection(transmogrifier, 'unittest', options, previous)
 
     def testAtLeastTwo(self):
@@ -109,8 +120,8 @@ class SplitterSectionTests(unittest.TestCase):
         self._makeOne({}, {'pipeline-1': '', 'pipeline-2': ''}, iter(()))
 
     def testInsertExtra(self):
+        @implementer(ISection)
         class Inserter(object):
-            implements(ISection)
 
             def __init__(self, transmogrifier, name, options, previous):
                 self.previous = previous
@@ -124,7 +135,7 @@ class SplitterSectionTests(unittest.TestCase):
                     count += 1
 
         provideUtility(Inserter, ISectionBlueprint,
-                       name=u'collective.transmogrifier.tests.inserter')
+                       name='collective.transmogrifier.tests.inserter')
         splitter = self._makeOne(dict(
             inserter=dict(
                 blueprint='collective.transmogrifier.tests.inserter')),
@@ -143,8 +154,8 @@ class SplitterSectionTests(unittest.TestCase):
         ])                                  # p2 is done
 
     def testSkipItems(self):
+        @implementer(ISection)
         class Skip(object):
-            implements(ISection)
 
             def __init__(self, transmogrifier, name, options, previous):
                 self.previous = previous
@@ -157,7 +168,7 @@ class SplitterSectionTests(unittest.TestCase):
                         yield item
                     count += 1
         provideUtility(Skip, ISectionBlueprint,
-                       name=u'collective.transmogrifier.tests.skip')
+                       name='collective.transmogrifier.tests.skip')
         splitter = self._makeOne(dict(
             skip=dict(
                 blueprint='collective.transmogrifier.tests.skip')),
@@ -175,25 +186,25 @@ class SplitterSectionTests(unittest.TestCase):
 # Doctest support
 
 
+@provider(ISectionBlueprint)
+@implementer(ISection)
 class SampleSource(object):
-    classProvides(ISectionBlueprint)
-    implements(ISection)
 
     def __init__(self, transmogrifier, name, options, previous):
         self.encoding = options.get('encoding')
         self.previous = previous
         self.sample = (
             dict(
-                id='foo',
-                title=u'The Foo Fighters \u2117',
-                status=u'\u2117'),
+                id="foo",
+                title=u"The Foo Fighters \u2117",
+                status=u"\u2117"),
             dict(
-                id='bar',
-                title=u'Brand Chocolate Bar \u2122',
-                status=u'\u2122'),
-            dict(id='monty-python',
+                id="bar",
+                title=u"Brand Chocolate Bar \u2122",
+                status=u"\u2122"),
+            dict(id="monty-python",
                  title=u"Monty Python's Flying Circus \u00A9",
-                 status=u'\u00A9'),
+                 status=u"\u00A9"),
         )
 
     def __iter__(self):
@@ -208,9 +219,9 @@ class SampleSource(object):
             yield item
 
 
+@provider(ISectionBlueprint)
+@implementer(ISection)
 class RangeSource(object):
-    classProvides(ISectionBlueprint)
-    implements(ISection)
 
     def __init__(self, transmogrifier, name, options, previous):
         self.previous = previous
@@ -235,10 +246,10 @@ def sectionsSetUp(test):
 
     provideUtility(
         SampleSource,
-        name=u'collective.transmogrifier.sections.tests.samplesource')
+        name='collective.transmogrifier.sections.tests.samplesource')
     provideUtility(
         RangeSource,
-        name=u'collective.transmogrifier.sections.tests.rangesource')
+        name='collective.transmogrifier.sections.tests.rangesource')
 
     import logging
     from zope.testing import loggingsupport
@@ -280,10 +291,11 @@ def constructorSetUp(test):
         def getTypeInfo(self, type_name):
             self._last_path[:] = ['']
             self._last_type = type_name
-            if type_name in ('FooType', 'BarType'): return self
+            if type_name in ('FooType', 'BarType'):
+                return self
 
         def hasObject(self, id_):
-            if isinstance(id_, unicode):
+            if six.PY2 and isinstance(id_, unicode):
                 return False
             if (self._path + '/' + id_).startswith('not/existing'):
                 return False
@@ -306,9 +318,9 @@ def constructorSetUp(test):
     test.globs['plone'] = MockPortal()
     test.globs['transmogrifier'].context = test.globs['plone']
 
+    @provider(ISectionBlueprint)
+    @implementer(ISection)
     class ContentSource(SampleSource):
-        classProvides(ISectionBlueprint)
-        implements(ISection)
 
         def __init__(self, *args, **kw):
             super(ContentSource, self).__init__(*args, **kw)
@@ -330,7 +342,7 @@ def constructorSetUp(test):
             )
     provideUtility(
         ContentSource,
-        name=u'collective.transmogrifier.sections.tests.contentsource')
+        name='collective.transmogrifier.sections.tests.contentsource')
 
 
 def foldersSetUp(test):
@@ -351,7 +363,7 @@ def foldersSetUp(test):
             if path in self.exists:
                 return True
             self.exists.add(path)
-            if isinstance(id_, unicode):
+            if six.PY2 and isinstance(id_, unicode):
                 return False
             if not path.startswith('/existing'):
                 return False
@@ -360,9 +372,9 @@ def foldersSetUp(test):
     test.globs['plone'] = MockPortal()
     test.globs['transmogrifier'].context = test.globs['plone']
 
+    @provider(ISectionBlueprint)
+    @implementer(ISection)
     class FoldersSource(SampleSource):
-        classProvides(ISectionBlueprint)
-        implements(ISection)
 
         def __init__(self, *args, **kw):
             super(FoldersSource, self).__init__(*args, **kw)
@@ -392,7 +404,7 @@ def foldersSetUp(test):
             )
     provideUtility(
         FoldersSource,
-        name=u'collective.transmogrifier.sections.tests.folderssource')
+        name='collective.transmogrifier.sections.tests.folderssource')
 
 
 def pdbSetUp(test):
@@ -410,7 +422,7 @@ def pdbSetUp(test):
 
         def readline(self):
             line = self.lines.pop(0)
-            print line
+            print(line)
             return line + '\n'
 
     def make_stdin(data):
@@ -425,12 +437,14 @@ def pdbSetUp(test):
     test.globs['reset_stdin'] = reset_stdin
 
 
-class HTTPHandler(urllib2.HTTPHandler):
+class HTTPHandler(six.moves.urllib.request.HTTPHandler):
 
     def http_open(self, req):
         url = req.get_full_url()
-        resp = urllib2.addinfourl(
-            io.StringIO(), mimetools.Message(io.StringIO()), url)
+        resp = six.moves.urllib.response.addinfourl(
+            io.StringIO(),
+            get_message(), url,
+        )
         if 'redirect' in url:
             resp.code = 301
             resp.msg = 'Permanent'
@@ -449,6 +463,38 @@ def urlopenTearDown(test):
     tearDown(test)
 
 
+class Py23DocChecker(doctest.OutputChecker):
+
+    def __init__(self):
+        """Constructor"""
+
+    def transformer_py2_output(self, got):
+        """Handles differences in output between Python 2 and Python 3."""
+        if six.PY2:
+            got = re.sub("u'", "'", got)
+            got = re.sub('u"', '"', got)
+
+            got = re.sub("\\'\\\\u2117\\'", "\'\xe2\x84\x97\'", got)
+            got = re.sub("\\\\u2122", "\xe2\x84\xa2", got)
+            got = re.sub("\\'\\\\xa9\\'", "\'\xc2\xa9\'", got)
+
+            # Adaptation to manipulator.rst test in Python 2
+            got = re.sub("\\\\u2117", "\xe2\x84\x97", got)
+            got = re.sub("\\\\\\xe2\\x84\\x97", "\\\\\\u2117", got)
+            got = re.sub("\\\\xa9", "\xc2\xa9", got)
+            got = re.sub("\\\\\\xc2\xa9", "\\\\\\xa9", got)
+
+        return got
+
+    def check_output(self, want, got, optionflags):
+        got = self.transformer_py2_output(got)
+        return doctest.OutputChecker.check_output(self, want, got, optionflags)
+
+    def output_difference(self, example, got, optionflags):
+        got = self.transformer_py2_output(got)
+        return doctest.OutputChecker.output_difference(self, example, got, optionflags)
+
+
 def test_suite():
     return unittest.TestSuite((
         unittest.makeSuite(SplitterConditionSectionTests),
@@ -464,7 +510,9 @@ def test_suite():
             '../../../../docs/source/sections/listsource.rst',
             '../../../../docs/source/sections/xmlwalker.rst',
             setUp=sectionsSetUp, tearDown=tearDown,
-            optionflags=doctest.NORMALIZE_WHITESPACE | doctest.REPORT_NDIFF),
+            optionflags=doctest.NORMALIZE_WHITESPACE | doctest.REPORT_NDIFF,
+            checker=Py23DocChecker(),
+        ),
         doctest.DocFileSuite(
             '../../../../docs/source/sections/csvsource.rst',
             '../../../../docs/source/sections/dirwalker.rst',
@@ -479,7 +527,9 @@ def test_suite():
         doctest.DocFileSuite(
             '../../../../docs/source/sections/constructor.rst',
             setUp=constructorSetUp, tearDown=tearDown,
-            optionflags=doctest.NORMALIZE_WHITESPACE | doctest.REPORT_NDIFF),
+            optionflags=doctest.NORMALIZE_WHITESPACE | doctest.REPORT_NDIFF,
+            checker=Py23DocChecker(),
+        ),
         doctest.DocFileSuite(
             '../../../../docs/source/sections/folders.rst',
             setUp=foldersSetUp, tearDown=tearDown,

@@ -3,8 +3,8 @@ from collective.transmogrifier.interfaces import ISection
 from collective.transmogrifier.interfaces import ISectionBlueprint
 from collective.transmogrifier.utils import Matcher
 from collective.transmogrifier.utils import traverse
-from zope.interface import classProvides
-from zope.interface import implements
+from zope.interface import provider
+from zope.interface import implementer
 
 
 def boolean(val):
@@ -17,14 +17,14 @@ def assequence(val):
     Returns issingle (True, False), sequence
 
     """
-    if isinstance(val, basestring):
+    if isinstance(val, str):
         return True, (val,)
     return False, val
 
 
+@provider(ISectionBlueprint)
+@implementer(ISection)
 class PathResolverSection(object):
-    classProvides(ISectionBlueprint)
-    implements(ISection)
 
     def __init__(self, transmogrifier, name, options, previous):
         self.keys = Matcher(*options['keys'].splitlines())
@@ -48,7 +48,7 @@ class PathResolverSection(object):
         context = self.context
         resolved = {}
 
-        for key in item.keys():
+        for key in list(item.keys()):
             match = self.keys(key)[1]
             if match:
                 single, paths = assequence(item[key])
@@ -60,7 +60,7 @@ class PathResolverSection(object):
                     result = result[0]
                 else:
                     # Strip unresolved items
-                    result = filter(lambda x: x is not None, result)
+                    result = [x for x in result if x is not None]
                 resolved[key] = result
 
         item.update(resolved)

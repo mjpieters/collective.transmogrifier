@@ -2,19 +2,20 @@
 from collective.transmogrifier.interfaces import ISection
 from collective.transmogrifier.interfaces import ISectionBlueprint
 from collective.transmogrifier.interfaces import ITransmogrifier
+from collective.transmogrifier.sections.tests import Py23DocChecker
 from collective.transmogrifier.tests import setUp
 from collective.transmogrifier.tests import tearDown
 from collective.transmogrifier.transmogrifier import configuration_registry
-from Products.Five import zcml
 from zope.component import provideAdapter
 from zope.component import provideUtility
 from zope.interface import classImplements
 from zope.interface import directlyProvides
-from zope.interface import implements
+from zope.interface import implementer
 from zope.testing import cleanup
-from zope.testing import doctest
+from Zope2.App import zcml
 
 import collective.transmogrifier
+import doctest
 import operator
 import os
 import shutil
@@ -262,8 +263,8 @@ class PackageReferenceResolverTest(unittest.TestCase):
                           'collective.transmogrifier.nonexistent:test')
 
 
+@implementer(ITransmogrifier)
 class MockImportContext(object):
-    implements(ITransmogrifier)
 
     def __init__(self, configfile=None):
         self.configfile = configfile
@@ -346,6 +347,8 @@ def test_suite():
         doctest.DocFileSuite(
             '../../../../docs/source/transmogrifier.rst',
             setUp=setUp, tearDown=tearDown,
-            optionflags=doctest.NORMALIZE_WHITESPACE),
+            optionflags=doctest.NORMALIZE_WHITESPACE,
+            checker=Py23DocChecker(),
+        ),
     ))
     return suite

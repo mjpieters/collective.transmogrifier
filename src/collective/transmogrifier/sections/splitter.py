@@ -3,8 +3,8 @@ from collective.transmogrifier.interfaces import ISection
 from collective.transmogrifier.interfaces import ISectionBlueprint
 from collective.transmogrifier.utils import Condition
 from collective.transmogrifier.utils import constructPipeline
-from zope.interface import classProvides
-from zope.interface import implements
+from zope.interface import provider
+from zope.interface import implementer
 
 import collections
 import copy
@@ -32,8 +32,8 @@ _empty = []
 _stop = []
 
 
+@implementer(ISection)
 class SplitterConditionSection(object):
-    implements(ISection)
 
     # how far ahead are we
     ahead = 0
@@ -46,7 +46,7 @@ class SplitterConditionSection(object):
     def __iter__(self):
         return self
 
-    def next(self):
+    def __next__(self):
         self.ahead += 1
 
         while True:
@@ -54,13 +54,15 @@ class SplitterConditionSection(object):
                 raise StopIteration
 
             if self._buffer is not _empty:
-                next = self._buffer
+                _next = self._buffer
                 self._buffer = _empty
             else:
-                next = self.previous.next()
+                _next = next(self.previous)
 
-            if self.condition(next):
-                return copy.deepcopy(next)
+            if self.condition(_next):
+                return copy.deepcopy(_next)
+
+    next = __next__  # Python 2
 
     @property
     def isAhead(self):
@@ -77,7 +79,7 @@ class SplitterConditionSection(object):
     def _getBuffer(self):
         if self._buffer is _empty:
             try:
-                self._buffer = self.previous.next()
+                self._buffer = next(self.previous)
             except StopIteration:
                 self._buffer = _stop
         return self._buffer
@@ -106,9 +108,9 @@ class SplitterConditionSection(object):
         return self._getBuffer() is _stop
 
 
+@provider(ISectionBlueprint)
+@implementer(ISection)
 class SplitterSection(object):
-    classProvides(ISectionBlueprint)
-    implements(ISection)
 
     def __init__(self, transmogrifier, name, options, previous):
         self.subpipes = collections.deque()
@@ -147,15 +149,15 @@ class SplitterSection(object):
                     continue
 
                 if condition.willMatch:
-                    yield pipe.next()
+                    yield next(pipe)
                     while not condition.isAhead:
                         # pipe is inserting extra items, advance until
                         # item in condition section has been used
-                        yield pipe.next()
+                        yield next(pipe)
 
                 while condition.isDone:
                     # self.previous is done, but perhaps not the sub-pipe
-                    yield pipe.next()
+                    yield next(pipe)
             except StopIteration:
                 subpipes.pop()
             else:

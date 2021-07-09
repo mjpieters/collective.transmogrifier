@@ -14,16 +14,16 @@ A savepoint section doesn't alter the items in any way:
     ... pipeline =
     ...     source
     ...     savepoint
-    ...     
+    ...
     ... [source]
     ... blueprint = collective.transmogrifier.sections.tests.rangesource
     ... size = 10
-    ... 
+    ...
     ... [savepoint]
     ... blueprint = collective.transmogrifier.sections.savepoint
     ... every = 3
     ... """
-    >>> registerConfig(u'collective.transmogrifier.sections.tests.savepoint',
+    >>> registerConfig('collective.transmogrifier.sections.tests.savepoint',
     ...                savepoint)
 
     We'll show savepoints being committed by overriding transaction.savepoint:
@@ -34,7 +34,7 @@ A savepoint section doesn't alter the items in any way:
     >>> def test_savepoint(counter=counter, *args, **kw):
     ...     counter[0] += 1
     >>> transaction.savepoint = test_savepoint
-    >>> transmogrifier(u'collective.transmogrifier.sections.tests.savepoint')
+    >>> transmogrifier('collective.transmogrifier.sections.tests.savepoint')
     >>> transaction.savepoint = original_savepoint
     >>> counter[0]
     3

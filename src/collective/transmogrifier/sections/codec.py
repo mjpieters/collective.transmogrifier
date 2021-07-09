@@ -3,10 +3,11 @@ from collective.transmogrifier.interfaces import ISection
 from collective.transmogrifier.interfaces import ISectionBlueprint
 from collective.transmogrifier.utils import Condition
 from collective.transmogrifier.utils import Matcher
-from zope.interface import classProvides
-from zope.interface import implements
+from zope.interface import implementer
+from zope.interface import provider
 
 import codecs
+import six
 
 
 def _get_default_encoding(site):
@@ -14,9 +15,9 @@ def _get_default_encoding(site):
     return getSiteEncoding(site)
 
 
+@provider(ISectionBlueprint)
+@implementer(ISection)
 class CodecSection(object):
-    classProvides(ISectionBlueprint)
-    implements(ISection)
 
     from_ = None
     from_error_handler = 'strict'
@@ -66,26 +67,34 @@ class CodecSection(object):
         from_ = self.from_
         if from_ is None:
             def decode(value):
-                if not isinstance(value, unicode):
+                if six.PY2 and not isinstance(value, unicode):
                     raise ValueError('Not a unicode string: %s' % value)
                 return value
         else:
             from_error_handler = self.from_error_handler
 
             def decode(value):
-                return value.decode(from_, from_error_handler)
+                # Python 2 unicode or Python 3 bytes have the decode method
+                if six.PY2 or isinstance(value, bytes):
+                    return value.decode(from_, from_error_handler)
+                # Strings in Python 3 don't have the decode method
+                return value.encode().decode(from_, from_error_handler)
 
         to = self.to
         if to is None:
             def encode(value):
-                if not isinstance(value, unicode):
+                if six.PY2 and not isinstance(value, unicode):
                     raise ValueError('Not a unicode string: %s' % value)
                 return value
         else:
             to_error_handler = self.to_error_handler
 
             def encode(value):
-                return value.encode(to, to_error_handler)
+                # Python 3 bytes are converted to strings
+                if six.PY2 or isinstance(value, bytes):
+                    return value.encode(to, to_error_handler)
+                # After encoding in Python 3, we convert the result to string.
+                return value.encode(to, to_error_handler).decode()
 
         for item in self.previous:
             for key in item:

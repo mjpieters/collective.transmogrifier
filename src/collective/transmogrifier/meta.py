@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
-from transmogrifier import configuration_registry
+from collective.transmogrifier.transmogrifier import configuration_registry
 from zope.configuration.fields import MessageID
 from zope.configuration.fields import Path
-from zope.configuration.fields import PythonIdentifier
 from zope.interface import Interface
+from zope.schema import DottedName
 
 
 class IRegisterConfigDirective(Interface):
@@ -12,10 +12,10 @@ class IRegisterConfigDirective(Interface):
     transmogrifier:registerConfig
     """
 
-    name = PythonIdentifier(
+    name = DottedName(
         title=u'Name',
         description=u"If not specified 'default' is used.",
-        default=u'default',
+        default='default',
         required=False)
 
     title = MessageID(
@@ -39,7 +39,7 @@ class IRegisterConfigDirective(Interface):
 _configuration_regs = []
 
 
-def registerConfig(_context, configuration, name=u'default', title=None,
+def registerConfig(_context, configuration, name='default', title=None,
                    description=None):
     """Add a new configuration to the registry"""
     if title is None:
