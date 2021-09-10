@@ -27,8 +27,8 @@ import six.moves.urllib.request
 if six.PY2:
     from mimetools import Message
 else:
-    from email.message import Message
     from email import message_from_string
+    from email.message import Message
 
 
 def get_message(initial_value=""):

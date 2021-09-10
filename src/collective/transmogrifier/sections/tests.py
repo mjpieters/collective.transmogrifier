@@ -255,8 +255,9 @@ def sectionsSetUp(test):
         RangeSource, name="collective.transmogrifier.sections.tests.rangesource"
     )
 
-    import logging
     from zope.testing import loggingsupport
+
+    import logging
 
     test.globs["handler"] = loggingsupport.InstalledHandler(
         "logger", level=logging.INFO
@@ -421,8 +422,9 @@ def foldersSetUp(test):
 def pdbSetUp(test):
     sectionsSetUp(test)
 
-    import pdb
     from collective.transmogrifier.sections import breakpoint
+
+    import pdb
 
     class Input:
 

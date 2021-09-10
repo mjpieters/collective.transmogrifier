@@ -313,8 +313,8 @@ class MockImportContext(object):
     run = ()
 
     def __call__(self, config):
-        from zope.annotation.interfaces import IAnnotations
         from collective.transmogrifier.genericsetup import IMPORT_CONTEXT
+        from zope.annotation.interfaces import IAnnotations
 
         assert IAnnotations(self)[IMPORT_CONTEXT] is self
         self.run += (config,)
