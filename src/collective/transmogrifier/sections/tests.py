@@ -437,7 +437,6 @@ def pdbSetUp(test):
             return line + "\n"
 
     def make_stdin(data):
-        oldstdin = sys.stdin
         sys.stdin = Input(data)
         breakpoint.BreakpointSection.pdb = pdb.Pdb()
 
