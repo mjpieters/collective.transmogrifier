@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 from collective.transmogrifier.interfaces import ISection
 from collective.transmogrifier.interfaces import ISectionBlueprint
-from zope.interface import provider
 from zope.interface import implementer
+from zope.interface import provider
 
 import transaction
 

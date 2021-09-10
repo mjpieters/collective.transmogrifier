@@ -3,8 +3,8 @@ from collective.transmogrifier.interfaces import ISection
 from collective.transmogrifier.interfaces import ISectionBlueprint
 from collective.transmogrifier.utils import Matcher
 from collective.transmogrifier.utils import traverse
-from zope.interface import provider
 from zope.interface import implementer
+from zope.interface import provider
 
 
 def boolean(val):

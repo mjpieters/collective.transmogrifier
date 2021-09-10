@@ -4,8 +4,8 @@ from collective.transmogrifier.interfaces import ISectionBlueprint
 from collective.transmogrifier.utils import Condition
 from collective.transmogrifier.utils import Matcher
 from collective.transmogrifier.utils import pformat_msg
-from zope.interface import provider
 from zope.interface import implementer
+from zope.interface import provider
 
 import logging
 

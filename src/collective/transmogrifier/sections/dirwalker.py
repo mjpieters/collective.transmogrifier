@@ -4,8 +4,8 @@ from collective.transmogrifier.interfaces import ISectionBlueprint
 from collective.transmogrifier.utils import Expression
 from collective.transmogrifier.utils import pathsplit
 from collective.transmogrifier.utils import resolvePackageReferenceOrFile
-from zope.interface import provider
 from zope.interface import implementer
+from zope.interface import provider
 
 import os
 import posixpath

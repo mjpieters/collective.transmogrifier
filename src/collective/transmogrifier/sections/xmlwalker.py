@@ -4,8 +4,8 @@ from collective.transmogrifier.interfaces import ISectionBlueprint
 from collective.transmogrifier.utils import Expression
 from lxml import etree
 from lxml import html
-from zope.interface import provider
 from zope.interface import implementer
+from zope.interface import provider
 
 import logging
 
