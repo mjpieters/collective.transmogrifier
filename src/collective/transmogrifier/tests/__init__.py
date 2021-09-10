@@ -15,36 +15,39 @@ BASEDIR = None
 
 
 def registerConfig(name, configuration):
-    filename = os.path.join(BASEDIR, '%s.cfg' % name)
-    open(filename, 'w').write(configuration)
+    filename = os.path.join(BASEDIR, "%s.cfg" % name)
+    open(filename, "w").write(configuration)
     configuration_registry.registerConfiguration(
         name,
         u"Pipeline configuration '%s' from "
         u"'collective.transmogrifier.tests'" % name,
-        u'', filename)
+        u"",
+        filename,
+    )
 
 
 def setUp(test):
     global BASEDIR
-    BASEDIR = tempfile.mkdtemp('transmogrifierTestConfigs')
+    BASEDIR = tempfile.mkdtemp("transmogrifierTestConfigs")
 
     class PloneSite(object):
-
         def Title(self):
-            return u'Plone Test Site'
+            return u"Plone Test Site"
 
         def getPhysicalPath(self):
-            return ('', 'plone')
+            return ("", "plone")
 
         def absolute_url(self):
-            return 'http://nohost/plone'
+            return "http://nohost/plone"
 
-    test.globs.update(dict(
-        registerConfig=registerConfig,
-        ISectionBlueprint=ISectionBlueprint,
-        ISection=ISection,
-        plone=PloneSite(),
-    ))
+    test.globs.update(
+        dict(
+            registerConfig=registerConfig,
+            ISectionBlueprint=ISectionBlueprint,
+            ISection=ISection,
+            plone=PloneSite(),
+        )
+    )
 
 
 def tearDown(test):

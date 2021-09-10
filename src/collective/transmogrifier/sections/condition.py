@@ -9,9 +9,8 @@ from zope.interface import implementer
 @provider(ISectionBlueprint)
 @implementer(ISection)
 class ConditionSection(object):
-
     def __init__(self, transmogrifier, name, options, previous):
-        condition = options['condition']
+        condition = options["condition"]
         self.condition = Condition(condition, transmogrifier, name, options)
         self.previous = previous
 

@@ -8,7 +8,7 @@ from zope.interface import implementer
 
 
 def boolean(val):
-    return val.lower() in ('yes', 'true', 'on', '1')
+    return val.lower() in ("yes", "true", "on", "1")
 
 
 def assequence(val):
@@ -25,10 +25,9 @@ def assequence(val):
 @provider(ISectionBlueprint)
 @implementer(ISection)
 class PathResolverSection(object):
-
     def __init__(self, transmogrifier, name, options, previous):
-        self.keys = Matcher(*options['keys'].splitlines())
-        self.defer = boolean(options.get('defer-until-present', 'no'))
+        self.keys = Matcher(*options["keys"].splitlines())
+        self.defer = boolean(options.get("defer-until-present", "no"))
         self.previous = previous
         self._deferred = []
         self.context = transmogrifier.context
@@ -52,8 +51,7 @@ class PathResolverSection(object):
             match = self.keys(key)[1]
             if match:
                 single, paths = assequence(item[key])
-                result = [traverse(context, p.lstrip('/'), None)
-                          for p in paths]
+                result = [traverse(context, p.lstrip("/"), None) for p in paths]
                 if defer and None in result:
                     return False
                 if single:

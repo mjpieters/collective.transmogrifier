@@ -22,6 +22,7 @@ import unittest
 
 _marker = object()
 
+
 def get_next_method(iterator):
     """
     Returns the method used by the built-in next function, depending on the
@@ -34,9 +35,9 @@ def get_next_method(iterator):
 
 
 class SplitterConditionSectionTests(unittest.TestCase):
-
     def _makeOne(self, previous, condition=None):
         from .splitter import SplitterConditionSection
+
         return SplitterConditionSection(condition, previous)
 
     def testIterates(self):
@@ -107,56 +108,57 @@ class SplitterConditionSectionTests(unittest.TestCase):
 
 
 class SplitterSectionTests(unittest.TestCase):
-
     def _makeOne(self, transmogrifier, options, previous):
         from .splitter import SplitterSection
-        return SplitterSection(transmogrifier, 'unittest', options, previous)
+
+        return SplitterSection(transmogrifier, "unittest", options, previous)
 
     def testAtLeastTwo(self):
         self.assertRaises(ValueError, self._makeOne, {}, {}, iter(()))
-        self.assertRaises(ValueError, self._makeOne, {}, {'pipeline-1': ''},
-                          iter(()))
+        self.assertRaises(ValueError, self._makeOne, {}, {"pipeline-1": ""}, iter(()))
         # Shouldn't raise
-        self._makeOne({}, {'pipeline-1': '', 'pipeline-2': ''}, iter(()))
+        self._makeOne({}, {"pipeline-1": "", "pipeline-2": ""}, iter(()))
 
     def testInsertExtra(self):
         @implementer(ISection)
         class Inserter(object):
-
             def __init__(self, transmogrifier, name, options, previous):
                 self.previous = previous
 
             def __iter__(self):
                 count = 0
                 for item in self.previous:
-                    item['pipeline'] = 1
+                    item["pipeline"] = 1
                     yield item
-                    yield dict(id='extra-%02d' % count)
+                    yield dict(id="extra-%02d" % count)
                     count += 1
 
-        provideUtility(Inserter, ISectionBlueprint,
-                       name='collective.transmogrifier.tests.inserter')
-        splitter = self._makeOne(dict(
-            inserter=dict(
-                blueprint='collective.transmogrifier.tests.inserter')),
-            {'pipeline-1': 'inserter', 'pipeline-2': ''},
-            (dict(id='item-%02d' % i) for i in range(3)))
-        self.assertEqual(list(splitter), [
-            dict(id='item-00', pipeline=1),  # p1 advanced, look at p2
-            dict(id='item-00'),             # p2 advanced, look at p1
-            dict(id='extra-00'),            # p1 did not advance
-            dict(id='item-01', pipeline=1),  # p1 advanced, look at p2
-            dict(id='item-01'),             # p2 advanced, look at p1
-            dict(id='extra-01'),            # p1 did not advance
-            dict(id='item-02', pipeline=1),  # p1 advanced, condition isDone
-            dict(id='extra-02'),            # last in p1 after isDone, l.a. p2
-            dict(id='item-02'),             # p2 advanced
-        ])                                  # p2 is done
+        provideUtility(
+            Inserter, ISectionBlueprint, name="collective.transmogrifier.tests.inserter"
+        )
+        splitter = self._makeOne(
+            dict(inserter=dict(blueprint="collective.transmogrifier.tests.inserter")),
+            {"pipeline-1": "inserter", "pipeline-2": ""},
+            (dict(id="item-%02d" % i) for i in range(3)),
+        )
+        self.assertEqual(
+            list(splitter),
+            [
+                dict(id="item-00", pipeline=1),  # p1 advanced, look at p2
+                dict(id="item-00"),  # p2 advanced, look at p1
+                dict(id="extra-00"),  # p1 did not advance
+                dict(id="item-01", pipeline=1),  # p1 advanced, look at p2
+                dict(id="item-01"),  # p2 advanced, look at p1
+                dict(id="extra-01"),  # p1 did not advance
+                dict(id="item-02", pipeline=1),  # p1 advanced, condition isDone
+                dict(id="extra-02"),  # last in p1 after isDone, l.a. p2
+                dict(id="item-02"),  # p2 advanced
+            ],
+        )  # p2 is done
 
     def testSkipItems(self):
         @implementer(ISection)
         class Skip(object):
-
             def __init__(self, transmogrifier, name, options, previous):
                 self.previous = previous
 
@@ -164,24 +166,30 @@ class SplitterSectionTests(unittest.TestCase):
                 count = 0
                 for item in self.previous:
                     if count % 2:
-                        item['pipeline'] = 1
+                        item["pipeline"] = 1
                         yield item
                     count += 1
-        provideUtility(Skip, ISectionBlueprint,
-                       name='collective.transmogrifier.tests.skip')
-        splitter = self._makeOne(dict(
-            skip=dict(
-                blueprint='collective.transmogrifier.tests.skip')),
-            {'pipeline-1': 'skip', 'pipeline-2': ''},
-            (dict(id='item-%02d' % i) for i in range(4)))
-        self.assertEqual(list(splitter), [
-            dict(id='item-01', pipeline=1),  # p1 is ahead
-            dict(id='item-00'),             # p2 advanced, p1 is skipped
-            dict(id='item-01'),             # p2 advanced, p1 no longer ahead
-            dict(id='item-03', pipeline=1),  # p1 is ahead again
-            dict(id='item-02'),             # p2 advanced, p1 is skipped
-            dict(id='item-03')              # p2 advanced, p1 no longer ahead
-        ])                                  # p1 is done, p2 is done
+
+        provideUtility(
+            Skip, ISectionBlueprint, name="collective.transmogrifier.tests.skip"
+        )
+        splitter = self._makeOne(
+            dict(skip=dict(blueprint="collective.transmogrifier.tests.skip")),
+            {"pipeline-1": "skip", "pipeline-2": ""},
+            (dict(id="item-%02d" % i) for i in range(4)),
+        )
+        self.assertEqual(
+            list(splitter),
+            [
+                dict(id="item-01", pipeline=1),  # p1 is ahead
+                dict(id="item-00"),  # p2 advanced, p1 is skipped
+                dict(id="item-01"),  # p2 advanced, p1 no longer ahead
+                dict(id="item-03", pipeline=1),  # p1 is ahead again
+                dict(id="item-02"),  # p2 advanced, p1 is skipped
+                dict(id="item-03"),  # p2 advanced, p1 no longer ahead
+            ],
+        )  # p1 is done, p2 is done
+
 
 # Doctest support
 
@@ -189,22 +197,17 @@ class SplitterSectionTests(unittest.TestCase):
 @provider(ISectionBlueprint)
 @implementer(ISection)
 class SampleSource(object):
-
     def __init__(self, transmogrifier, name, options, previous):
-        self.encoding = options.get('encoding')
+        self.encoding = options.get("encoding")
         self.previous = previous
         self.sample = (
+            dict(id="foo", title=u"The Foo Fighters \u2117", status=u"\u2117"),
+            dict(id="bar", title=u"Brand Chocolate Bar \u2122", status=u"\u2122"),
             dict(
-                id="foo",
-                title=u"The Foo Fighters \u2117",
-                status=u"\u2117"),
-            dict(
-                id="bar",
-                title=u"Brand Chocolate Bar \u2122",
-                status=u"\u2122"),
-            dict(id="monty-python",
-                 title=u"Monty Python's Flying Circus \u00A9",
-                 status=u"\u00A9"),
+                id="monty-python",
+                title=u"Monty Python's Flying Circus \u00A9",
+                status=u"\u00A9",
+            ),
         )
 
     def __iter__(self):
@@ -214,57 +217,60 @@ class SampleSource(object):
         for item in self.sample:
             item = item.copy()
             if self.encoding:
-                item['title'] = item['title'].encode(self.encoding)
-                item['status'] = item['status'].encode(self.encoding)
+                item["title"] = item["title"].encode(self.encoding)
+                item["status"] = item["status"].encode(self.encoding)
             yield item
 
 
 @provider(ISectionBlueprint)
 @implementer(ISection)
 class RangeSource(object):
-
     def __init__(self, transmogrifier, name, options, previous):
         self.previous = previous
-        self.size = int(options.get('size', 5))
+        self.size = int(options.get("size", 5))
 
     def __iter__(self):
         for item in self.previous:
             yield item
 
         for i in range(self.size):
-            yield dict(id='item-%02d' % i)
+            yield dict(id="item-%02d" % i)
 
 
 def sectionsSetUp(test):
     setUp(test)
 
     from collective.transmogrifier.transmogrifier import Transmogrifier
-    test.globs['transmogrifier'] = Transmogrifier(test.globs['plone'])
+
+    test.globs["transmogrifier"] = Transmogrifier(test.globs["plone"])
 
     import collective.transmogrifier.sections
-    zcml.load_config('testing.zcml', collective.transmogrifier.sections)
+
+    zcml.load_config("testing.zcml", collective.transmogrifier.sections)
 
     provideUtility(
-        SampleSource,
-        name='collective.transmogrifier.sections.tests.samplesource')
+        SampleSource, name="collective.transmogrifier.sections.tests.samplesource"
+    )
     provideUtility(
-        RangeSource,
-        name='collective.transmogrifier.sections.tests.rangesource')
+        RangeSource, name="collective.transmogrifier.sections.tests.rangesource"
+    )
 
     import logging
     from zope.testing import loggingsupport
-    test.globs['handler'] = loggingsupport.InstalledHandler(
-        'logger', level=logging.INFO)
+
+    test.globs["handler"] = loggingsupport.InstalledHandler(
+        "logger", level=logging.INFO
+    )
 
 
 class MockObjectManager(object):
 
-    _last_path = ['']
+    _last_path = [""]
 
-    def __init__(self, id_='', container=None):
+    def __init__(self, id_="", container=None):
         self.id = id_
         if container is None:
-            self._path = ''
+            self._path = ""
         else:
             self._path = posixpath.join(container._path, id_)
         self._last_path[:] = [self._path]
@@ -286,26 +292,27 @@ def constructorSetUp(test):
         existing = True  # Existing object
 
         @property
-        def portal_types(self): return self
+        def portal_types(self):
+            return self
 
         def getTypeInfo(self, type_name):
-            self._last_path[:] = ['']
+            self._last_path[:] = [""]
             self._last_type = type_name
-            if type_name in ('FooType', 'BarType'):
+            if type_name in ("FooType", "BarType"):
                 return self
 
         def hasObject(self, id_):
             if six.PY2 and isinstance(id_, unicode):
                 return False
-            if (self._path + '/' + id_).startswith('not/existing'):
+            if (self._path + "/" + id_).startswith("not/existing"):
                 return False
             return True
 
         constructed = []
 
         def _constructInstance(self, context, id_):
-            if id_ == 'changeme':
-                id_ = 'changedByFactory'
+            if id_ == "changeme":
+                id_ = "changedByFactory"
             self.constructed.append((self._last_path[0], id_, self._last_type))
             return MockPortal(id_, container=self)
 
@@ -315,34 +322,48 @@ def constructorSetUp(test):
         def getId(self):
             return self.id
 
-    test.globs['plone'] = MockPortal()
-    test.globs['transmogrifier'].context = test.globs['plone']
+    test.globs["plone"] = MockPortal()
+    test.globs["transmogrifier"].context = test.globs["plone"]
 
     @provider(ISectionBlueprint)
     @implementer(ISection)
     class ContentSource(SampleSource):
-
         def __init__(self, *args, **kw):
             super(ContentSource, self).__init__(*args, **kw)
             self.sample = (
-                dict(_type='FooType', _path='/eggs/foo'),
-                dict(_type='FooType', _path='/spam/eggs/foo'),
-                dict(_type='FooType', _path='/foo'),
-                dict(_type='FooType', _path=u'/unicode/encoded/to/ascii'),
-                dict(_type='BarType', _path='not/existing/bar',
-                     title='Should not be constructed, not an existing path'),
-                dict(_type='FooType', _path='/spam/eggs/existing',
-                     title='Should not be constructed, an existing object'),
-                dict(_path='/spam/eggs/incomplete',
-                     title='Should not be constructed, no type'),
-                dict(_type='NonExisting', _path='/spam/eggs/nosuchtype',
-                     title='Should not be constructed, not an existing type'),
-                dict(_type='FooType', _path='/spam/eggs/changeme',
-                     title='Factories are allowed to change the id'),
+                dict(_type="FooType", _path="/eggs/foo"),
+                dict(_type="FooType", _path="/spam/eggs/foo"),
+                dict(_type="FooType", _path="/foo"),
+                dict(_type="FooType", _path=u"/unicode/encoded/to/ascii"),
+                dict(
+                    _type="BarType",
+                    _path="not/existing/bar",
+                    title="Should not be constructed, not an existing path",
+                ),
+                dict(
+                    _type="FooType",
+                    _path="/spam/eggs/existing",
+                    title="Should not be constructed, an existing object",
+                ),
+                dict(
+                    _path="/spam/eggs/incomplete",
+                    title="Should not be constructed, no type",
+                ),
+                dict(
+                    _type="NonExisting",
+                    _path="/spam/eggs/nosuchtype",
+                    title="Should not be constructed, not an existing type",
+                ),
+                dict(
+                    _type="FooType",
+                    _path="/spam/eggs/changeme",
+                    title="Factories are allowed to change the id",
+                ),
             )
+
     provideUtility(
-        ContentSource,
-        name='collective.transmogrifier.sections.tests.contentsource')
+        ContentSource, name="collective.transmogrifier.sections.tests.contentsource"
+    )
 
 
 def foldersSetUp(test):
@@ -352,59 +373,49 @@ def foldersSetUp(test):
 
         exists = set()
 
-        def __init__(self, id_='', container=None):
+        def __init__(self, id_="", container=None):
             if container is None:
-                self._path = ''
+                self._path = ""
             else:
-                self._path = container._path + '/' + id_
+                self._path = container._path + "/" + id_
 
         def hasObject(self, id_):
-            path = self._path + '/' + id_
+            path = self._path + "/" + id_
             if path in self.exists:
                 return True
             self.exists.add(path)
             if six.PY2 and isinstance(id_, unicode):
                 return False
-            if not path.startswith('/existing'):
+            if not path.startswith("/existing"):
                 return False
             return True
 
-    test.globs['plone'] = MockPortal()
-    test.globs['transmogrifier'].context = test.globs['plone']
+    test.globs["plone"] = MockPortal()
+    test.globs["transmogrifier"].context = test.globs["plone"]
 
     @provider(ISectionBlueprint)
     @implementer(ISection)
     class FoldersSource(SampleSource):
-
         def __init__(self, *args, **kw):
             super(FoldersSource, self).__init__(*args, **kw)
             self.sample = (
-                dict(
-                    _type='Document',
-                    _path='/foo'),
+                dict(_type="Document", _path="/foo"),
                 # in root, do nothing
-                dict(
-                    _type='Document',
-                    _path='/existing/foo'),
+                dict(_type="Document", _path="/existing/foo"),
                 # in existing folder, do nothing
-                dict(
-                    _type='Document',
-                    _path='/nonexisting/alpha/foo'),
+                dict(_type="Document", _path="/nonexisting/alpha/foo"),
                 # neither parent exists, yield both
-                dict(
-                    _type='Document',
-                    _path='/nonexisting/beta/foo'),
+                dict(_type="Document", _path="/nonexisting/beta/foo"),
                 # this time yield only beta
                 # no path key
-                dict(_type='Document'),
-                dict(
-                    _type='Document',
-                    _folders_path='/delta/foo'),
+                dict(_type="Document"),
+                dict(_type="Document", _folders_path="/delta/foo"),
                 # specific path key
             )
+
     provideUtility(
-        FoldersSource,
-        name='collective.transmogrifier.sections.tests.folderssource')
+        FoldersSource, name="collective.transmogrifier.sections.tests.folderssource"
+    )
 
 
 def pdbSetUp(test):
@@ -418,12 +429,12 @@ def pdbSetUp(test):
         """A helper to push data onto stdin"""
 
         def __init__(self, src):
-            self.lines = src.split('\n')
+            self.lines = src.split("\n")
 
         def readline(self):
             line = self.lines.pop(0)
             print(line)
-            return line + '\n'
+            return line + "\n"
 
     def make_stdin(data):
         oldstdin = sys.stdin
@@ -433,38 +444,37 @@ def pdbSetUp(test):
     def reset_stdin(old):
         sys.stdin = old
 
-    test.globs['make_stdin'] = make_stdin
-    test.globs['reset_stdin'] = reset_stdin
+    test.globs["make_stdin"] = make_stdin
+    test.globs["reset_stdin"] = reset_stdin
 
 
 class HTTPHandler(six.moves.urllib.request.HTTPHandler):
-
     def http_open(self, req):
         url = req.get_full_url()
         resp = six.moves.urllib.response.addinfourl(
             io.StringIO(),
-            get_message(), url,
+            get_message(),
+            url,
         )
-        if 'redirect' in url:
+        if "redirect" in url:
             resp.code = 301
-            resp.msg = 'Permanent'
-            resp.info()['Location'] = url.replace('redirect', 'location')
-        elif 'location' in url:
+            resp.msg = "Permanent"
+            resp.info()["Location"] = url.replace("redirect", "location")
+        elif "location" in url:
             resp.code = 200
-            resp.msg = 'Ok'
+            resp.msg = "Ok"
         else:
             resp.code = 404
-            resp.msg = 'Not Found'
+            resp.msg = "Not Found"
         return resp
 
 
 def urlopenTearDown(test):
-    shutil.rmtree('var/tests.urlopener.cache.d')
+    shutil.rmtree("var/tests.urlopener.cache.d")
     tearDown(test)
 
 
 class Py23DocChecker(doctest.OutputChecker):
-
     def __init__(self):
         """Constructor"""
 
@@ -474,9 +484,9 @@ class Py23DocChecker(doctest.OutputChecker):
             got = re.sub("u'", "'", got)
             got = re.sub('u"', '"', got)
 
-            got = re.sub("\\'\\\\u2117\\'", "\'\xe2\x84\x97\'", got)
+            got = re.sub("\\'\\\\u2117\\'", "'\xe2\x84\x97'", got)
             got = re.sub("\\\\u2122", "\xe2\x84\xa2", got)
-            got = re.sub("\\'\\\\xa9\\'", "\'\xc2\xa9\'", got)
+            got = re.sub("\\'\\\\xa9\\'", "'\xc2\xa9'", got)
 
             # Adaptation to manipulator.rst test in Python 2
             got = re.sub("\\\\u2117", "\xe2\x84\x97", got)
@@ -496,46 +506,60 @@ class Py23DocChecker(doctest.OutputChecker):
 
 
 def test_suite():
-    return unittest.TestSuite((
-        unittest.makeSuite(SplitterConditionSectionTests),
-        unittest.makeSuite(SplitterSectionTests),
-        doctest.DocFileSuite(
-            '../../../../docs/source/sections/codec.rst',
-            '../../../../docs/source/sections/inserter.rst',
-            '../../../../docs/source/sections/manipulator.rst',
-            '../../../../docs/source/sections/condition.rst',
-            '../../../../docs/source/sections/splitter.rst',
-            '../../../../docs/source/sections/savepoint.rst',
-            '../../../../docs/source/sections/logger.rst',
-            '../../../../docs/source/sections/listsource.rst',
-            '../../../../docs/source/sections/xmlwalker.rst',
-            setUp=sectionsSetUp, tearDown=tearDown,
-            optionflags=doctest.NORMALIZE_WHITESPACE | doctest.REPORT_NDIFF,
-            checker=Py23DocChecker(),
-        ),
-        doctest.DocFileSuite(
-            '../../../../docs/source/sections/csvsource.rst',
-            '../../../../docs/source/sections/dirwalker.rst',
-            setUp=sectionsSetUp, tearDown=tearDown,
-            optionflags=doctest.NORMALIZE_WHITESPACE | doctest.REPORT_NDIFF
-            | doctest.ELLIPSIS),
-        doctest.DocFileSuite(
-            '../../../../docs/source/sections/urlopener.rst',
-            setUp=sectionsSetUp, tearDown=urlopenTearDown,
-            optionflags=doctest.NORMALIZE_WHITESPACE | doctest.REPORT_NDIFF
-            | doctest.ELLIPSIS),
-        doctest.DocFileSuite(
-            '../../../../docs/source/sections/constructor.rst',
-            setUp=constructorSetUp, tearDown=tearDown,
-            optionflags=doctest.NORMALIZE_WHITESPACE | doctest.REPORT_NDIFF,
-            checker=Py23DocChecker(),
-        ),
-        doctest.DocFileSuite(
-            '../../../../docs/source/sections/folders.rst',
-            setUp=foldersSetUp, tearDown=tearDown,
-            optionflags=doctest.NORMALIZE_WHITESPACE | doctest.REPORT_NDIFF),
-        doctest.DocFileSuite(
-            '../../../../docs/source/sections/breakpoint.rst',
-            setUp=pdbSetUp, tearDown=tearDown,
-            optionflags=doctest.NORMALIZE_WHITESPACE | doctest.ELLIPSIS),
-    ))
+    return unittest.TestSuite(
+        (
+            unittest.makeSuite(SplitterConditionSectionTests),
+            unittest.makeSuite(SplitterSectionTests),
+            doctest.DocFileSuite(
+                "../../../../docs/source/sections/codec.rst",
+                "../../../../docs/source/sections/inserter.rst",
+                "../../../../docs/source/sections/manipulator.rst",
+                "../../../../docs/source/sections/condition.rst",
+                "../../../../docs/source/sections/splitter.rst",
+                "../../../../docs/source/sections/savepoint.rst",
+                "../../../../docs/source/sections/logger.rst",
+                "../../../../docs/source/sections/listsource.rst",
+                "../../../../docs/source/sections/xmlwalker.rst",
+                setUp=sectionsSetUp,
+                tearDown=tearDown,
+                optionflags=doctest.NORMALIZE_WHITESPACE | doctest.REPORT_NDIFF,
+                checker=Py23DocChecker(),
+            ),
+            doctest.DocFileSuite(
+                "../../../../docs/source/sections/csvsource.rst",
+                "../../../../docs/source/sections/dirwalker.rst",
+                setUp=sectionsSetUp,
+                tearDown=tearDown,
+                optionflags=doctest.NORMALIZE_WHITESPACE
+                | doctest.REPORT_NDIFF
+                | doctest.ELLIPSIS,
+            ),
+            doctest.DocFileSuite(
+                "../../../../docs/source/sections/urlopener.rst",
+                setUp=sectionsSetUp,
+                tearDown=urlopenTearDown,
+                optionflags=doctest.NORMALIZE_WHITESPACE
+                | doctest.REPORT_NDIFF
+                | doctest.ELLIPSIS,
+            ),
+            doctest.DocFileSuite(
+                "../../../../docs/source/sections/constructor.rst",
+                setUp=constructorSetUp,
+                tearDown=tearDown,
+                optionflags=doctest.NORMALIZE_WHITESPACE | doctest.REPORT_NDIFF,
+                checker=Py23DocChecker(),
+            ),
+            doctest.DocFileSuite(
+                "../../../../docs/source/sections/folders.rst",
+                setUp=foldersSetUp,
+                tearDown=tearDown,
+                optionflags=doctest.NORMALIZE_WHITESPACE | doctest.REPORT_NDIFF,
+            ),
+            doctest.DocFileSuite(
+                "../../../../docs/source/sections/breakpoint.rst",
+                setUp=pdbSetUp,
+                tearDown=tearDown,
+                optionflags=doctest.NORMALIZE_WHITESPACE | doctest.ELLIPSIS,
+            ),
+        )
+    )

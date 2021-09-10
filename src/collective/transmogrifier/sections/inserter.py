@@ -10,13 +10,12 @@ from zope.interface import implementer
 @provider(ISectionBlueprint)
 @implementer(ISection)
 class InserterSection(object):
-
     def __init__(self, transmogrifier, name, options, previous):
-        self.key = Expression(options['key'], transmogrifier, name, options)
-        self.value = Expression(options['value'], transmogrifier, name,
-                                options)
-        self.condition = Condition(options.get('condition', 'python:True'),
-                                   transmogrifier, name, options)
+        self.key = Expression(options["key"], transmogrifier, name, options)
+        self.value = Expression(options["value"], transmogrifier, name, options)
+        self.condition = Condition(
+            options.get("condition", "python:True"), transmogrifier, name, options
+        )
         self.previous = previous
 
     def __iter__(self):

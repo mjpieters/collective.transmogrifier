@@ -111,25 +111,28 @@ class SplitterConditionSection(object):
 @provider(ISectionBlueprint)
 @implementer(ISection)
 class SplitterSection(object):
-
     def __init__(self, transmogrifier, name, options, previous):
         self.subpipes = collections.deque()
 
-        pipe_ids = sorted([k for k in options
-                           if k.startswith('pipeline-') and
-                           not k.endswith('-condition')])
+        pipe_ids = sorted(
+            [
+                k
+                for k in options
+                if k.startswith("pipeline-") and not k.endswith("-condition")
+            ]
+        )
 
         if len(pipe_ids) < 2:
-            raise ValueError(
-                '%s: Need at least two sub-pipes for a splitter' % name)
+            raise ValueError("%s: Need at least two sub-pipes for a splitter" % name)
 
         splitter_head = list(itertools.tee(previous, len(pipe_ids)))
 
         for pipe_id, pipeline in zip(pipe_ids, splitter_head):
-            condition = options.get('%s-condition' % pipe_id)
+            condition = options.get("%s-condition" % pipe_id)
             if condition:
-                condition = Condition(condition, transmogrifier, name,
-                                      options, pipeline=pipe_id)
+                condition = Condition(
+                    condition, transmogrifier, name, options, pipeline=pipe_id
+                )
             condition = SplitterConditionSection(condition, pipeline)
 
             sections = options[pipe_id].splitlines()

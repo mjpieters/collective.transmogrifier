@@ -11,18 +11,17 @@ from zope.interface import implementer
 @provider(ISectionBlueprint)
 @implementer(ISection)
 class FoldersSection(object):
-
     def __init__(self, transmogrifier, name, options, previous):
         self.previous = previous
         self.context = transmogrifier.context
 
-        self.pathKey = defaultMatcher(options, 'path-key', name, 'path')
+        self.pathKey = defaultMatcher(options, "path-key", name, "path")
 
-        self.newPathKey = options.get('new-path-key', None)
-        self.newTypeKey = options.get('new-type-key', '_type')
+        self.newPathKey = options.get("new-path-key", None)
+        self.newTypeKey = options.get("new-type-key", "_type")
 
-        self.folderType = options.get('folder-type', 'Folder')
-        self.cache = options.get('cache', 'true').lower() == 'true'
+        self.folderType = options.get("folder-type", "Folder")
+        self.cache = options.get("cache", "true").lower() == "true"
 
         self.seen = set()
 
@@ -34,14 +33,15 @@ class FoldersSection(object):
             pathKey = self.pathKey(*keys)[0]
 
             if not pathKey:  # not enough info
-                yield item; continue
+                yield item
+                continue
 
             newPathKey = self.newPathKey or pathKey
             newTypeKey = self.newTypeKey
 
             path = item[pathKey]
-            elems = path.strip('/').rsplit('/', 1)
-            container, id = (len(elems) == 1 and ('', elems[0]) or elems)
+            elems = path.strip("/").rsplit("/", 1)
+            container, id = len(elems) == 1 and ("", elems[0]) or elems
 
             # This may be a new container
             if container not in self.seen:
@@ -55,21 +55,29 @@ class FoldersSection(object):
                     obj = self.context
                     for element in containerPathItems:
                         checkedElements.append(element)
-                        currentPath = '/'.join(checkedElements)
+                        currentPath = "/".join(checkedElements)
 
                         if currentPath and currentPath not in self.seen:
 
                             if element and traverse(obj, element) is None:
                                 # We don't have this path - yield to create a
                                 # skeleton folder
-                                yield {newPathKey: '/' + currentPath,
-                                       newTypeKey: self.folderType}
+                                yield {
+                                    newPathKey: "/" + currentPath,
+                                    newTypeKey: self.folderType,
+                                }
                             if self.cache:
                                 self.seen.add(currentPath)
 
                         obj = traverse(obj, element)
 
             if self.cache:
-                self.seen.add("%s/%s" % (container, id,))
+                self.seen.add(
+                    "%s/%s"
+                    % (
+                        container,
+                        id,
+                    )
+                )
 
             yield item

@@ -10,9 +10,8 @@ import transaction
 @provider(ISectionBlueprint)
 @implementer(ISection)
 class SavepointSection(object):
-
     def __init__(self, transmogrifier, name, options, previous):
-        self.every = int(options.get('every', 1000))
+        self.every = int(options.get("every", 1000))
         self.previous = previous
 
     def __iter__(self):
