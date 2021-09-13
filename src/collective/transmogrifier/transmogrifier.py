@@ -11,6 +11,7 @@ from zope.testing.cleanup import addCleanUp
 
 import re
 
+
 try:
     from collections.abc import MutableMapping
 except ImportError:
@@ -28,20 +29,19 @@ class ConfigurationRegistry(object):
 
     def registerConfiguration(self, name, title, description, configuration):
         if name in self._config_info:
-            raise KeyError('Duplicate pipeline configuration: %s' % name)
+            raise KeyError("Duplicate pipeline configuration: %s" % name)
 
         self._config_ids.append(name)
         self._config_info[name] = dict(
-            id=name,
-            title=title,
-            description=description,
-            configuration=configuration)
+            id=name, title=title, description=description, configuration=configuration
+        )
 
     def getConfiguration(self, id):
         return self._config_info[id].copy()
 
     def listConfigurationIds(self):
         return tuple(self._config_ids)
+
 
 configuration_registry = ConfigurationRegistry()
 
@@ -67,13 +67,13 @@ class Transmogrifier(MutableMapping):
         self._raw = _load_config(configuration_id, **overrides)
         self._data = {}
 
-        options = self._raw['transmogrifier']
-        sections = options['pipeline'].splitlines()
+        options = self._raw["transmogrifier"]
+        sections = options["pipeline"].splitlines()
         pipeline = constructPipeline(self, sections)
 
         # Pipeline execution
         for item in pipeline:
-            pass # discard once processed
+            pass  # discard once processed
 
     def __getitem__(self, section):
         try:
@@ -90,10 +90,10 @@ class Transmogrifier(MutableMapping):
         return options
 
     def __setitem__(self, key, value):
-        raise NotImplementedError('__setitem__')
+        raise NotImplementedError("__setitem__")
 
     def __delitem__(self, key):
-        raise NotImplementedError('__delitem__')
+        raise NotImplementedError("__delitem__")
 
     def keys(self):
         return list(self._raw.keys())
@@ -116,7 +116,7 @@ class Options(MutableMapping):
 
     def _substitute(self):
         for key, value in list(self._raw.items()):
-            if '${' in value:
+            if "${" in value:
                 self._cooked[key] = self._sub(value, [(self.section, key)])
 
     def get(self, option, default=None, seen=None):
@@ -131,12 +131,12 @@ class Options(MutableMapping):
             if value is None:
                 return default
 
-        if '${' in value:
+        if "${" in value:
             key = self.section, option
             if seen is None:
                 seen = [key]
             elif key in seen:
-                raise ValueError('Circular reference in substitutions.')
+                raise ValueError("Circular reference in substitutions.")
             else:
                 seen.append(key)
 
@@ -146,9 +146,9 @@ class Options(MutableMapping):
         self._data[option] = value
         return value
 
-    _template_split = re.compile('([$]{[^}]*})').split
-    _valid = re.compile('\${[-a-zA-Z0-9 ._]+:[-a-zA-Z0-9 ._]+}$').match
-    _tales = re.compile('^\s*string:', re.MULTILINE).match
+    _template_split = re.compile("([$]{[^}]*})").split
+    _valid = re.compile(r"\${[-a-zA-Z0-9 ._]+:[-a-zA-Z0-9 ._]+}$").match
+    _tales = re.compile(r"^\s*string:", re.MULTILINE).match
 
     def _sub(self, template, seen):
         parts = self._template_split(template)
@@ -159,16 +159,16 @@ class Options(MutableMapping):
                 if self._tales(template):
                     subs.append(ref)
                     continue
-                raise ValueError('Not a valid substitution %s.' % ref)
+                raise ValueError("Not a valid substitution %s." % ref)
 
-            names = tuple(ref[2:-1].split(':'))
+            names = tuple(ref[2:-1].split(":"))
             value = self.transmogrifier[names[0]].get(names[1], None, seen)
             if value is None:
-                raise KeyError('Referenced option does not exist:', *names)
+                raise KeyError("Referenced option does not exist:", *names)
             subs.append(value)
-        subs.append('')
+        subs.append("")
 
-        return ''.join([''.join(v) for v in zip(parts[::2], subs)])
+        return "".join(["".join(v) for v in zip(parts[::2], subs)])
 
     def __getitem__(self, key):
         try:
@@ -178,12 +178,12 @@ class Options(MutableMapping):
 
         v = self.get(key)
         if v is None:
-            raise KeyError('Missing option: %s:%s' % (self.section, key))
+            raise KeyError("Missing option: %s:%s" % (self.section, key))
         return v
 
     def __setitem__(self, option, value):
         if not isinstance(value, str):
-            raise TypeError('Option values must be strings', value)
+            raise TypeError("Option values must be strings", value)
         self._data[option] = value
 
     def __delitem__(self, key):
@@ -218,26 +218,34 @@ def _update_section(section, included):
     before + options.
     """
     keys = set(section.keys())
-    add = set([k for k in keys if k.endswith('+')])
-    remove = set([k for k in keys if k.endswith('-')])
+    add = set([k for k in keys if k.endswith("+")])
+    remove = set([k for k in keys if k.endswith("-")])
 
     for key in remove:
-        option = key.strip(' -')
+        option = key.strip(" -")
         if option in keys:
-            raise ValueError('Option %s specified twice', option)
-        included[option] = '\n'.join([
-            v for v in included.get(option, '').splitlines()
-            if v and v not in section[key].splitlines()])
+            raise ValueError("Option %s specified twice", option)
+        included[option] = "\n".join(
+            [
+                v
+                for v in included.get(option, "").splitlines()
+                if v and v not in section[key].splitlines()
+            ]
+        )
         del section[key]
 
     for key in add:
-        option = key.strip(' +')
+        option = key.strip(" +")
         if option in keys:
-            raise ValueError('Option %s specified twice', option)
-        included[option] = '\n'.join([
-            v for v in
-            included.get(option, '').splitlines() + section[key].splitlines()
-            if v])
+            raise ValueError("Option %s specified twice", option)
+        included[option] = "\n".join(
+            [
+                v
+                for v in included.get(option, "").splitlines()
+                + section[key].splitlines()
+                if v
+            ]
+        )
         del section[key]
 
     included.update(section)
@@ -249,15 +257,15 @@ def _load_config(configuration_id, seen=None, **overrides):
         seen = []
     if configuration_id in seen:
         raise ValueError(
-            'Recursive configuration extends: %s (%r)' % (
-                configuration_id, seen))
+            "Recursive configuration extends: %s (%r)" % (configuration_id, seen)
+        )
     seen.append(configuration_id)
 
-    if ':' in configuration_id:
+    if ":" in configuration_id:
         configuration_file = resolvePackageReference(configuration_id)
     else:
         config_info = configuration_registry.getConfiguration(configuration_id)
-        configuration_file = config_info['configuration']
+        configuration_file = config_info["configuration"]
     parser = configparser.RawConfigParser()
     parser.optionxform = str  # case sensitive
     parser.read(configuration_file)
@@ -266,8 +274,8 @@ def _load_config(configuration_id, seen=None, **overrides):
     result = {}
     for section in parser.sections():
         result[section] = dict(parser.items(section))
-        if section == 'transmogrifier':
-            includes = result[section].pop('include', includes)
+        if section == "transmogrifier":
+            includes = result[section].pop("include", includes)
 
     if includes:
         for configuration_id in includes.split()[::-1]:
@@ -275,7 +283,8 @@ def _load_config(configuration_id, seen=None, **overrides):
             sections = set(include.keys()) | set(result.keys())
             for section in sections:
                 result[section] = _update_section(
-                    result.get(section, {}), include.get(section, {}))
+                    result.get(section, {}), include.get(section, {})
+                )
 
     seen.pop()
 

@@ -3,8 +3,8 @@ from collective.transmogrifier.interfaces import ISection
 from collective.transmogrifier.interfaces import ISectionBlueprint
 from collective.transmogrifier.utils import Condition
 from pdb import Pdb
-from zope.interface import provider
 from zope.interface import implementer
+from zope.interface import provider
 
 import sys
 
@@ -19,7 +19,7 @@ class BreakpointSection(object):
     pdb = Pdb()
 
     def __init__(self, transmogrifier, name, options, previous):
-        condition = options['condition']
+        condition = options["condition"]
         self.condition = Condition(condition, transmogrifier, name, options)
         self.previous = previous
 

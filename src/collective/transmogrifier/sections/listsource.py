@@ -4,21 +4,21 @@ from collective.transmogrifier.interfaces import ISectionBlueprint
 from collective.transmogrifier.utils import Condition
 from collective.transmogrifier.utils import Expression
 from zope.annotation.interfaces import IAnnotations
-from zope.interface import provider
 from zope.interface import implementer
+from zope.interface import provider
 
 
-LISTKEY = 'collective.transmogrifier.sections.listsource'
+LISTKEY = "collective.transmogrifier.sections.listsource"
 
 
 @provider(ISectionBlueprint)
 @implementer(ISection)
 class ListSource(object):
-
     def __init__(self, transmogrifier, name, options, previous):
         self.previous = previous
-        self.items = IAnnotations(transmogrifier).setdefault(
-            LISTKEY, {}).setdefault(name, [])
+        self.items = (
+            IAnnotations(transmogrifier).setdefault(LISTKEY, {}).setdefault(name, [])
+        )
 
     def __iter__(self):
         for item in self.previous:
@@ -32,17 +32,19 @@ class ListSource(object):
 @provider(ISectionBlueprint)
 @implementer(ISection)
 class ListAppender(object):
-
     def __init__(self, transmogrifier, name, options, previous):
         self.previous = previous
-        self.condition = Condition(options.get('condition', 'python:True'),
-                                   transmogrifier, name, options)
-        self.items = IAnnotations(transmogrifier)[LISTKEY][options['section']]
+        self.condition = Condition(
+            options.get("condition", "python:True"), transmogrifier, name, options
+        )
+        self.items = IAnnotations(transmogrifier)[LISTKEY][options["section"]]
 
         self.keys = Expression(
-            options.get('keys', 'nothing'), transmogrifier, name, options)
+            options.get("keys", "nothing"), transmogrifier, name, options
+        )
         self.copykeys = Expression(
-            options.get('copy-keys', 'nothing'), transmogrifier, name, options)
+            options.get("copy-keys", "nothing"), transmogrifier, name, options
+        )
 
     def __iter__(self):
         for item in self.previous:
@@ -50,10 +52,8 @@ class ListAppender(object):
                 keys = self.keys(item)
                 copykeys = self.copykeys(item)
                 if keys or copykeys:
-                    new_item = dict(
-                        (key, item.pop(key)) for key in keys if key in item)
-                    new_item.update(
-                        (key, item[key]) for key in copykeys if key in item)
+                    new_item = dict((key, item.pop(key)) for key in keys if key in item)
+                    new_item.update((key, item[key]) for key in copykeys if key in item)
                     if new_item:
                         self.items.append(new_item)
                     yield item

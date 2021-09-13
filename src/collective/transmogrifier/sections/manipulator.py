@@ -4,8 +4,8 @@ from collective.transmogrifier.interfaces import ISectionBlueprint
 from collective.transmogrifier.utils import Condition
 from collective.transmogrifier.utils import Expression
 from collective.transmogrifier.utils import Matcher
-from zope.interface import provider
 from zope.interface import implementer
+from zope.interface import provider
 
 import copy
 
@@ -13,16 +13,17 @@ import copy
 @provider(ISectionBlueprint)
 @implementer(ISection)
 class ManipulatorSection(object):
-
     def __init__(self, transmogrifier, name, options, previous):
-        keys = options.get('keys') or ''
+        keys = options.get("keys") or ""
         self.keys = Matcher(*keys.splitlines())
         if keys:
-            self.dest = Expression(options['destination'], transmogrifier,
-                                   name, options)
-        self.delete = Matcher(*options.get('delete', '').splitlines())
-        self.condition = Condition(options.get('condition', 'python:True'),
-                                   transmogrifier, name, options)
+            self.dest = Expression(
+                options["destination"], transmogrifier, name, options
+            )
+        self.delete = Matcher(*options.get("delete", "").splitlines())
+        self.condition = Condition(
+            options.get("condition", "python:True"), transmogrifier, name, options
+        )
         self.previous = previous
 
     def __iter__(self):
