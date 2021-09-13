@@ -33,9 +33,9 @@ class CSVSourceSection(object):
         self.restkey = options.get("restkey", "_csvsource_rest")
         self.fmtparam = dict(
             (
-                key[len("fmtparam-"):],
+                key[len("fmtparam-") :],
                 Expression(value, transmogrifier, name, options)(
-                    options, key=key[len("fmtparam-"):]
+                    options, key=key[len("fmtparam-") :]
                 ),
             )
             for key, value in options.items()
