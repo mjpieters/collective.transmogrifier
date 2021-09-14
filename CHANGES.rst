@@ -47,10 +47,10 @@ Change History
 - Add csvsource restkey handling for rows with more keys than fieldnames.
   [rpatterson]
 
-- Add a blueprint for opening and caching URLs with `urllib2`_.
+- Add a blueprint for opening and caching URLs with ``urllib2``.
   [rpatterson]
 
-- Add a source for walking a directory with `os.walk`_.
+- Add a source for walking a directory with ``os.walk``.
   [rpatterson]
 
 - Add support for arbitrary csvsource fmtparam options.
