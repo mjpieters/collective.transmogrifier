@@ -3,6 +3,12 @@ Change History
 
 (name of developer listed in brackets)
 
+2.0.1 (unreleased)
+==================
+
+- Nothing changed yet.
+
+
 2.0.0 (2021-09-16)
 ==================
 
