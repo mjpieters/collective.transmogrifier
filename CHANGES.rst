@@ -3,7 +3,7 @@ Change History
 
 (name of developer listed in brackets)
 
-1.5.3 (unreleased)
+1.6.0 (unreleased)
 ==================
 
 - Add Python 3 e Plone 5.2 support.
