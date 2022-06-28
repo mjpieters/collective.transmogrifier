@@ -31,10 +31,11 @@ class CSVSourceSection:
         self.dialect = options.get("dialect", "excel")
         self.restkey = options.get("restkey", "_csvsource_rest")
         self.fmtparam = {
-                key[len("fmtparam-") :]:
-                Expression(value, transmogrifier, name, options)(
-                    options, key=key[len("fmtparam-") :]
-                )
+            key[len("fmtparam-") :]: Expression(  # noQA
+                value, transmogrifier, name, options
+            )(
+                options, key=key[len("fmtparam-") :]  # noQA
+            )
             for key, value in options.items()
             if key.startswith("fmtparam-")
         }
@@ -72,7 +73,7 @@ class CSVSourceSection:
             dialect=self.dialect,
             fieldnames=self.fieldnames,
             restkey=self.restkey,
-            **self.fmtparam
+            **self.fmtparam,
         )
         yield from reader
         file_.close()

@@ -18,8 +18,7 @@ def registerConfig(name, configuration):
     open(filename, "w").write(configuration)
     configuration_registry.registerConfiguration(
         name,
-        "Pipeline configuration '%s' from "
-        "'collective.transmogrifier.tests'" % name,
+        "Pipeline configuration '%s' from " "'collective.transmogrifier.tests'" % name,
         "",
         filename,
     )

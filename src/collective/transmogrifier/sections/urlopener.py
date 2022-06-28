@@ -3,6 +3,15 @@ from collective.transmogrifier.interfaces import ISectionBlueprint
 from collective.transmogrifier.utils import defaultMatcher
 from collective.transmogrifier.utils import Expression
 from collective.transmogrifier.utils import resolvePackageReferenceOrFile
+
+# BBB: mimetools.Message doesn't exist in Python 3. Usually email.message.Message
+# is used in Python 3. In some cases it would be possible to use
+# email.message.Message in Python 2 as well. But here we call the method
+# six.moves.urllib.request.HTTPRedirectHandler.http_error_302.
+# In Python 2 the headers parameter of this method must be a mimetools.Message.
+# So, we need to use it here.
+from email import message_from_string
+from email.message import Message
 from zope.interface import implementer
 from zope.interface import provider
 
@@ -15,16 +24,6 @@ import six
 import six.moves.urllib.error
 import six.moves.urllib.parse
 import six.moves.urllib.request
-
-
-# BBB: mimetools.Message doesn't exist in Python 3. Usually email.message.Message
-# is used in Python 3. In some cases it would be possible to use
-# email.message.Message in Python 2 as well. But here we call the method
-# six.moves.urllib.request.HTTPRedirectHandler.http_error_302.
-# In Python 2 the headers parameter of this method must be a mimetools.Message.
-# So, we need to use it here.
-from email import message_from_string
-from email.message import Message
 
 
 def get_message(initial_value=""):

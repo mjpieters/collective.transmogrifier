@@ -1,24 +1,30 @@
 <configure
     xmlns="http://namespaces.zope.org/zope"
     xmlns:zcml="http://namespaces.zope.org/zcml"
-    i18n_domain="collective.transmogrifier">
+    i18n_domain="collective.transmogrifier"
+    >
 
-  <include package=".sections"/>
+  <include package=".sections" />
 
   <adapter
       factory=".transmogrifier.Transmogrifier"
       provides=".interfaces.ITransmogrifier"
       />
 
-  <configure 
+  <configure
+      xmlns:gs="http://namespaces.zope.org/genericsetup"
       zcml:condition="installed Products.GenericSetup"
-      xmlns:gs="http://namespaces.zope.org/genericsetup">
-    <include package="Products.GenericSetup" file="meta.zcml" /> 
+      >
+    <include
+        package="Products.GenericSetup"
+        file="meta.zcml"
+        />
     <gs:importStep
         name="transmogrifier"
         title="Run transmogrifier pipeline"
         description="Runs the pipeline named in transmogrifier.txt in the current profile"
-        handler=".genericsetup.importTransmogrifier">
+        handler=".genericsetup.importTransmogrifier"
+        >
       <gs:depends name="toolset" />
     </gs:importStep>
   </configure>

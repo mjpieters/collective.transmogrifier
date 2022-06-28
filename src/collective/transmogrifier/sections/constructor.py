@@ -54,7 +54,9 @@ class ConstructorSection:
             container, id = posixpath.split(path.strip("/"))
             context = traverse(self.context, container, None)
             if context is None:
-                error = "Container {} does not exist for item {}".format(container, path)
+                error = "Container {} does not exist for item {}".format(
+                    container, path
+                )
                 if self.required:
                     raise KeyError(error)
                 logger.warning(error)
@@ -68,7 +70,9 @@ class ConstructorSection:
             try:
                 obj = fti._constructInstance(context, id)
             except (BadRequest, ValueError):
-                error = "Could not create type {} with id {} at {}".format(type_, id, path)
+                error = "Could not create type {} with id {} at {}".format(
+                    type_, id, path
+                )
                 logger.warning(error)
                 yield item
                 continue

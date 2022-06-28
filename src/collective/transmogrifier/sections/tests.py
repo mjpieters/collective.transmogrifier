@@ -507,7 +507,9 @@ class Py23DocChecker(doctest.OutputChecker):
 def test_suite():
     return unittest.TestSuite(
         (
-            unittest.defaultTestLoader.loadTestsFromTestCase(SplitterConditionSectionTests),
+            unittest.defaultTestLoader.loadTestsFromTestCase(
+                SplitterConditionSectionTests
+            ),
             unittest.defaultTestLoader.loadTestsFromTestCase(SplitterSectionTests),
             doctest.DocFileSuite(
                 "../../../../docs/source/sections/codec.rst",

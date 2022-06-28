@@ -96,9 +96,7 @@ class XMLWalkerSection:
                         self.logger.info("Skipping already seen tree")
                         continue
                     self.seen.add(tree_string)
-                yield from self.walk(
-                    item, tree, elementkey, parentkey, childrenkey
-                )
+                yield from self.walk(item, tree, elementkey, parentkey, childrenkey)
 
     def walk(self, item, tree, elementkey, parentkey, childrenkey):
         depth = 0

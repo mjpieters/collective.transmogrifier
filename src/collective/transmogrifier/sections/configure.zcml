@@ -1,94 +1,95 @@
 <configure
     xmlns="http://namespaces.zope.org/zope"
-    xmlns:zcml="http://namespaces.zope.org/zcml"
     xmlns:transmogrifier="http://namespaces.plone.org/transmogrifier"
-    i18n_domain="collective.transmogrifier">
+    xmlns:zcml="http://namespaces.zope.org/zcml"
+    i18n_domain="collective.transmogrifier"
+    >
 
   <utility
-      component=".constructor.ConstructorSection"
       name="collective.transmogrifier.sections.constructor"
+      component=".constructor.ConstructorSection"
       />
 
   <utility
-      component=".folders.FoldersSection"
       name="collective.transmogrifier.sections.folders"
+      component=".folders.FoldersSection"
       />
 
   <utility
-      component=".codec.CodecSection"
       name="collective.transmogrifier.sections.codec"
+      component=".codec.CodecSection"
       />
 
   <utility
-      component=".inserter.InserterSection"
       name="collective.transmogrifier.sections.inserter"
+      component=".inserter.InserterSection"
       />
 
   <utility
-      component=".condition.ConditionSection"
       name="collective.transmogrifier.sections.condition"
+      component=".condition.ConditionSection"
       />
 
   <utility
-      component=".manipulator.ManipulatorSection"
       name="collective.transmogrifier.sections.manipulator"
+      component=".manipulator.ManipulatorSection"
       />
 
   <utility
-      component=".pathresolver.PathResolverSection"
       name="collective.transmogrifier.sections.pathresolver"
+      component=".pathresolver.PathResolverSection"
       />
 
   <utility
-      component=".splitter.SplitterSection"
       name="collective.transmogrifier.sections.splitter"
+      component=".splitter.SplitterSection"
       />
 
   <utility
-      component=".savepoint.SavepointSection"
       name="collective.transmogrifier.sections.savepoint"
+      component=".savepoint.SavepointSection"
       />
 
   <utility
-      component=".csvsource.CSVSourceSection"
       name="collective.transmogrifier.sections.csvsource"
+      component=".csvsource.CSVSourceSection"
       />
 
   <utility
-      component=".logger.LoggerSection"
       name="collective.transmogrifier.sections.logger"
+      component=".logger.LoggerSection"
       />
-      
+
   <utility
-      component=".breakpoint.BreakpointSection"
       name="collective.transmogrifier.sections.breakpoint"
+      component=".breakpoint.BreakpointSection"
       />
 
   <utility
-      component=".listsource.ListSource"
       name="collective.transmogrifier.sections.listsource"
+      component=".listsource.ListSource"
       />
 
   <utility
-      component=".listsource.ListAppender"
       name="collective.transmogrifier.sections.listappender"
+      component=".listsource.ListAppender"
       />
 
   <configure zcml:condition="installed lxml">
     <utility
-        component=".xmlwalker.XMLWalkerSection"
         name="collective.transmogrifier.sections.xmlwalker"
+        component=".xmlwalker.XMLWalkerSection"
         />
   </configure>
 
   <utility
-      component=".dirwalker.DirWalkerSection"
       name="collective.transmogrifier.sections.dirwalker"
+      component=".dirwalker.DirWalkerSection"
       />
 
   <utility
-      component=".urlopener.URLOpenerSection"
       name="collective.transmogrifier.sections.urlopener"
+      component=".urlopener.URLOpenerSection"
       />
 
 </configure>

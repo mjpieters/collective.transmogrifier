@@ -1,10 +1,21 @@
-<configure xmlns="http://namespaces.zope.org/zope"
-           i18n_domain="collective.transmogrifier" >
+<configure
+    xmlns="http://namespaces.zope.org/zope"
+    i18n_domain="collective.transmogrifier"
+    >
 
-  <include package="zope.component" file="meta.zcml" />
-  <include package="zope.security" file="meta.zcml" />
+  <include
+      package="zope.component"
+      file="meta.zcml"
+      />
+  <include
+      package="zope.security"
+      file="meta.zcml"
+      />
 
-  <include package="collective.transmogrifier" file="meta.zcml" />
+  <include
+      package="collective.transmogrifier"
+      file="meta.zcml"
+      />
 
   <include package="zope.annotation" />
   <include package="collective.transmogrifier" />

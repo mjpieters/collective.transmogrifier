@@ -243,7 +243,7 @@ class Expression:
                 options=self.options,
                 nothing=None,
                 modules=sys.modules,
-                **extras
+                **extras,
             )
         )
         if self.logger.isEnabledFor(DEBUG):

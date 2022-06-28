@@ -114,11 +114,9 @@ class SplitterSection:
         self.subpipes = collections.deque()
 
         pipe_ids = sorted(
-            
-                k
-                for k in options
-                if k.startswith("pipeline-") and not k.endswith("-condition")
-            
+            k
+            for k in options
+            if k.startswith("pipeline-") and not k.endswith("-condition")
         )
 
         if len(pipe_ids) < 2:
