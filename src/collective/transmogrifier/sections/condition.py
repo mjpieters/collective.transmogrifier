@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from collective.transmogrifier.interfaces import ISection
 from collective.transmogrifier.interfaces import ISectionBlueprint
 from collective.transmogrifier.utils import Condition
@@ -8,7 +7,7 @@ from zope.interface import provider
 
 @provider(ISectionBlueprint)
 @implementer(ISection)
-class ConditionSection(object):
+class ConditionSection:
     def __init__(self, transmogrifier, name, options, previous):
         condition = options["condition"]
         self.condition = Condition(condition, transmogrifier, name, options)

@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from collective.transmogrifier.interfaces import ISection
 from collective.transmogrifier.interfaces import ISectionBlueprint
 from collective.transmogrifier.transmogrifier import configuration_registry
@@ -19,9 +18,9 @@ def registerConfig(name, configuration):
     open(filename, "w").write(configuration)
     configuration_registry.registerConfiguration(
         name,
-        u"Pipeline configuration '%s' from "
-        u"'collective.transmogrifier.tests'" % name,
-        u"",
+        "Pipeline configuration '%s' from "
+        "'collective.transmogrifier.tests'" % name,
+        "",
         filename,
     )
 
@@ -30,9 +29,9 @@ def setUp(test):
     global BASEDIR
     BASEDIR = tempfile.mkdtemp("transmogrifierTestConfigs")
 
-    class PloneSite(object):
+    class PloneSite:
         def Title(self):
-            return u"Plone Test Site"
+            return "Plone Test Site"
 
         def getPhysicalPath(self):
             return ("", "plone")

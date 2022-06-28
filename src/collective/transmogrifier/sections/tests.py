@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from collective.transmogrifier.interfaces import ISection
 from collective.transmogrifier.interfaces import ISectionBlueprint
 from collective.transmogrifier.sections.urlopener import get_message
@@ -121,7 +120,7 @@ class SplitterSectionTests(unittest.TestCase):
 
     def testInsertExtra(self):
         @implementer(ISection)
-        class Inserter(object):
+        class Inserter:
             def __init__(self, transmogrifier, name, options, previous):
                 self.previous = previous
 
@@ -158,7 +157,7 @@ class SplitterSectionTests(unittest.TestCase):
 
     def testSkipItems(self):
         @implementer(ISection)
-        class Skip(object):
+        class Skip:
             def __init__(self, transmogrifier, name, options, previous):
                 self.previous = previous
 
@@ -196,17 +195,17 @@ class SplitterSectionTests(unittest.TestCase):
 
 @provider(ISectionBlueprint)
 @implementer(ISection)
-class SampleSource(object):
+class SampleSource:
     def __init__(self, transmogrifier, name, options, previous):
         self.encoding = options.get("encoding")
         self.previous = previous
         self.sample = (
-            dict(id="foo", title=u"The Foo Fighters \u2117", status=u"\u2117"),
-            dict(id="bar", title=u"Brand Chocolate Bar \u2122", status=u"\u2122"),
+            dict(id="foo", title="The Foo Fighters \u2117", status="\u2117"),
+            dict(id="bar", title="Brand Chocolate Bar \u2122", status="\u2122"),
             dict(
                 id="monty-python",
-                title=u"Monty Python's Flying Circus \u00A9",
-                status=u"\u00A9",
+                title="Monty Python's Flying Circus \u00A9",
+                status="\u00A9",
             ),
         )
 
@@ -224,14 +223,13 @@ class SampleSource(object):
 
 @provider(ISectionBlueprint)
 @implementer(ISection)
-class RangeSource(object):
+class RangeSource:
     def __init__(self, transmogrifier, name, options, previous):
         self.previous = previous
         self.size = int(options.get("size", 5))
 
     def __iter__(self):
-        for item in self.previous:
-            yield item
+        yield from self.previous
 
         for i in range(self.size):
             yield dict(id="item-%02d" % i)
@@ -264,7 +262,7 @@ def sectionsSetUp(test):
     )
 
 
-class MockObjectManager(object):
+class MockObjectManager:
 
     _last_path = [""]
 
@@ -330,12 +328,12 @@ def constructorSetUp(test):
     @implementer(ISection)
     class ContentSource(SampleSource):
         def __init__(self, *args, **kw):
-            super(ContentSource, self).__init__(*args, **kw)
+            super().__init__(*args, **kw)
             self.sample = (
                 dict(_type="FooType", _path="/eggs/foo"),
                 dict(_type="FooType", _path="/spam/eggs/foo"),
                 dict(_type="FooType", _path="/foo"),
-                dict(_type="FooType", _path=u"/unicode/encoded/to/ascii"),
+                dict(_type="FooType", _path="/unicode/encoded/to/ascii"),
                 dict(
                     _type="BarType",
                     _path="not/existing/bar",
@@ -398,7 +396,7 @@ def foldersSetUp(test):
     @implementer(ISection)
     class FoldersSource(SampleSource):
         def __init__(self, *args, **kw):
-            super(FoldersSource, self).__init__(*args, **kw)
+            super().__init__(*args, **kw)
             self.sample = (
                 dict(_type="Document", _path="/foo"),
                 # in root, do nothing
@@ -509,8 +507,8 @@ class Py23DocChecker(doctest.OutputChecker):
 def test_suite():
     return unittest.TestSuite(
         (
-            unittest.makeSuite(SplitterConditionSectionTests),
-            unittest.makeSuite(SplitterSectionTests),
+            unittest.defaultTestLoader.loadTestsFromTestCase(SplitterConditionSectionTests),
+            unittest.defaultTestLoader.loadTestsFromTestCase(SplitterSectionTests),
             doctest.DocFileSuite(
                 "../../../../docs/source/sections/codec.rst",
                 "../../../../docs/source/sections/inserter.rst",

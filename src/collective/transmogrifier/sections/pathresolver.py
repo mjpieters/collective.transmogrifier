@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from collective.transmogrifier.interfaces import ISection
 from collective.transmogrifier.interfaces import ISectionBlueprint
 from collective.transmogrifier.utils import Matcher
@@ -24,7 +23,7 @@ def assequence(val):
 
 @provider(ISectionBlueprint)
 @implementer(ISection)
-class PathResolverSection(object):
+class PathResolverSection:
     def __init__(self, transmogrifier, name, options, previous):
         self.keys = Matcher(*options["keys"].splitlines())
         self.defer = boolean(options.get("defer-until-present", "no"))

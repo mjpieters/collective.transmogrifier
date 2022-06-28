@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from collective.transmogrifier.interfaces import ISection
 from collective.transmogrifier.interfaces import ISectionBlueprint
 from collective.transmogrifier.utils import Condition
@@ -12,7 +11,7 @@ import copy
 
 @provider(ISectionBlueprint)
 @implementer(ISection)
-class ManipulatorSection(object):
+class ManipulatorSection:
     def __init__(self, transmogrifier, name, options, previous):
         keys = options.get("keys") or ""
         self.keys = Matcher(*keys.splitlines())

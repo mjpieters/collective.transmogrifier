@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from collective.transmogrifier.interfaces import ISection
 from collective.transmogrifier.interfaces import ISectionBlueprint
 from logging import DEBUG
@@ -52,7 +51,7 @@ def openFileReference(transmogrifier, ref):
     # Either no import context or not there.
     filename = resolvePackageReferenceOrFile(ref)
     if os.path.isfile(filename):
-        return open(filename, "r")
+        return open(filename)
     return None
 
 
@@ -86,8 +85,7 @@ def pathsplit(path, ospath=posixpath):
     if dirname == ospath.sep:
         yield dirname
     elif dirname:
-        for elem in pathsplit(dirname):
-            yield elem
+        yield from pathsplit(dirname)
         yield basename
     elif basename:
         yield basename
@@ -172,7 +170,7 @@ def defaultMatcher(options, optionname, section, key=None, extra=()):
     return Matcher(*keys)
 
 
-class Matcher(object):
+class Matcher:
     """Given a set of string expressions, return the first match.
 
     Normally items are matched using equality, unless the expression
@@ -220,7 +218,7 @@ def pformat_msg(obj):
     return msg
 
 
-class Expression(object):
+class Expression:
     """A transmogrifier expression
 
     Evaluate the expression with a transmogrifier context.
@@ -261,4 +259,4 @@ class Condition(Expression):
     """
 
     def __call__(self, item, **extras):
-        return bool(super(Condition, self).__call__(item, **extras))
+        return bool(super().__call__(item, **extras))

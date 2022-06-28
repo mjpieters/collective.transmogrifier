@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from collective.transmogrifier.interfaces import ISection
 from collective.transmogrifier.interfaces import ISectionBlueprint
 from collective.transmogrifier.utils import Condition
@@ -33,7 +32,7 @@ _stop = []
 
 
 @implementer(ISection)
-class SplitterConditionSection(object):
+class SplitterConditionSection:
 
     # how far ahead are we
     ahead = 0
@@ -110,16 +109,16 @@ class SplitterConditionSection(object):
 
 @provider(ISectionBlueprint)
 @implementer(ISection)
-class SplitterSection(object):
+class SplitterSection:
     def __init__(self, transmogrifier, name, options, previous):
         self.subpipes = collections.deque()
 
         pipe_ids = sorted(
-            [
+            
                 k
                 for k in options
                 if k.startswith("pipeline-") and not k.endswith("-condition")
-            ]
+            
         )
 
         if len(pipe_ids) < 2:

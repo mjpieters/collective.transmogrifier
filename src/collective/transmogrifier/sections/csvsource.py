@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from collective.transmogrifier.interfaces import ISection
 from collective.transmogrifier.interfaces import ISectionBlueprint
 from collective.transmogrifier.utils import defaultMatcher
@@ -12,7 +11,7 @@ import csv
 
 @provider(ISectionBlueprint)
 @implementer(ISection)
-class CSVSourceSection(object):
+class CSVSourceSection:
     def __init__(self, transmogrifier, name, options, previous):
         self.previous = previous
         self.transmogrifier = transmogrifier
@@ -31,16 +30,14 @@ class CSVSourceSection(object):
 
         self.dialect = options.get("dialect", "excel")
         self.restkey = options.get("restkey", "_csvsource_rest")
-        self.fmtparam = dict(
-            (
-                key[len("fmtparam-") :],
+        self.fmtparam = {
+                key[len("fmtparam-") :]:
                 Expression(value, transmogrifier, name, options)(
                     options, key=key[len("fmtparam-") :]
-                ),
-            )
+                )
             for key, value in options.items()
             if key.startswith("fmtparam-")
-        )
+        }
         self.fieldnames = options.get("fieldnames")
         if self.fieldnames:
             self.fieldnames = self.fieldnames.split()
@@ -77,6 +74,5 @@ class CSVSourceSection(object):
             restkey=self.restkey,
             **self.fmtparam
         )
-        for item in reader:
-            yield item
+        yield from reader
         file_.close()

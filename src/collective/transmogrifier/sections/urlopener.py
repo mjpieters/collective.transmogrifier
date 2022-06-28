@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from collective.transmogrifier.interfaces import ISection
 from collective.transmogrifier.interfaces import ISectionBlueprint
 from collective.transmogrifier.utils import defaultMatcher
@@ -24,11 +23,8 @@ import six.moves.urllib.request
 # six.moves.urllib.request.HTTPRedirectHandler.http_error_302.
 # In Python 2 the headers parameter of this method must be a mimetools.Message.
 # So, we need to use it here.
-if six.PY2:
-    from mimetools import Message
-else:
-    from email import message_from_string
-    from email.message import Message
+from email import message_from_string
+from email.message import Message
 
 
 def get_message(initial_value=""):
@@ -39,7 +35,7 @@ def get_message(initial_value=""):
 
 @provider(ISectionBlueprint)
 @implementer(ISection)
-class URLOpenerSection(object):
+class URLOpenerSection:
     def __init__(self, transmogrifier, name, options, previous):
         self.previous = previous
 
@@ -69,7 +65,7 @@ class URLOpenerSection(object):
         if not os.path.isdir(self.cachedir):
             os.makedirs(self.cachedir)
         self.defaultpagename = options.get(
-            "default-page-name", ".{0}.cache".format(options["blueprint"])
+            "default-page-name", ".{}.cache".format(options["blueprint"])
         )
 
         handlers = Expression(

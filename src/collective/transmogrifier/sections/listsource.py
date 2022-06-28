@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from collective.transmogrifier.interfaces import ISection
 from collective.transmogrifier.interfaces import ISectionBlueprint
 from collective.transmogrifier.utils import Condition
@@ -13,7 +12,7 @@ LISTKEY = "collective.transmogrifier.sections.listsource"
 
 @provider(ISectionBlueprint)
 @implementer(ISection)
-class ListSource(object):
+class ListSource:
     def __init__(self, transmogrifier, name, options, previous):
         self.previous = previous
         self.items = (
@@ -31,7 +30,7 @@ class ListSource(object):
 
 @provider(ISectionBlueprint)
 @implementer(ISection)
-class ListAppender(object):
+class ListAppender:
     def __init__(self, transmogrifier, name, options, previous):
         self.previous = previous
         self.condition = Condition(
@@ -52,7 +51,7 @@ class ListAppender(object):
                 keys = self.keys(item)
                 copykeys = self.copykeys(item)
                 if keys or copykeys:
-                    new_item = dict((key, item.pop(key)) for key in keys if key in item)
+                    new_item = {key: item.pop(key) for key in keys if key in item}
                     new_item.update((key, item[key]) for key in copykeys if key in item)
                     if new_item:
                         self.items.append(new_item)
