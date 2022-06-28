@@ -12,11 +12,10 @@ import doctest
 import io
 import itertools
 import posixpath
-import re
 import shutil
-import six
 import sys
 import unittest
+import urllib
 
 
 _marker = object()
@@ -27,9 +26,6 @@ def get_next_method(iterator):
     Returns the method used by the built-in next function, depending on the
     Python version.
     """
-    # BBB: Python 2 uses method next in iterators. Python 3 uses __next__
-    if six.PY2:
-        return iterator.next
     return iterator.__next__
 
 
@@ -301,8 +297,6 @@ def constructorSetUp(test):
                 return self
 
         def hasObject(self, id_):
-            if six.PY2 and isinstance(id_, unicode):
-                return False
             if (self._path + "/" + id_).startswith("not/existing"):
                 return False
             return True
@@ -383,8 +377,6 @@ def foldersSetUp(test):
             if path in self.exists:
                 return True
             self.exists.add(path)
-            if six.PY2 and isinstance(id_, unicode):
-                return False
             if not path.startswith("/existing"):
                 return False
             return True
@@ -447,10 +439,10 @@ def pdbSetUp(test):
     test.globs["reset_stdin"] = reset_stdin
 
 
-class HTTPHandler(six.moves.urllib.request.HTTPHandler):
+class HTTPHandler(urllib.request.HTTPHandler):
     def http_open(self, req):
         url = req.get_full_url()
-        resp = six.moves.urllib.response.addinfourl(
+        resp = urllib.response.addinfourl(
             io.StringIO(),
             get_message(),
             url,
@@ -477,26 +469,7 @@ class Py23DocChecker(doctest.OutputChecker):
     def __init__(self):
         """Constructor"""
 
-    def transformer_py2_output(self, got):
-        """Handles differences in output between Python 2 and Python 3."""
-        if six.PY2:
-            got = re.sub("u'", "'", got)
-            got = re.sub('u"', '"', got)
-
-            got = re.sub("\\'\\\\u2117\\'", "'\xe2\x84\x97'", got)
-            got = re.sub("\\\\u2122", "\xe2\x84\xa2", got)
-            got = re.sub("\\'\\\\xa9\\'", "'\xc2\xa9'", got)
-
-            # Adaptation to manipulator.rst test in Python 2
-            got = re.sub("\\\\u2117", "\xe2\x84\x97", got)
-            got = re.sub("\\\\\\xe2\\x84\\x97", "\\\\\\u2117", got)
-            got = re.sub("\\\\xa9", "\xc2\xa9", got)
-            got = re.sub("\\\\\\xc2\xa9", "\\\\\\xa9", got)
-
-        return got
-
     def check_output(self, want, got, optionflags):
-        got = self.transformer_py2_output(got)
         return doctest.OutputChecker.check_output(self, want, got, optionflags)
 
     def output_difference(self, example, got, optionflags):

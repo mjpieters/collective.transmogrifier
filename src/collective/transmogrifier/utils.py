@@ -1,21 +1,16 @@
 from collective.transmogrifier.interfaces import ISection
 from collective.transmogrifier.interfaces import ISectionBlueprint
+from io import StringIO
 from logging import DEBUG
 from logging import getLogger
 from zope.component import getUtility
+from zope.pagetemplate import engine
 
 import os.path
 import posixpath
 import pprint
 import re
 import sys
-
-
-try:
-    from zope.pagetemplate import engine
-except ImportError:
-    # BBB: Zope 2.10
-    from zope.app.pagetemplate import engine
 
 
 def openFileReference(transmogrifier, ref):
@@ -43,9 +38,7 @@ def openFileReference(transmogrifier, ref):
             if hasattr(context, "openDataFile"):
                 return context.openDataFile(filename, subdir=subdir)
             if hasattr(context, "readDataFile"):
-                import six
-
-                return six.StringIO(context.readDataFile(filename, subdir=subdir))
+                return StringIO(context.readDataFile(filename, subdir=subdir))
         except ImportError:
             return None
     # Either no import context or not there.

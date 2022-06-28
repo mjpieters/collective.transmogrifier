@@ -10,7 +10,6 @@ from zope.interface import provider
 
 import logging
 import posixpath
-import six
 
 
 logger = logging.getLogger("collective.transmogrifier.constructor")
@@ -49,8 +48,6 @@ class ConstructorSection:
                 yield item
                 continue
 
-            if six.PY2:
-                path = path.encode("ASCII")
             container, id = posixpath.split(path.strip("/"))
             context = traverse(self.context, container, None)
             if context is None:

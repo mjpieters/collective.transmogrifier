@@ -6,7 +6,6 @@ from zope.interface import implementer
 from zope.interface import provider
 
 import codecs
-import six
 
 
 def _get_default_encoding(site):
@@ -71,8 +70,6 @@ class CodecSection:
         if from_ is None:
 
             def decode(value):
-                if six.PY2 and not isinstance(value, unicode):
-                    raise ValueError("Not a unicode string: %s" % value)
                 return value
 
         else:
@@ -80,7 +77,7 @@ class CodecSection:
 
             def decode(value):
                 # Python 2 unicode or Python 3 bytes have the decode method
-                if six.PY2 or isinstance(value, bytes):
+                if isinstance(value, bytes):
                     return value.decode(from_, from_error_handler)
                 # Strings in Python 3 don't have the decode method
                 return value.encode().decode(from_, from_error_handler)
@@ -89,18 +86,14 @@ class CodecSection:
         if to is None:
 
             def encode(value):
-                if six.PY2 and not isinstance(value, unicode):
-                    raise ValueError("Not a unicode string: %s" % value)
                 return value
 
         else:
             to_error_handler = self.to_error_handler
 
             def encode(value):
-                # Python 3 bytes are converted to strings
-                if six.PY2 or isinstance(value, bytes):
+                if isinstance(value, bytes):
                     return value.encode(to, to_error_handler)
-                # After encoding in Python 3, we convert the result to string.
                 return value.encode(to, to_error_handler).decode()
 
         for item in self.previous:

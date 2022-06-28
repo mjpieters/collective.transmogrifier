@@ -141,7 +141,7 @@ We can also load a file from a GS import context:
 
 Import contexts can be chunked, and that's okay:
 
-    >>> import six
+    >>> from io import StringIO
     >>> class FakeChunkedImportContext(object):
     ...  def __init__(self, subdir, filename, contents):
     ...      self.filename = filename
@@ -151,7 +151,7 @@ Import contexts can be chunked, and that's okay:
     ...          return None
     ...      if filename != self.filename:
     ...          return None
-    ...      return six.StringIO(self.contents)
+    ...      return StringIO(self.contents)
     >>> handler.clear()
     >>> t = Transmogrifier({})
     >>> IAnnotations(t)[IMPORT_CONTEXT] = FakeChunkedImportContext(None, 'somefile.csv',
