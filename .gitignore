@@ -38,3 +38,5 @@ docs/doctrees
 docs/html
 /pyvenv.cfg
 /local.cfg
+etc
+inituser
