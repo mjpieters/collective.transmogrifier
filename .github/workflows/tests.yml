@@ -23,10 +23,9 @@ jobs:
           python-version: ${{ matrix.python }}
           plone-version: ${{ matrix.plone }}
 
-      # Install plone.volto with test extras
-      - name: Install plone.volto
+      - name: Install package
         run: |
-          pip install ".[test]"
+          pip install -e ".[test]"
 
       # test
       - name: test
