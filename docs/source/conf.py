@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-#
 # Transmogrifier documentation build configuration file, created by
 # sphinx-quickstart on Tue May 13 09:42:08 2014.
 #
@@ -10,10 +8,6 @@
 #
 # All configuration values have a default; values that are commented out
 # serve to show the default.
-
-import os
-import sys
-
 
 # If extensions (or modules to document with autodoc) are in another directory,
 # add these directories to sys.path here. If the directory is relative to the
@@ -42,8 +36,8 @@ source_suffix = ".rst"
 master_doc = "index"
 
 # General information about the project.
-project = u"Transmogrifier"
-copyright = u"2014, Martijn Pieters"
+project = "Transmogrifier"
+copyright = "2014, Martijn Pieters"
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
@@ -169,15 +163,15 @@ html_static_path = ["_static"]
 htmlhelp_basename = "Transmogrifierdoc"
 
 
-# -- Options for LaTeX output --------------------------------------------------
+# Options for LaTeX output --------------------------------------------------
 
 latex_elements = {
     # The paper size ('letterpaper' or 'a4paper').
-    #'papersize': 'letterpaper',
+    # 'papersize': 'letterpaper',
     # The font size ('10pt', '11pt' or '12pt').
-    #'pointsize': '10pt',
+    # 'pointsize': '10pt',
     # Additional stuff for the LaTeX preamble.
-    #'preamble': '',
+    # 'preamble': '',
 }
 
 # Grouping the document tree into LaTeX files. List of tuples
@@ -186,8 +180,8 @@ latex_documents = [
     (
         "index",
         "Transmogrifier.tex",
-        u"Transmogrifier Documentation",
-        u"Martijn Pieters",
+        "Transmogrifier Documentation",
+        "Martijn Pieters",
         "manual",
     ),
 ]
@@ -221,8 +215,8 @@ man_pages = [
     (
         "index",
         "transmogrifier",
-        u"Transmogrifier Documentation",
-        [u"Martijn Pieters"],
+        "Transmogrifier Documentation",
+        ["Martijn Pieters"],
         1,
     )
 ]
@@ -240,8 +234,8 @@ texinfo_documents = [
     (
         "index",
         "Transmogrifier",
-        u"Transmogrifier Documentation",
-        u"Martijn Pieters",
+        "Transmogrifier Documentation",
+        "Martijn Pieters",
         "Transmogrifier",
         "One line description of project.",
         "Miscellaneous",

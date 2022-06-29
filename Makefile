@@ -23,7 +23,7 @@ LINT=docker run --rm -v "$(PWD)":/github/workspace plone/code-quality:${CODE_QUA
 
 PACKAGE_NAME=collective.transmogrifier
 PACKAGE_PATH=src/
-CHECK_PATH=setup.py $(PACKAGE_PATH)
+CHECK_PATH=setup.py docs/source/conf.py $(PACKAGE_PATH)
 
 all: build
 
