@@ -22,3 +22,11 @@ Formatting the codebase
 
 ::
     $ make format
+
+
+
+Linting the codebase
+--------------------
+
+::
+    $ make lint
