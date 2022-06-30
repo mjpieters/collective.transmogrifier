@@ -473,7 +473,7 @@ Keys are fields
 Secondly, *all* keys in such mappings that do not start with an underscore
 will be used by constructor sections (see Constructors_) to construct Plone
 content. So keys that do not start with an underscore are expected to map to
-Archetypes fields or Zope3 schema fields or whatever the constructor expects.
+Zope3 schema fields or whatever the constructor expects.
 
 Paths are to the target object
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
