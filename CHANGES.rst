@@ -3,6 +3,12 @@ Change History
 
 (name of developer listed in brackets)
 
+3.0.1 (unreleased)
+==================
+
+- Nothing changed yet.
+
+
 3.0.0 (2022-06-29)
 ==================
 
