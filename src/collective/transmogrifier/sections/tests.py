@@ -465,18 +465,6 @@ def urlopenTearDown(test):
     tearDown(test)
 
 
-class Py23DocChecker(doctest.OutputChecker):
-    def __init__(self):
-        """Constructor"""
-
-    def check_output(self, want, got, optionflags):
-        return doctest.OutputChecker.check_output(self, want, got, optionflags)
-
-    def output_difference(self, example, got, optionflags):
-        got = self.transformer_py2_output(got)
-        return doctest.OutputChecker.output_difference(self, example, got, optionflags)
-
-
 def test_suite():
     return unittest.TestSuite(
         (
@@ -497,7 +485,7 @@ def test_suite():
                 setUp=sectionsSetUp,
                 tearDown=tearDown,
                 optionflags=doctest.NORMALIZE_WHITESPACE | doctest.REPORT_NDIFF,
-                checker=Py23DocChecker(),
+                checker=doctest.OutputChecker(),
             ),
             doctest.DocFileSuite(
                 "../../../../docs/source/sections/csvsource.rst",
@@ -521,7 +509,7 @@ def test_suite():
                 setUp=constructorSetUp,
                 tearDown=tearDown,
                 optionflags=doctest.NORMALIZE_WHITESPACE | doctest.REPORT_NDIFF,
-                checker=Py23DocChecker(),
+                checker=doctest.OutputChecker(),
             ),
             doctest.DocFileSuite(
                 "../../../../docs/source/sections/folders.rst",

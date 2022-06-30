@@ -1,7 +1,6 @@
 from collective.transmogrifier.interfaces import ISection
 from collective.transmogrifier.interfaces import ISectionBlueprint
 from collective.transmogrifier.interfaces import ITransmogrifier
-from collective.transmogrifier.sections.tests import Py23DocChecker
 from collective.transmogrifier.tests import setUp
 from collective.transmogrifier.tests import tearDown
 from collective.transmogrifier.transmogrifier import configuration_registry
@@ -382,7 +381,7 @@ def test_suite():
                 setUp=setUp,
                 tearDown=tearDown,
                 optionflags=doctest.NORMALIZE_WHITESPACE,
-                checker=Py23DocChecker(),
+                checker=doctest.OutputChecker(),
             ),
         )
     )
