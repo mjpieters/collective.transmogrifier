@@ -7,7 +7,7 @@ jobs:
       fail-fast: false
       matrix:
         python: [3.7, 3.8, 3.9]
-        plone: ["6.0.0a6", "5.2-latest"]
+        plone: ["6.0-latest", "5.2-latest"]
         exclude:
           - plone: "5.2-latest"
             python: 3.9
