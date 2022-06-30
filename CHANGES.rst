@@ -9,6 +9,9 @@ Change History
 - Implement plone/code-analysis-action
   [ericof]
 
+- Drop support to Plone versions 4.3, 5.0 and 5.1
+  [ericof]
+
 - Drop support to Python 2.7 and Python 3.6
   [ericof]
 
