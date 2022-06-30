@@ -1,21 +1,15 @@
 # Test cleanup support
+from collections.abc import MutableMapping
 from collective.transmogrifier.interfaces import ITransmogrifier
 from collective.transmogrifier.utils import constructPipeline
 from collective.transmogrifier.utils import resolvePackageReference
 from Products.CMFCore.interfaces import IFolderish
-from six.moves import configparser
 from zope.component import adapts
 from zope.interface import implementer
 from zope.testing.cleanup import addCleanUp
 
+import configparser
 import re
-
-
-try:
-    from collections.abc import MutableMapping
-except ImportError:
-    # BBB: Python 2
-    from collections import MutableMapping
 
 
 class ConfigurationRegistry:

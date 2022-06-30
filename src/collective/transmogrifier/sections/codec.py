@@ -76,10 +76,10 @@ class CodecSection:
             from_error_handler = self.from_error_handler
 
             def decode(value):
-                # Python 2 unicode or Python 3 bytes have the decode method
+                # Bytes have the decode method
                 if isinstance(value, bytes):
                     return value.decode(from_, from_error_handler)
-                # Strings in Python 3 don't have the decode method
+                # Strings don't have the decode method
                 return value.encode().decode(from_, from_error_handler)
 
         to = self.to
@@ -92,6 +92,7 @@ class CodecSection:
             to_error_handler = self.to_error_handler
 
             def encode(value):
+                # Bytes are converted to strings
                 if isinstance(value, bytes):
                     return value.encode(to, to_error_handler)
                 return value.encode(to, to_error_handler).decode()
