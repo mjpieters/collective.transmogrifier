@@ -17,10 +17,6 @@ import urllib.parse
 import urllib.request
 
 
-def get_message(initial_value=""):
-    return message_from_string(initial_value)
-
-
 @provider(ISectionBlueprint)
 @implementer(ISection)
 class URLOpenerSection:
@@ -102,7 +98,7 @@ class URLOpenerSection:
 
             if os.path.isfile(cache) and os.path.isfile(headers_cache):
                 self.logger.debug("Using cache: %s", cache)
-                headers = get_message(open(headers_cache))
+                headers = message_from_string(open(headers_cache))
             else:
                 if not os.path.isdir(os.path.dirname(cache)):
                     os.makedirs(os.path.dirname(cache))
@@ -135,7 +131,7 @@ class URLOpenerSection:
 class HTTPDefaultErrorHandler(urllib.request.HTTPDefaultErrorHandler):
     def http_error_default(self, req, fp, code, msg, hdrs):
         if not isinstance(hdrs, Message):
-            hdrs = get_message(hdrs)
+            hdrs = message_from_string(hdrs)
         hdrs["status"] = str(code) + " " + msg
         try:
             return urllib.request.HTTPDefaultErrorHandler.http_error_default(

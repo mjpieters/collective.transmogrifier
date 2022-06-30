@@ -1,8 +1,8 @@
 from collective.transmogrifier.interfaces import ISection
 from collective.transmogrifier.interfaces import ISectionBlueprint
-from collective.transmogrifier.sections.urlopener import get_message
 from collective.transmogrifier.tests import setUp
 from collective.transmogrifier.tests import tearDown
+from email import message_from_string
 from Zope2.App import zcml
 from zope.component import provideUtility
 from zope.interface import implementer
@@ -444,7 +444,7 @@ class HTTPHandler(urllib.request.HTTPHandler):
         url = req.get_full_url()
         resp = urllib.response.addinfourl(
             io.StringIO(),
-            get_message(),
+            message_from_string(""),
             url,
         )
         if "redirect" in url:
