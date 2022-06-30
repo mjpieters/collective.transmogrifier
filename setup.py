@@ -15,7 +15,7 @@ long_description = "\n\n".join(
 
 setup(
     name="collective.transmogrifier",
-    version="3.0.0.dev0",
+    version="3.0.0",
     description="A configurable pipeline, aimed at transforming content for import and export",
     long_description=long_description,
     # Get more from https://pypi.org/classifiers/
