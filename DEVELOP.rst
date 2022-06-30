@@ -1,42 +1,32 @@
-Using the development buildout
-==============================
+Developing this package
+=======================
 
-Create a virtualenv in the package::
+Create the virtual enviroment and install all dependencies::
 
-    $ virtualenv --clear .
+    $ make build
 
-Install requirements with pip::
+Start Plone in foreground::
 
-    $ ./bin/pip install -r requirements.txt
-
-Run buildout::
-
-    $ ./bin/buildout
-
-Start Plone in foreground:
-
-    $ ./bin/instance fg
+    $ make start
 
 
 Running tests
 -------------
 
-    $ tox
+::
+    $ make tests
 
-list all tox environments:
 
-    $ tox -l
-    py27-Plone43
-    py27-Plone51
-    py27-Plone52
-    py37-Plone52
-    build_instance
-    code-analysis
-    lint-py27
-    lint-py37
-    coverage-report
+Formatting the codebase
+-----------------------
 
-run a specific tox env:
+::
+    $ make format
 
-    $ tox -e py37-Plone52
 
+
+Linting the codebase
+--------------------
+
+::
+    $ make lint

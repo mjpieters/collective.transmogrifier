@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from Acquisition import aq_base
 from collective.transmogrifier.interfaces import ISection
 from collective.transmogrifier.interfaces import ISectionBlueprint
@@ -11,7 +10,6 @@ from zope.interface import provider
 
 import logging
 import posixpath
-import six
 
 
 logger = logging.getLogger("collective.transmogrifier.constructor")
@@ -19,7 +17,7 @@ logger = logging.getLogger("collective.transmogrifier.constructor")
 
 @provider(ISectionBlueprint)
 @implementer(ISection)
-class ConstructorSection(object):
+class ConstructorSection:
     def __init__(self, transmogrifier, name, options, previous):
         self.previous = previous
         self.context = transmogrifier.context
@@ -50,12 +48,12 @@ class ConstructorSection(object):
                 yield item
                 continue
 
-            if six.PY2:
-                path = path.encode("ASCII")
             container, id = posixpath.split(path.strip("/"))
             context = traverse(self.context, container, None)
             if context is None:
-                error = "Container %s does not exist for item %s" % (container, path)
+                error = "Container {} does not exist for item {}".format(
+                    container, path
+                )
                 if self.required:
                     raise KeyError(error)
                 logger.warning(error)
@@ -69,7 +67,9 @@ class ConstructorSection(object):
             try:
                 obj = fti._constructInstance(context, id)
             except (BadRequest, ValueError):
-                error = "Could not create type %s with id %s at %s" % (type_, id, path)
+                error = "Could not create type {} with id {} at {}".format(
+                    type_, id, path
+                )
                 logger.warning(error)
                 yield item
                 continue

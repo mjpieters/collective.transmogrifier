@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """Generic setup integration"""
 from .interfaces import ITransmogrifier
 from Products.CMFPlone.utils import safe_unicode

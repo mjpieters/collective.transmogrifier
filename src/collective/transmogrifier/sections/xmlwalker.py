@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from collective.transmogrifier.interfaces import ISection
 from collective.transmogrifier.interfaces import ISectionBlueprint
 from collective.transmogrifier.utils import Expression
@@ -12,7 +11,7 @@ import logging
 
 @provider(ISectionBlueprint)
 @implementer(ISection)
-class XMLWalkerSection(object):
+class XMLWalkerSection:
 
     xpath = "@href | @src"
     prefix = "element-"
@@ -97,10 +96,7 @@ class XMLWalkerSection(object):
                         self.logger.info("Skipping already seen tree")
                         continue
                     self.seen.add(tree_string)
-                for child_item in self.walk(
-                    item, tree, elementkey, parentkey, childrenkey
-                ):
-                    yield child_item
+                yield from self.walk(item, tree, elementkey, parentkey, childrenkey)
 
     def walk(self, item, tree, elementkey, parentkey, childrenkey):
         depth = 0

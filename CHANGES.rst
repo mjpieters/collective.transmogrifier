@@ -3,10 +3,17 @@ Change History
 
 (name of developer listed in brackets)
 
-2.0.1 (unreleased)
+3.0.0 (unreleased)
 ==================
 
-- Nothing changed yet.
+- Implement plone/code-analysis-action
+  [ericof]
+
+- Drop support to Plone versions 4.3, 5.0 and 5.1
+  [ericof]
+
+- Drop support to Python 2.7 and Python 3.6
+  [ericof]
 
 
 2.0.0 (2021-09-16)

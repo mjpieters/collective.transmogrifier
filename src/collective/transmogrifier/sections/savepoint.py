@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from collective.transmogrifier.interfaces import ISection
 from collective.transmogrifier.interfaces import ISectionBlueprint
 from zope.interface import implementer
@@ -9,7 +8,7 @@ import transaction
 
 @provider(ISectionBlueprint)
 @implementer(ISection)
-class SavepointSection(object):
+class SavepointSection:
     def __init__(self, transmogrifier, name, options, previous):
         self.every = int(options.get("every", 1000))
         self.previous = previous

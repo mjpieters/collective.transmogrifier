@@ -1,9 +1,8 @@
-# -*- coding: utf-8 -*-
 from collective.transmogrifier.interfaces import ISection
 from collective.transmogrifier.interfaces import ISectionBlueprint
-from collective.transmogrifier.sections.urlopener import get_message
 from collective.transmogrifier.tests import setUp
 from collective.transmogrifier.tests import tearDown
+from email import message_from_string
 from Zope2.App import zcml
 from zope.component import provideUtility
 from zope.interface import implementer
@@ -13,11 +12,10 @@ import doctest
 import io
 import itertools
 import posixpath
-import re
 import shutil
-import six
 import sys
 import unittest
+import urllib
 
 
 _marker = object()
@@ -28,9 +26,6 @@ def get_next_method(iterator):
     Returns the method used by the built-in next function, depending on the
     Python version.
     """
-    # BBB: Python 2 uses method next in iterators. Python 3 uses __next__
-    if six.PY2:
-        return iterator.next
     return iterator.__next__
 
 
@@ -121,7 +116,7 @@ class SplitterSectionTests(unittest.TestCase):
 
     def testInsertExtra(self):
         @implementer(ISection)
-        class Inserter(object):
+        class Inserter:
             def __init__(self, transmogrifier, name, options, previous):
                 self.previous = previous
 
@@ -158,7 +153,7 @@ class SplitterSectionTests(unittest.TestCase):
 
     def testSkipItems(self):
         @implementer(ISection)
-        class Skip(object):
+        class Skip:
             def __init__(self, transmogrifier, name, options, previous):
                 self.previous = previous
 
@@ -196,17 +191,17 @@ class SplitterSectionTests(unittest.TestCase):
 
 @provider(ISectionBlueprint)
 @implementer(ISection)
-class SampleSource(object):
+class SampleSource:
     def __init__(self, transmogrifier, name, options, previous):
         self.encoding = options.get("encoding")
         self.previous = previous
         self.sample = (
-            dict(id="foo", title=u"The Foo Fighters \u2117", status=u"\u2117"),
-            dict(id="bar", title=u"Brand Chocolate Bar \u2122", status=u"\u2122"),
+            dict(id="foo", title="The Foo Fighters \u2117", status="\u2117"),
+            dict(id="bar", title="Brand Chocolate Bar \u2122", status="\u2122"),
             dict(
                 id="monty-python",
-                title=u"Monty Python's Flying Circus \u00A9",
-                status=u"\u00A9",
+                title="Monty Python's Flying Circus \u00A9",
+                status="\u00A9",
             ),
         )
 
@@ -224,14 +219,13 @@ class SampleSource(object):
 
 @provider(ISectionBlueprint)
 @implementer(ISection)
-class RangeSource(object):
+class RangeSource:
     def __init__(self, transmogrifier, name, options, previous):
         self.previous = previous
         self.size = int(options.get("size", 5))
 
     def __iter__(self):
-        for item in self.previous:
-            yield item
+        yield from self.previous
 
         for i in range(self.size):
             yield dict(id="item-%02d" % i)
@@ -264,7 +258,7 @@ def sectionsSetUp(test):
     )
 
 
-class MockObjectManager(object):
+class MockObjectManager:
 
     _last_path = [""]
 
@@ -303,8 +297,6 @@ def constructorSetUp(test):
                 return self
 
         def hasObject(self, id_):
-            if six.PY2 and isinstance(id_, unicode):
-                return False
             if (self._path + "/" + id_).startswith("not/existing"):
                 return False
             return True
@@ -330,12 +322,12 @@ def constructorSetUp(test):
     @implementer(ISection)
     class ContentSource(SampleSource):
         def __init__(self, *args, **kw):
-            super(ContentSource, self).__init__(*args, **kw)
+            super().__init__(*args, **kw)
             self.sample = (
                 dict(_type="FooType", _path="/eggs/foo"),
                 dict(_type="FooType", _path="/spam/eggs/foo"),
                 dict(_type="FooType", _path="/foo"),
-                dict(_type="FooType", _path=u"/unicode/encoded/to/ascii"),
+                dict(_type="FooType", _path="/unicode/encoded/to/ascii"),
                 dict(
                     _type="BarType",
                     _path="not/existing/bar",
@@ -385,8 +377,6 @@ def foldersSetUp(test):
             if path in self.exists:
                 return True
             self.exists.add(path)
-            if six.PY2 and isinstance(id_, unicode):
-                return False
             if not path.startswith("/existing"):
                 return False
             return True
@@ -398,7 +388,7 @@ def foldersSetUp(test):
     @implementer(ISection)
     class FoldersSource(SampleSource):
         def __init__(self, *args, **kw):
-            super(FoldersSource, self).__init__(*args, **kw)
+            super().__init__(*args, **kw)
             self.sample = (
                 dict(_type="Document", _path="/foo"),
                 # in root, do nothing
@@ -449,12 +439,12 @@ def pdbSetUp(test):
     test.globs["reset_stdin"] = reset_stdin
 
 
-class HTTPHandler(six.moves.urllib.request.HTTPHandler):
+class HTTPHandler(urllib.request.HTTPHandler):
     def http_open(self, req):
         url = req.get_full_url()
-        resp = six.moves.urllib.response.addinfourl(
+        resp = urllib.response.addinfourl(
             io.StringIO(),
-            get_message(),
+            message_from_string(""),
             url,
         )
         if "redirect" in url:
@@ -475,42 +465,13 @@ def urlopenTearDown(test):
     tearDown(test)
 
 
-class Py23DocChecker(doctest.OutputChecker):
-    def __init__(self):
-        """Constructor"""
-
-    def transformer_py2_output(self, got):
-        """Handles differences in output between Python 2 and Python 3."""
-        if six.PY2:
-            got = re.sub("u'", "'", got)
-            got = re.sub('u"', '"', got)
-
-            got = re.sub("\\'\\\\u2117\\'", "'\xe2\x84\x97'", got)
-            got = re.sub("\\\\u2122", "\xe2\x84\xa2", got)
-            got = re.sub("\\'\\\\xa9\\'", "'\xc2\xa9'", got)
-
-            # Adaptation to manipulator.rst test in Python 2
-            got = re.sub("\\\\u2117", "\xe2\x84\x97", got)
-            got = re.sub("\\\\\\xe2\\x84\\x97", "\\\\\\u2117", got)
-            got = re.sub("\\\\xa9", "\xc2\xa9", got)
-            got = re.sub("\\\\\\xc2\xa9", "\\\\\\xa9", got)
-
-        return got
-
-    def check_output(self, want, got, optionflags):
-        got = self.transformer_py2_output(got)
-        return doctest.OutputChecker.check_output(self, want, got, optionflags)
-
-    def output_difference(self, example, got, optionflags):
-        got = self.transformer_py2_output(got)
-        return doctest.OutputChecker.output_difference(self, example, got, optionflags)
-
-
 def test_suite():
     return unittest.TestSuite(
         (
-            unittest.makeSuite(SplitterConditionSectionTests),
-            unittest.makeSuite(SplitterSectionTests),
+            unittest.defaultTestLoader.loadTestsFromTestCase(
+                SplitterConditionSectionTests
+            ),
+            unittest.defaultTestLoader.loadTestsFromTestCase(SplitterSectionTests),
             doctest.DocFileSuite(
                 "../../../../docs/source/sections/codec.rst",
                 "../../../../docs/source/sections/inserter.rst",
@@ -524,7 +485,7 @@ def test_suite():
                 setUp=sectionsSetUp,
                 tearDown=tearDown,
                 optionflags=doctest.NORMALIZE_WHITESPACE | doctest.REPORT_NDIFF,
-                checker=Py23DocChecker(),
+                checker=doctest.OutputChecker(),
             ),
             doctest.DocFileSuite(
                 "../../../../docs/source/sections/csvsource.rst",
@@ -548,7 +509,7 @@ def test_suite():
                 setUp=constructorSetUp,
                 tearDown=tearDown,
                 optionflags=doctest.NORMALIZE_WHITESPACE | doctest.REPORT_NDIFF,
-                checker=Py23DocChecker(),
+                checker=doctest.OutputChecker(),
             ),
             doctest.DocFileSuite(
                 "../../../../docs/source/sections/folders.rst",

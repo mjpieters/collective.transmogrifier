@@ -1,22 +1,16 @@
-# -*- coding: utf-8 -*-
 from collective.transmogrifier.interfaces import ISection
 from collective.transmogrifier.interfaces import ISectionBlueprint
+from io import StringIO
 from logging import DEBUG
 from logging import getLogger
 from zope.component import getUtility
+from zope.pagetemplate import engine
 
 import os.path
 import posixpath
 import pprint
 import re
 import sys
-
-
-try:
-    from zope.pagetemplate import engine
-except ImportError:
-    # BBB: Zope 2.10
-    from zope.app.pagetemplate import engine
 
 
 def openFileReference(transmogrifier, ref):
@@ -44,15 +38,13 @@ def openFileReference(transmogrifier, ref):
             if hasattr(context, "openDataFile"):
                 return context.openDataFile(filename, subdir=subdir)
             if hasattr(context, "readDataFile"):
-                import six
-
-                return six.StringIO(context.readDataFile(filename, subdir=subdir))
+                return StringIO(context.readDataFile(filename, subdir=subdir))
         except ImportError:
             return None
     # Either no import context or not there.
     filename = resolvePackageReferenceOrFile(ref)
     if os.path.isfile(filename):
-        return open(filename, "r")
+        return open(filename)
     return None
 
 
@@ -86,8 +78,7 @@ def pathsplit(path, ospath=posixpath):
     if dirname == ospath.sep:
         yield dirname
     elif dirname:
-        for elem in pathsplit(dirname):
-            yield elem
+        yield from pathsplit(dirname)
         yield basename
     elif basename:
         yield basename
@@ -172,7 +163,7 @@ def defaultMatcher(options, optionname, section, key=None, extra=()):
     return Matcher(*keys)
 
 
-class Matcher(object):
+class Matcher:
     """Given a set of string expressions, return the first match.
 
     Normally items are matched using equality, unless the expression
@@ -220,7 +211,7 @@ def pformat_msg(obj):
     return msg
 
 
-class Expression(object):
+class Expression:
     """A transmogrifier expression
 
     Evaluate the expression with a transmogrifier context.
@@ -245,7 +236,7 @@ class Expression(object):
                 options=self.options,
                 nothing=None,
                 modules=sys.modules,
-                **extras
+                **extras,
             )
         )
         if self.logger.isEnabledFor(DEBUG):
@@ -261,4 +252,4 @@ class Condition(Expression):
     """
 
     def __call__(self, item, **extras):
-        return bool(super(Condition, self).__call__(item, **extras))
+        return bool(super().__call__(item, **extras))

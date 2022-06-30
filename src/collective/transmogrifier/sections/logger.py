@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from collective.transmogrifier.interfaces import ISection
 from collective.transmogrifier.interfaces import ISectionBlueprint
 from collective.transmogrifier.utils import Condition
@@ -12,7 +11,7 @@ import logging
 
 @provider(ISectionBlueprint)
 @implementer(ISection)
-class LoggerSection(object):
+class LoggerSection:
     """Logs a value of a key."""
 
     def __init__(self, transmogrifier, name, options, previous):

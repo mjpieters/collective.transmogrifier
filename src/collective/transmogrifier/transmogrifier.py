@@ -1,25 +1,18 @@
-# -*- coding: utf-8 -*-
 # Test cleanup support
+from collections.abc import MutableMapping
 from collective.transmogrifier.interfaces import ITransmogrifier
 from collective.transmogrifier.utils import constructPipeline
 from collective.transmogrifier.utils import resolvePackageReference
 from Products.CMFCore.interfaces import IFolderish
-from six.moves import configparser
 from zope.component import adapts
 from zope.interface import implementer
 from zope.testing.cleanup import addCleanUp
 
+import configparser
 import re
 
 
-try:
-    from collections.abc import MutableMapping
-except ImportError:
-    # BBB: Python 2
-    from collections import MutableMapping
-
-
-class ConfigurationRegistry(object):
+class ConfigurationRegistry:
     def __init__(self):
         self.clear()
 
@@ -111,8 +104,7 @@ class Options(MutableMapping):
         return len(self._raw)
 
     def __iter__(self):
-        for i in self._raw:
-            yield i
+        yield from self._raw
 
     def _substitute(self):
         for key, value in list(self._raw.items()):
@@ -178,7 +170,7 @@ class Options(MutableMapping):
 
         v = self.get(key)
         if v is None:
-            raise KeyError("Missing option: %s:%s" % (self.section, key))
+            raise KeyError("Missing option: {}:{}".format(self.section, key))
         return v
 
     def __setitem__(self, option, value):
@@ -218,8 +210,8 @@ def _update_section(section, included):
     before + options.
     """
     keys = set(section.keys())
-    add = set([k for k in keys if k.endswith("+")])
-    remove = set([k for k in keys if k.endswith("-")])
+    add = {k for k in keys if k.endswith("+")}
+    remove = {k for k in keys if k.endswith("-")}
 
     for key in remove:
         option = key.strip(" -")
@@ -257,7 +249,7 @@ def _load_config(configuration_id, seen=None, **overrides):
         seen = []
     if configuration_id in seen:
         raise ValueError(
-            "Recursive configuration extends: %s (%r)" % (configuration_id, seen)
+            "Recursive configuration extends: {} ({!r})".format(configuration_id, seen)
         )
     seen.append(configuration_id)
 

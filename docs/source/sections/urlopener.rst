@@ -20,7 +20,7 @@ response and header optionally also using a local cache.
     ... [url]
     ... blueprint = collective.transmogrifier.sections.inserter
     ... key = string:_url
-    ... condition = python:not modules['six.moves.urllib.parse'].urlsplit(
+    ... condition = python:not modules['urllib.parse'].urlsplit(
     ...     item.get('_url', '')).netloc
     ... value = python:'file://' + modules['posixpath'].join(
     ...     modules['os.path'].dirname(

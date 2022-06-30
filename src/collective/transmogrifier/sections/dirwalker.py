@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from collective.transmogrifier.interfaces import ISection
 from collective.transmogrifier.interfaces import ISectionBlueprint
 from collective.transmogrifier.utils import Expression
@@ -13,7 +12,7 @@ import posixpath
 
 @provider(ISectionBlueprint)
 @implementer(ISection)
-class DirWalkerSection(object):
+class DirWalkerSection:
     def __init__(self, transmogrifier, name, options, previous):
         self.previous = previous
         self.pathkey = options.get("path-key", "_path")
@@ -35,8 +34,7 @@ class DirWalkerSection(object):
         )
 
     def __iter__(self):
-        for item in self.previous:
-            yield item
+        yield from self.previous
 
         cwd = os.getcwd()
         yield {self.pathkey: posixpath.sep, self.typekey: self.foldertype}

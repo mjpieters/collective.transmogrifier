@@ -1,8 +1,6 @@
-# -*- coding: utf-8 -*-
 from collective.transmogrifier.interfaces import ISection
 from collective.transmogrifier.interfaces import ISectionBlueprint
 from collective.transmogrifier.interfaces import ITransmogrifier
-from collective.transmogrifier.sections.tests import Py23DocChecker
 from collective.transmogrifier.tests import setUp
 from collective.transmogrifier.tests import tearDown
 from collective.transmogrifier.transmogrifier import configuration_registry
@@ -58,17 +56,17 @@ class MetaDirectivesTests(unittest.TestCase):
         )
         self.assertEqual(
             configuration_registry.listConfigurationIds(),
-            (u"collective.transmogrifier.tests.configname",),
+            ("collective.transmogrifier.tests.configname",),
         )
         path = os.path.split(collective.transmogrifier.__file__)[0]
         self.assertEqual(
             configuration_registry.getConfiguration(
-                u"collective.transmogrifier.tests.configname"
+                "collective.transmogrifier.tests.configname"
             ),
             dict(
-                id=u"collective.transmogrifier.tests.configname",
-                title=u"config title",
-                description=u"config description",
+                id="collective.transmogrifier.tests.configname",
+                title="config title",
+                description="config description",
                 configuration=os.path.join(path, "filename.cfg"),
             ),
         )
@@ -87,18 +85,18 @@ class MetaDirectivesTests(unittest.TestCase):
         )
         self.assertEqual(
             configuration_registry.listConfigurationIds(),
-            (u"collective.transmogrifier.tests.configname",),
+            ("collective.transmogrifier.tests.configname",),
         )
         path = os.path.split(collective.transmogrifier.__file__)[0]
         self.assertEqual(
             configuration_registry.getConfiguration(
-                u"collective.transmogrifier.tests.configname"
+                "collective.transmogrifier.tests.configname"
             ),
             dict(
-                id=u"collective.transmogrifier.tests.configname",
-                title=u"Pipeline configuration "
-                u"'collective.transmogrifier.tests.configname'",
-                description=u"",
+                id="collective.transmogrifier.tests.configname",
+                title="Pipeline configuration "
+                "'collective.transmogrifier.tests.configname'",
+                description="",
                 configuration=os.path.join(path, "filename.cfg"),
             ),
         )
@@ -155,10 +153,10 @@ class OptionSubstitutionTests(unittest.TestCase):
 
 class InclusionManipulationTests(cleanup.CleanUp, unittest.TestCase):
     def setUp(self):
-        super(InclusionManipulationTests, self).setUp()
+        super().setUp()
         self._basedir = tempfile.mkdtemp("transmogrifierTestConfigs")
         self._registerConfig(
-            u"collective.transmogrifier.tests.included",
+            "collective.transmogrifier.tests.included",
             """\
 [foo]
 bar=
@@ -168,7 +166,7 @@ bar=
         )
 
     def tearDown(self):
-        super(InclusionManipulationTests, self).tearDown()
+        super().tearDown()
         shutil.rmtree(self._basedir)
 
     def _registerConfig(self, name, configuration):
@@ -176,9 +174,9 @@ bar=
         open(filename, "w").write(configuration)
         configuration_registry.registerConfiguration(
             name,
-            u"Pipeline configuration '%s' from "
-            u"'collective.transmogrifier.tests'" % name,
-            u"",
+            "Pipeline configuration '%s' from "
+            "'collective.transmogrifier.tests'" % name,
+            "",
             filename,
         )
 
@@ -188,16 +186,16 @@ bar=
         config = (
             "[transmogrifier]\n" "include=collective.transmogrifier.tests.included\n\n"
         ) + config
-        self._registerConfig(u"collective.transmogrifier.tests.includer", config)
-        return _load_config(u"collective.transmogrifier.tests.includer")
+        self._registerConfig("collective.transmogrifier.tests.includer", config)
+        return _load_config("collective.transmogrifier.tests.includer")
 
     def testAdd(self):
         opts = self._loadConfig("[foo]\nbar+=eggs\n")
-        self.assertEquals(opts["foo"]["bar"], "monty\npython\neggs")
+        self.assertEqual(opts["foo"]["bar"], "monty\npython\neggs")
 
     def testRemove(self):
         opts = self._loadConfig("[foo]\nbar-=python\n")
-        self.assertEquals(opts["foo"]["bar"], "monty")
+        self.assertEqual(opts["foo"]["bar"], "monty")
 
     def testAddAndRemove(self):
         opts = self._loadConfig(
@@ -210,12 +208,12 @@ bar +=
     eggs
 """
         )
-        self.assertEquals(opts["foo"]["bar"], "python\nmonty\neggs")
+        self.assertEqual(opts["foo"]["bar"], "python\nmonty\neggs")
 
     def testNonExistent(self):
         opts = self._loadConfig("[bar]\nfoo+=spam\nbaz-=monty\n")
-        self.assertEquals(opts["bar"]["foo"], "spam")
-        self.assertEquals(opts["bar"]["baz"], "")
+        self.assertEqual(opts["bar"]["foo"], "spam")
+        self.assertEqual(opts["bar"]["baz"], "")
 
 
 class ConstructPipelineTests(cleanup.CleanUp, unittest.TestCase):
@@ -229,18 +227,17 @@ class ConstructPipelineTests(cleanup.CleanUp, unittest.TestCase):
             noisection=dict(blueprint="collective.transmogrifier.tests.noisection")
         )
 
-        class NotAnISection(object):
+        class NotAnISection:
             def __init__(self, transmogrifier, name, options, previous):
                 self.previous = previous
 
             def __iter__(self):
-                for item in self.previous:
-                    yield item
+                yield from self.previous
 
         provideUtility(
             NotAnISection,
             ISectionBlueprint,
-            name=u"collective.transmogrifier.tests.noisection",
+            name="collective.transmogrifier.tests.noisection",
         )
         self.assertRaises(ValueError, self._doConstruct, config, ["noisection"])
 
@@ -290,7 +287,7 @@ class PackageReferenceResolverTest(unittest.TestCase):
 
 
 @implementer(ITransmogrifier)
-class MockImportContext(object):
+class MockImportContext:
     def __init__(self, configfile=None):
         self.configfile = configfile
 
@@ -376,7 +373,7 @@ class GenericSetupImporterTest(unittest.TestCase):
 def test_suite():
     import sys
 
-    suite = unittest.findTestCases(sys.modules[__name__])
+    suite = unittest.defaultTestLoader.loadTestsFromModule(sys.modules[__name__])
     suite.addTests(
         (
             doctest.DocFileSuite(
@@ -384,7 +381,7 @@ def test_suite():
                 setUp=setUp,
                 tearDown=tearDown,
                 optionflags=doctest.NORMALIZE_WHITESPACE,
-                checker=Py23DocChecker(),
+                checker=doctest.OutputChecker(),
             ),
         )
     )

@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from collective.transmogrifier.interfaces import ISection
 from collective.transmogrifier.interfaces import ISectionBlueprint
 from collective.transmogrifier.utils import Condition
@@ -14,7 +13,7 @@ import sys
 
 @provider(ISectionBlueprint)
 @implementer(ISection)
-class BreakpointSection(object):
+class BreakpointSection:
 
     pdb = Pdb()
 

@@ -7,3 +7,4 @@ Contributors
 - Jarn, info@jarn.com
 - Ross Patterson
 - Wesley Barroso
+- Érico Andrei
