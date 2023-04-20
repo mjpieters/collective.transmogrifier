@@ -6,7 +6,8 @@ Change History
 3.0.1 (unreleased)
 ==================
 
-- Nothing changed yet.
+- Add Python 3.10 and 3.11 support.
+  [wesleybl]
 
 
 3.0.0 (2022-06-29)
