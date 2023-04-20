@@ -18,7 +18,7 @@ YELLOW=`tput setaf 3`
 PLONE5=5.2-latest
 PLONE6=6.0-latest
 
-CODE_QUALITY_VERSION=1.0.1
+CODE_QUALITY_VERSION=2.1.0
 LINT=docker run --rm -v "$(PWD)":/github/workspace plone/code-quality:${CODE_QUALITY_VERSION} check
 
 PACKAGE_NAME=collective.transmogrifier
