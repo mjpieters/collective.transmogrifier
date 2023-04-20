@@ -2,6 +2,12 @@
 Transmogrifier 
 **************
 
+.. highlights:: **Project moved**
+
+   Development on this project has been `moved to the Plone collective repository`_.
+
+.. _moved to the Plone collective repository: https://github.com/collective/collective.transmogrifier
+
 .. contents::
 
 Transmogrifier provides support for building pipelines that turn one thing
